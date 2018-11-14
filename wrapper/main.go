@@ -3,42 +3,37 @@ package wrapper
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 )
 
-type Data struct{}
+/********** STRUCTS **********/
 
 // ClientCredentials structure of client object
 type ClientCredentials struct {
-	Gateway, IPAddress, UserID string
+	gateway, ipAddress, userID string
 }
+
+/********** EXPORTED FUNCTIONS ***********/
 
 // NewClient creation of client object
 func NewClient(gateway, ipAddress, userID string) ClientCredentials {
 	return ClientCredentials{
-		Gateway:   gateway,
-		IPAddress: ipAddress,
-		UserID:    userID,
+		gateway:   gateway,
+		ipAddress: ipAddress,
+		userID:    userID,
 	}
 }
 
 // GetUser GET method to GET user information
-func GetUser(c ClientCredentials) map[string]interface{} {
+// Confirm the correct type to return from function
+func GetUser(credentials ClientCredentials) map[string]interface{} {
 	_url := "http://uat-api.synapsefi.com/v3.1/users"
 
 	client := &http.Client{}
 
-	req, err := http.NewRequest("GET", _url, nil)
-
-	req.Header.Set("x-sp-gateway", c.Gateway)
-	req.Header.Set("x-sp-user-ip", c.IPAddress)
-	req.Header.Set("x-sp-user", c.UserID)
-	req.Header.Set("content-type", "application/json;charset=UTF-8")
-
-	if err != nil {
-		fmt.Println(err)
-	}
+	req := updateRequest(credentials, "GET", _url, nil)
 
 	resp, err := client.Do(req)
 
@@ -59,8 +54,31 @@ func GetUser(c ClientCredentials) map[string]interface{} {
 	jsonData, ok := data.(map[string]interface{})
 
 	if ok != false {
-		jsonData["id"] = c.UserID
+		jsonData["id"] = credentials.userID
 	}
 
 	return jsonData
+}
+
+/********** HELPER FUNCTIONS **********/
+
+// sets client headers using client credentials
+func setHeaders(client ClientCredentials, request *http.Request) {
+	request.Header.Set("x-sp-gateway", client.gateway)
+	request.Header.Set("x-sp-user-ip", client.ipAddress)
+	request.Header.Set("x-sp-user", client.userID)
+	request.Header.Set("content-type", "application/json;charset=UTF-8")
+}
+
+// updates request headers with method, url, and body (if applicable)
+func updateRequest(client ClientCredentials, method, url string, body io.Reader) *http.Request {
+	req, err := http.NewRequest(method, url, body)
+
+	setHeaders(client, req)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	return req
 }
