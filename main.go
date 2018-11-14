@@ -13,7 +13,18 @@ func main() {
 		"|5beb505292571b00a14dd31a",
 	)
 
-	// fmt.Println(wrapper.GetUsers(client))
-	fmt.Println(wrapper.GetUser(client, "5bec6ebebaabfc00ab168fa0"))
+	// data, err := wrapper.GetUsers(client)
+	// data, err := wrapper.GetUser(client, "5bec6ebebaabfc00ab168fa0")
+	var newUserDataTest = []byte(`{
+		"logins":       "test",
+		"phoneNumbers": "2035551234",
+		"legalNames":   "none",}`)
+	data, err := wrapper.CreateUser(client, newUserDataTest)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	fmt.Println(string(data))
 
 }
