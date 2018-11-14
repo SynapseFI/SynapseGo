@@ -9,7 +9,10 @@ import (
 )
 
 /********** GLOBAL VARIABLES **********/
-const _url = "http://uat-api.synapsefi.com/v3.1"
+const version = "v3.1"
+
+// const _url = "https://api.synapsefi.com/" + version
+const _url = "https://uat-api.synapsefi.com/" + version
 
 /********** STRUCTS **********/
 
@@ -29,16 +32,27 @@ func NewClient(gateway, ipAddress, userID string) ClientCredentials {
 	}
 }
 
-// GetUser GET method to GET user information
-// *CHECK* Confirm the correct type to return from function
-func GetUser(cred ClientCredentials) map[string]interface{} {
-	url := _url + "/users"
-
-	c := &http.Client{}
+// GetUser GET method for information about single user associated with client
+func GetUser(cred ClientCredentials, userID string) map[string]interface{} {
+	url := _url + "/users/" + userID
 
 	req := updateRequest(cred, "GET", url, nil)
 
-	resp := execRequest(c, req)
+	resp := execRequest(req)
+
+	body := readResponse(resp)
+
+	return jsonifyData(cred, body)
+}
+
+// GetUsers GET method to GET information about users associated with client
+// *CHECK* Confirm the correct type to return from function
+func GetUsers(cred ClientCredentials) map[string]interface{} {
+	url := _url + "/users"
+
+	req := updateRequest(cred, "GET", url, nil)
+
+	resp := execRequest(req)
 
 	body := readResponse(resp)
 
@@ -48,7 +62,9 @@ func GetUser(cred ClientCredentials) map[string]interface{} {
 /********** HELPER FUNCTIONS **********/
 
 // executes request
-func execRequest(client *http.Client, request *http.Request) *http.Response {
+func execRequest(request *http.Request) *http.Response {
+	client := &http.Client{}
+
 	response, err := client.Do(request)
 
 	if err != nil {
