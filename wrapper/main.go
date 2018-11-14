@@ -44,7 +44,7 @@ func NewClient(gateway, ipAddress, userID string) ClientCredentials {
 
 // CreateUser POST method for creating a single user
 func CreateUser(cred ClientCredentials, data []byte) ([]byte, error) {
-	req := setRequest(cred, "POST", _usersURL, bytes.NewReader(data))
+	req := setRequest(cred, "POST", _usersURL, bytes.NewBuffer(data))
 
 	resp := execRequest(req)
 
@@ -83,6 +83,8 @@ func GetUser(cred ClientCredentials, userID string) ([]byte, error) {
 // executes request
 func execRequest(request *http.Request) *http.Response {
 	client := &http.Client{}
+
+	fmt.Println(request)
 
 	response, err := client.Do(request)
 
@@ -137,11 +139,9 @@ func setHeaders(credentials ClientCredentials, request *http.Request) {
 
 // updates request headers with method, url, and body (if applicable)
 func setRequest(credentials ClientCredentials, method, url string, body io.Reader) *http.Request {
-	request, err := http.NewRequest(method, url, nil)
+	request, err := http.NewRequest(method, url, body)
 
 	setHeaders(credentials, request)
-
-	fmt.Println(request)
 
 	if err != nil {
 		fmt.Println(err)
