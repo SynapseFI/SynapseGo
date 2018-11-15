@@ -79,3 +79,13 @@ func setRequest(credentials ClientCredentials, method, url string, body io.Reade
 
 	return request
 }
+
+func handleRequest(credentials ClientCredentials, httpMethod, url string, body io.Reader) ([]byte, error) {
+	request := setRequest(credentials, httpMethod, url, body)
+
+	response := execRequest(request)
+
+	responseData := readResponse(response)
+
+	return formatResponse(credentials, responseData)
+}

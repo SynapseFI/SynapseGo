@@ -36,8 +36,8 @@ func main() {
 	// }`)
 	// data, err := wrapper.CreateUser(client, newUserDataTest)
 
-	// data, err := wrapper.GetClientTransactions(client)
-	data, err := wrapper.GetUserTransactions(client, "5bec6ebebaabfc00ab168fa0")
+	data, err := wrapper.GetClientTransactions(client)
+	// data, err := wrapper.GetUserTransactions(client, "5bec6ebebaabfc00ab168fa0")
 
 	if err != nil {
 		fmt.Println(err)

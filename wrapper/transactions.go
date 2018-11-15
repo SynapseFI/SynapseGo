@@ -7,13 +7,7 @@ const _clientTransactionsURL = _url + "/trans"
 
 // GetClientTransactions returns transactions made by all clients
 func GetClientTransactions(cred ClientCredentials) ([]byte, error) {
-	req := setRequest(cred, "GET", _clientTransactionsURL, nil)
-
-	resp := execRequest(req)
-
-	body := readResponse(resp)
-
-	return formatResponse(cred, body)
+	return handleRequest(cred, "GET", _clientTransactionsURL, nil)
 }
 
 // GetUserTransactions returns transactions made by client users
@@ -21,11 +15,5 @@ func GetClientTransactions(cred ClientCredentials) ([]byte, error) {
 func GetUserTransactions(cred ClientCredentials, userID string) ([]byte, error) {
 	url := _usersURL + "/" + userID + "/trans"
 
-	req := setRequest(cred, "GET", url, nil)
-
-	resp := execRequest(req)
-
-	body := readResponse(resp)
-
-	return formatResponse(cred, body)
+	return handleRequest(cred, "GET", url, nil)
 }
