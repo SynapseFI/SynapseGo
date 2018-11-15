@@ -43,15 +43,15 @@ func formatResponse(credentials ClientCredentials, response []byte) Response {
 	// add userID as "id" to jsonData
 
 	var responseObject Response
-
 	if isOK != false {
-		responseObject.ID = credentials.userID
+		responseObject.ID = payloadData["_id"].(string)
 		responseObject.Payload = payloadData
 	}
 
 	return responseObject
 }
 
+// main handler called by wrapper methods to execute API calls
 func handleRequest(credentials ClientCredentials, httpMethod, url string, body io.Reader) Response {
 	request := setRequest(credentials, httpMethod, url, body)
 
