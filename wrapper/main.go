@@ -11,11 +11,13 @@ import (
 
 /********** GLOBAL VARIABLES **********/
 const version = "v3.1"
+const debugMode = false
 
 // const _url = "https://api.synapsefi.com/" + version
 const _url = "https://uat-api.synapsefi.com/" + version
 
 const _usersURL = _url + "/users"
+const _clientTransactionsURL = _url + "/trans"
 
 /********** STRUCTS **********/
 
@@ -50,7 +52,7 @@ func CreateUser(cred ClientCredentials, data []byte) ([]byte, error) {
 
 	body := readResponse(resp)
 
-	return formatData(cred, body)
+	return formatResponse(cred, body)
 }
 
 // GetUsers GET method to GET information about users associated with client
@@ -62,7 +64,7 @@ func GetUsers(cred ClientCredentials) ([]byte, error) {
 
 	body := readResponse(resp)
 
-	return formatData(cred, body)
+	return formatResponse(cred, body)
 }
 
 // GetUser GET method for information about single user associated with client
@@ -75,7 +77,7 @@ func GetUser(cred ClientCredentials, userID string) ([]byte, error) {
 
 	body := readResponse(resp)
 
-	return formatData(cred, body)
+	return formatResponse(cred, body)
 }
 
 /********** HELPER FUNCTIONS **********/
@@ -103,18 +105,18 @@ func formatPayload(data NewUserData) map[string]interface{} {
 	}
 }
 
-func formatData(credentials ClientCredentials, responseBody []byte) ([]byte, error) {
-	var data interface{}
-	json.Unmarshal(responseBody, &data)
+func formatResponse(credentials ClientCredentials, response []byte) ([]byte, error) {
+	var payload interface{}
+	json.Unmarshal(response, &payload)
 
-	jsonData, isOK := data.(map[string]interface{})
+	data, isOK := payload.(map[string]interface{})
 
 	// add userID as "id" to jsonData
 	if isOK != false {
-		jsonData["id"] = credentials.userID
+		data["id"] = credentials.userID
 	}
 
-	return json.MarshalIndent(jsonData, "", "  ")
+	return json.MarshalIndent(payload, "", "  ")
 }
 
 // reads response from api and returns it in readable format
