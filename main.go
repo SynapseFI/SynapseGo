@@ -14,8 +14,8 @@ func main() {
 		"|5beb505292571b00a14dd31a",
 	)
 
-	// data, err := wrapper.GetUsers(client)
-	data := wrapper.GetUser(client, "5bec6ebebaabfc00ab168fa0")
+	data := wrapper.GetUsers(client)
+	// data := wrapper.GetUser(client, "5bec6ebebaabfc00ab168fa0")
 	// var newUserDataTest = []byte(`{
 	// 	"logins": [
 	// 		{

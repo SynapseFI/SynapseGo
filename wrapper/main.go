@@ -16,9 +16,15 @@ type (
 	}
 	// Payload type declaration
 	Payload map[string]interface{}
-	// Response structure of response to developer
-	Response struct {
-		ID      string
-		Payload Payload
+	// User structure of user object
+	User struct {
+		ID, FullDehydrate string
+		Payload           Payload
+	}
+	// Users sturcture of users object
+	Users struct {
+		Limit, Page, PageCount float64
+		UsersList              []User
+		Payload                Payload
 	}
 )

@@ -6,6 +6,7 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"reflect"
 )
 
 /********** HELPER FUNCTIONS **********/
@@ -25,45 +26,63 @@ func execRequest(request *http.Request) *http.Response {
 	return response
 }
 
-func formatPayload(data NewUserData) map[string]interface{} {
-	return map[string]interface{}{
-		"logins":        data.logins,
-		"phone_numbers": data.phoneNumbers,
-		"legal_names":   data.legalNames,
-	}
+func formatUserObject(payload Payload) User {
+	var user User
+
+	user.ID = payload["_id"].(string)
+	user.FullDehydrate = "yes"
+	user.Payload = payload
+
+	return user
 }
 
-func formatResponse(credentials ClientCredentials, response []byte) Response {
-	// map[string]interface{}
-	var payload interface{}
-	json.Unmarshal(response, &payload)
+func formatMultUserObject(payload Payload, arrName string) Users {
+	var users Users
 
-	payloadData, isOK := payload.(map[string]interface{})
+	users.Limit = payload["limit"].(float64)
+	users.Page = payload["page"].(float64)
+	users.PageCount = payload["page_count"].(float64)
+	users.Payload = payload
 
-	// add userID as "id" to jsonData
+	list := reflect.ValueOf(payload[arrName])
 
-	var responseObject Response
-	if isOK != false {
-		responseObject.ID = payloadData["_id"].(string)
-		responseObject.Payload = payloadData
+	for i := 0; i < list.Len(); i++ {
+		var user User
+		userValue := list.Index(i).Interface().(map[string]interface{})
+		user.ID = userValue["_id"].(string)
+		user.FullDehydrate = "yes"
+		user.Payload = userValue
+
+		users.UsersList = append(users.UsersList, user)
 	}
 
-	return responseObject
+	return users
 }
 
 // main handler called by wrapper methods to execute API calls
-func handleRequest(credentials ClientCredentials, httpMethod, url string, body io.Reader) Response {
+func handleRequest(credentials ClientCredentials, httpMethod, url string, body io.Reader) User {
 	request := setRequest(credentials, httpMethod, url, body)
 
 	response := execRequest(request)
 
 	responseData := readResponse(response)
 
-	return formatResponse(credentials, responseData)
+	return formatUserObject(responseData)
+}
+
+// main handler called by wrapper methods that return multiple users in payload
+func handleRequestMulti(credentials ClientCredentials, httpMethod, url, arrName string, body io.Reader) Users {
+	request := setRequest(credentials, httpMethod, url, body)
+
+	response := execRequest(request)
+
+	responseData := readResponse(response)
+
+	return formatMultUserObject(responseData, arrName)
 }
 
 // reads response from api and returns it in readable format
-func readResponse(response *http.Response) []byte {
+func readResponse(response *http.Response) map[string]interface{} {
 	defer response.Body.Close()
 	body, err := ioutil.ReadAll(response.Body)
 
@@ -71,7 +90,10 @@ func readResponse(response *http.Response) []byte {
 		fmt.Println(err)
 	}
 
-	return body
+	var payload interface{}
+	json.Unmarshal(body, &payload)
+
+	return payload.(map[string]interface{})
 }
 
 // sets client headers using client credentials
@@ -83,8 +105,8 @@ func setHeaders(credentials ClientCredentials, request *http.Request) {
 }
 
 // updates request headers with method, url, and body (if applicable)
-func setRequest(credentials ClientCredentials, method, url string, body io.Reader) *http.Request {
-	request, err := http.NewRequest(method, url, body)
+func setRequest(credentials ClientCredentials, httpMethod, url string, body io.Reader) *http.Request {
+	request, err := http.NewRequest(httpMethod, url, body)
 
 	setHeaders(credentials, request)
 
