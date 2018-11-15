@@ -2,6 +2,7 @@ package main
 
 import (
 	"api-wrapper/wrapper"
+	"encoding/json"
 	"fmt"
 )
 
@@ -14,7 +15,7 @@ func main() {
 	)
 
 	// data, err := wrapper.GetUsers(client)
-	// data, err := wrapper.GetUser(client, "5bec6ebebaabfc00ab168fa0")
+	data := wrapper.GetUser(client, "5bec6ebebaabfc00ab168fa0")
 	// var newUserDataTest = []byte(`{
 	// 	"logins": [
 	// 		{
@@ -36,12 +37,17 @@ func main() {
 	// }`)
 	// data, err := wrapper.CreateUser(client, newUserDataTest)
 
-	data, err := wrapper.GetClientTransactions(client)
+	// data, err := wrapper.GetClientTransactions(client)
 	// data, err := wrapper.GetUserTransactions(client, "5bec6ebebaabfc00ab168fa0")
 
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
+
+	payload, err := json.MarshalIndent(data, "", "  ")
+
 	if err != nil {
-		fmt.Println(err)
 	}
 
-	fmt.Println(string(data))
+	fmt.Println(string(payload))
 }

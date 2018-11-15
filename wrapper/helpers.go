@@ -33,18 +33,33 @@ func formatPayload(data NewUserData) map[string]interface{} {
 	}
 }
 
-func formatResponse(credentials ClientCredentials, response []byte) ([]byte, error) {
+func formatResponse(credentials ClientCredentials, response []byte) Response {
+	// map[string]interface{}
 	var payload interface{}
 	json.Unmarshal(response, &payload)
 
-	data, isOK := payload.(map[string]interface{})
+	payloadData, isOK := payload.(map[string]interface{})
 
 	// add userID as "id" to jsonData
+
+	var responseObject Response
+
 	if isOK != false {
-		data["id"] = credentials.userID
+		responseObject.ID = credentials.userID
+		responseObject.Payload = payloadData
 	}
 
-	return json.MarshalIndent(payload, "", "  ")
+	return responseObject
+}
+
+func handleRequest(credentials ClientCredentials, httpMethod, url string, body io.Reader) Response {
+	request := setRequest(credentials, httpMethod, url, body)
+
+	response := execRequest(request)
+
+	responseData := readResponse(response)
+
+	return formatResponse(credentials, responseData)
 }
 
 // reads response from api and returns it in readable format
@@ -78,14 +93,4 @@ func setRequest(credentials ClientCredentials, method, url string, body io.Reade
 	}
 
 	return request
-}
-
-func handleRequest(credentials ClientCredentials, httpMethod, url string, body io.Reader) ([]byte, error) {
-	request := setRequest(credentials, httpMethod, url, body)
-
-	response := execRequest(request)
-
-	responseData := readResponse(response)
-
-	return formatResponse(credentials, responseData)
 }

@@ -15,18 +15,18 @@ type NewUserData struct {
 /********** METHODS **********/
 
 // CreateUser POST method for creating a single user
-func CreateUser(cred ClientCredentials, data []byte) ([]byte, error) {
+func CreateUser(cred ClientCredentials, data []byte) Response {
 	return handleRequest(cred, "POST", _usersURL, bytes.NewBuffer(data))
 }
 
 // GetUsers GET method to GET information about users associated with client
 // *CHECK* Confirm the correct type to return from function
-func GetUsers(cred ClientCredentials) ([]byte, error) {
+func GetUsers(cred ClientCredentials) Response {
 	return handleRequest(cred, "GET", _usersURL, nil)
 }
 
 // GetUser GET method for information about single user associated with client
-func GetUser(cred ClientCredentials, userID string) ([]byte, error) {
+func GetUser(cred ClientCredentials, userID string) Response {
 	url := _usersURL + "/" + userID
 
 	return handleRequest(cred, "GET", url, nil)

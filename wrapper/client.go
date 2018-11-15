@@ -12,7 +12,7 @@ func NewClient(gateway, ipAddress, userID string) ClientCredentials {
 /********** METHODS **********/
 
 // GetPublicKey returns public key
-func GetPublicKey(cred ClientCredentials) ([]byte, error) {
+func GetPublicKey(cred ClientCredentials, scope []string) Response {
 	url := _url + "/client?issue_public_key=YES"
 	return handleRequest(cred, "GET", url, nil)
 }
