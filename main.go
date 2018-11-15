@@ -15,31 +15,33 @@ func main() {
 
 	// data, err := wrapper.GetUsers(client)
 	// data, err := wrapper.GetUser(client, "5bec6ebebaabfc00ab168fa0")
-	var newUserDataTest = []byte(`{
-		"logins": [
-			{
-				"email": "test@synapsefi.com"
-			}
-		],
-		"phone_numbers": [
-			"901.111.1111",
-			"test@synapsefi.com"
-		],
-		"legal_names": [
-			"Test User"
-		],
-		"extra": {
-			"supp_id": "122eddfgbeafrfvbbb",
-			"cip_tag":1,
-			"is_business": false
-		}
-	}`)
-	data, err := wrapper.CreateUser(client, newUserDataTest)
+	// var newUserDataTest = []byte(`{
+	// 	"logins": [
+	// 		{
+	// 			"email": "test@synapsefi.com"
+	// 		}
+	// 	],
+	// 	"phone_numbers": [
+	// 		"901.111.1111",
+	// 		"test@synapsefi.com"
+	// 	],
+	// 	"legal_names": [
+	// 		"Test User"
+	// 	],
+	// 	"extra": {
+	// 		"supp_id": "122eddfgbeafrfvbbb",
+	// 		"cip_tag":1,
+	// 		"is_business": false
+	// 	}
+	// }`)
+	// data, err := wrapper.CreateUser(client, newUserDataTest)
+
+	// data, err := wrapper.GetClientTransactions(client)
+	data, err := wrapper.GetUserTransactions(client, "5bec6ebebaabfc00ab168fa0")
 
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	fmt.Println("POST Response", string(data))
-
+	fmt.Println(string(data))
 }
