@@ -8,3 +8,9 @@ func NewClient(gateway, ipAddress, userID string) ClientCredentials {
 		userID:    userID,
 	}
 }
+
+// GetPublicKey returns public key
+func GetPublicKey(cred ClientCredentials) ([]byte, error) {
+	url := _url + "/client?issue_public_key=YES"
+	return handleRequest(cred, "GET", url, nil)
+}

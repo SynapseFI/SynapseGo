@@ -1,5 +1,7 @@
 package wrapper
 
+/********** METHODS **********/
+
 // GetUserNodes returns all the nodes associated with a user
 func GetUserNodes(cred ClientCredentials, userID string) ([]byte, error) {
 	url := _usersURL + "/" + userID + "/nodes"

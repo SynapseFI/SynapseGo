@@ -1,0 +1,9 @@
+package wrapper
+
+/********** METHODS **********/
+
+// DummyTransactions trigger external dummy transactions on deposit or card accounts
+func DummyTransactions(cred ClientCredentials, userID, nodeID string) ([]byte, error) {
+	url := _usersURL + "/" + userID + "/nodes" + nodeID + "dummy-tran"
+	return handleRequest(cred, "GET", url, nil)
+}

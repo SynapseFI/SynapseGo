@@ -3,7 +3,9 @@ package wrapper
 /********** GLOBAL VARIABLES **********/
 const _institutionsURL = _url + "/institutions"
 
-// GetInstitutions returns all the nodes associated with a user
+/********** METHODS **********/
+
+// GetInstitutions returns all the institutions
 func GetInstitutions(cred ClientCredentials) ([]byte, error) {
 	return handleRequest(cred, "GET", _institutionsURL, nil)
 }
