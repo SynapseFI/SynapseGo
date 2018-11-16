@@ -100,6 +100,26 @@ func readResponse(response *http.Response) map[string]interface{} {
 	return payload.(map[string]interface{})
 }
 
+func makeHeader(h Headers, r *http.Request) {
+	for k := range h {
+		r.Header.Set(k, h[k])
+	}
+
+	r.Header.Set("content-type", "application/json")
+}
+
+func createRequest(headers Headers, httpMethod, url string, body io.Reader) *http.Request {
+	request, err := http.NewRequest(httpMethod, url, body)
+
+	if err != nil {
+		errorLog(err)
+	}
+
+	makeHeader(headers, request)
+
+	return request
+}
+
 // sets client headers using client credentials
 func setHeaders(credentials *ClientCredentials, request *http.Request) {
 	request.Header.Set("x-sp-gateway", credentials.gateway)
@@ -111,7 +131,6 @@ func setHeaders(credentials *ClientCredentials, request *http.Request) {
 // updates request headers with method, url, and body (if applicable)
 func setRequest(credentials *ClientCredentials, httpMethod, url string, body io.Reader) *http.Request {
 	request, err := http.NewRequest(httpMethod, url, body)
-
 	setHeaders(credentials, request)
 
 	if err != nil {

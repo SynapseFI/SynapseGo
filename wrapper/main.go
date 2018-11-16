@@ -4,6 +4,7 @@ package wrapper
 
 const version = "v3.1"
 
+var authKey string
 var developerMode = false
 
 // const _url = "https://api.synapsefi.com/" + version
@@ -16,6 +17,9 @@ type (
 	ClientCredentials struct {
 		gateway, ipAddress, userID string
 	}
+
+	// Headers represent headers used in http requests
+	Headers map[string]string
 
 	// A Node represents a single node object
 	Node struct {
