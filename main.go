@@ -14,7 +14,7 @@ func main() {
 		"|5beb505292571b00a14dd31a",
 	)
 
-	// data := wrapper.GetUsers(client)
+	data := client.GetUsers(client)
 	// data := wrapper.GetUser(client, "5bec6ebebaabfc00ab168fa0")
 	// var newUserDataTest = []byte(`{
 	// 	"logins": [
@@ -40,7 +40,7 @@ func main() {
 	// data := wrapper.GetClientTransactions(client)
 	// data, err := wrapper.GetUserTransactions(client, "5bec6ebebaabfc00ab168fa0")
 	// data := wrapper.GetSubscriptions(client)
-	data := wrapper.GetInstitutions(client)
+	// data := wrapper.GetInstitutions(client)
 
 	// if err != nil {
 	// 	fmt.Println(err)
