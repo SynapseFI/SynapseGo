@@ -1,5 +1,7 @@
 package wrapper
 
+/********** METHODS **********/
+
 // NewClient creation of client object
 func NewClient(gateway, ipAddress, userID string, devMode ...bool) ClientCredentials {
 	if len(devMode) == 1 && devMode[0] == true {
@@ -12,8 +14,6 @@ func NewClient(gateway, ipAddress, userID string, devMode ...bool) ClientCredent
 		userID:    userID,
 	}
 }
-
-/********** METHODS **********/
 
 // GetPublicKey returns public key
 func GetPublicKey(cred ClientCredentials, scope []string) User {

@@ -25,9 +25,11 @@ func execRequest(request *http.Request) *http.Response {
 func formatUserObject(payload Payload) User {
 	var user User
 
-	user.ID = payload["_id"].(string)
-	user.FullDehydrate = "yes"
-	user.Payload = payload
+	if payload["_id"] != nil {
+		user.ID = payload["_id"].(string)
+		user.FullDehydrate = "yes"
+		user.Payload = payload
+	}
 
 	return user
 }
@@ -40,16 +42,18 @@ func formatMultiUserObject(payload Payload, arrName string) Users {
 	users.PageCount = payload["page_count"].(float64)
 	users.Payload = payload
 
-	list := reflect.ValueOf(payload[arrName])
+	if payload[arrName] != nil {
+		list := reflect.ValueOf(payload[arrName])
 
-	for i := 0; i < list.Len(); i++ {
-		var user User
-		userValue := list.Index(i).Interface().(map[string]interface{})
-		user.ID = userValue["_id"].(string)
-		user.FullDehydrate = "yes"
-		user.Payload = userValue
+		for i := 0; i < list.Len(); i++ {
+			var user User
+			userValue := list.Index(i).Interface().(map[string]interface{})
+			user.ID = userValue["_id"].(string)
+			user.FullDehydrate = "yes"
+			user.Payload = userValue
 
-		users.UsersList = append(users.UsersList, user)
+			users.UsersList = append(users.UsersList, user)
+		}
 	}
 
 	return users
