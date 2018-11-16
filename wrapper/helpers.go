@@ -26,7 +26,7 @@ func formatUserObject(payload Payload) User {
 	var user User
 
 	if payload["_id"] != nil {
-		user.ID = payload["_id"].(string)
+		user.UserID = payload["_id"].(string)
 		user.FullDehydrate = "yes"
 		user.Payload = payload
 	}
@@ -37,18 +37,21 @@ func formatUserObject(payload Payload) User {
 func formatMultiUserObject(payload Payload, arrName string) Users {
 	var users Users
 
-	users.Limit = payload["limit"].(float64)
-	users.Page = payload["page"].(float64)
-	users.PageCount = payload["page_count"].(float64)
-	users.Payload = payload
+	if payload[arrName] != nil {
+		users.Limit = payload["limit"].(float64)
+		users.Page = payload["page"].(float64)
+		users.PageCount = payload["page_count"].(float64)
+		users.Payload = payload
+	}
 
 	if payload[arrName] != nil {
 		list := reflect.ValueOf(payload[arrName])
 
 		for i := 0; i < list.Len(); i++ {
 			var user User
+
 			userValue := list.Index(i).Interface().(map[string]interface{})
-			user.ID = userValue["_id"].(string)
+			user.UserID = userValue["_id"].(string)
 			user.FullDehydrate = "yes"
 			user.Payload = userValue
 
@@ -83,6 +86,8 @@ func handleRequestMulti(credentials *ClientCredentials, httpMethod, url, arrName
 
 // reads response from api and returns it in readable format
 func readResponse(response *http.Response) map[string]interface{} {
+	var payload interface{}
+
 	defer response.Body.Close()
 	body, err := ioutil.ReadAll(response.Body)
 
@@ -90,7 +95,6 @@ func readResponse(response *http.Response) map[string]interface{} {
 		errorLog(err)
 	}
 
-	var payload interface{}
 	json.Unmarshal(body, &payload)
 
 	return payload.(map[string]interface{})
