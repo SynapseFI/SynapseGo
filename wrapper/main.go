@@ -1,8 +1,15 @@
 package wrapper
 
+import (
+	"github.com/sirupsen/logrus"
+)
+
+var logger = logrus.New()
+
 /********** GLOBAL VARIABLES **********/
 const version = "v3.1"
-const debugMode = false
+
+var developerMode = false
 
 // const _url = "https://api.synapsefi.com/" + version
 const _url = "https://uat-api.synapsefi.com/" + version
@@ -14,14 +21,17 @@ type (
 	ClientCredentials struct {
 		gateway, ipAddress, userID string
 	}
+
 	// Payload type declaration
 	Payload map[string]interface{}
+
 	// User structure of user object
 	User struct {
 		ID, FullDehydrate string
 		Payload           Payload
 	}
-	// Users sturcture of users object
+
+	// Users structure of users object
 	Users struct {
 		Limit, Page, PageCount float64
 		UsersList              []User

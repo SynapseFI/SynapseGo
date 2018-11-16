@@ -6,6 +6,6 @@ const _subscriptionsURL = _url + "/subscriptions"
 /********** METHODS **********/
 
 // GetSubscriptions returns all the subscriptions
-func GetSubscriptions(cred ClientCredentials) User {
-	return handleRequest(cred, "GET", _subscriptionsURL, nil)
+func GetSubscriptions(cred ClientCredentials) Users {
+	return handleRequestMulti(cred, "GET", _subscriptionsURL, "subscriptions ", nil)
 }

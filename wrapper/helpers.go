@@ -2,7 +2,6 @@ package wrapper
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -14,13 +13,10 @@ import (
 // executes request
 func execRequest(request *http.Request) *http.Response {
 	client := &http.Client{}
-
-	fmt.Println(request)
-
 	response, err := client.Do(request)
 
 	if err != nil {
-		fmt.Println(err)
+		errorLog(err)
 	}
 
 	return response
@@ -36,7 +32,7 @@ func formatUserObject(payload Payload) User {
 	return user
 }
 
-func formatMultUserObject(payload Payload, arrName string) Users {
+func formatMultiUserObject(payload Payload, arrName string) Users {
 	var users Users
 
 	users.Limit = payload["limit"].(float64)
@@ -78,7 +74,7 @@ func handleRequestMulti(credentials ClientCredentials, httpMethod, url, arrName 
 
 	responseData := readResponse(response)
 
-	return formatMultUserObject(responseData, arrName)
+	return formatMultiUserObject(responseData, arrName)
 }
 
 // reads response from api and returns it in readable format
@@ -87,7 +83,7 @@ func readResponse(response *http.Response) map[string]interface{} {
 	body, err := ioutil.ReadAll(response.Body)
 
 	if err != nil {
-		fmt.Println(err)
+		errorLog(err)
 	}
 
 	var payload interface{}
@@ -111,7 +107,7 @@ func setRequest(credentials ClientCredentials, httpMethod, url string, body io.R
 	setHeaders(credentials, request)
 
 	if err != nil {
-		fmt.Println(err)
+		errorLog(err)
 	}
 
 	return request
