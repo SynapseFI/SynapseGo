@@ -1,11 +1,5 @@
 package wrapper
 
-import (
-	"github.com/sirupsen/logrus"
-)
-
-var logger = logrus.New()
-
 /********** GLOBAL VARIABLES **********/
 const version = "v3.1"
 
