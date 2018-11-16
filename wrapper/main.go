@@ -1,6 +1,7 @@
 package wrapper
 
 /********** GLOBAL VARIABLES **********/
+
 const version = "v3.1"
 
 var developerMode = false
