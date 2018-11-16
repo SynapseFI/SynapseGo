@@ -16,8 +16,8 @@ func NewClient(gateway, ipAddress, userID string, devMode ...bool) ClientCredent
 }
 
 // GetPublicKey returns public key
-func GetPublicKey(cred ClientCredentials, scope []string) User {
+func (c *ClientCredentials) GetPublicKey(scope []string) User {
 	url := _url + "/client?issue_public_key=YES"
 
-	return handleRequest(cred, "GET", url, nil)
+	return handleRequest(c, "GET", url, nil)
 }

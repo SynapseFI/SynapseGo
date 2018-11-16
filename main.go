@@ -14,8 +14,8 @@ func main() {
 		"|5beb505292571b00a14dd31a",
 	)
 
-	data := client.GetUsers(client)
-	// data := wrapper.GetUser(client, "5bec6ebebaabfc00ab168fa0")
+	// data := client.GetUsers()
+	// data := client.GetUser("5bec6ebebaabfc00ab168fa0")
 	// var newUserDataTest = []byte(`{
 	// 	"logins": [
 	// 		{
@@ -35,12 +35,12 @@ func main() {
 	// 		"is_business": false
 	// 	}
 	// }`)
-	// data, err := wrapper.CreateUser(client, newUserDataTest)
+	// data := client.CreateUser(newUserDataTest)
 
-	// data := wrapper.GetClientTransactions(client)
-	// data, err := wrapper.GetUserTransactions(client, "5bec6ebebaabfc00ab168fa0")
-	// data := wrapper.GetSubscriptions(client)
-	// data := wrapper.GetInstitutions(client)
+	data := client.GetClientTransactions()
+	// data := client.GetUserTransactions("5bec6ebebaabfc00ab168fa0")
+	// data := client.GetSubscriptions()
+	// data := client.GetInstitutions()
 
 	// if err != nil {
 	// 	fmt.Println(err)

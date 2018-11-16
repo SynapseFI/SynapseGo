@@ -60,7 +60,7 @@ func formatMultiUserObject(payload Payload, arrName string) Users {
 }
 
 // main handler called by wrapper methods to execute API calls
-func handleRequest(credentials ClientCredentials, httpMethod, url string, body io.Reader) User {
+func handleRequest(credentials *ClientCredentials, httpMethod, url string, body io.Reader) User {
 	request := setRequest(credentials, httpMethod, url, body)
 
 	response := execRequest(request)
@@ -71,7 +71,7 @@ func handleRequest(credentials ClientCredentials, httpMethod, url string, body i
 }
 
 // main handler called by wrapper methods that return multiple users in payload
-func handleRequestMulti(credentials ClientCredentials, httpMethod, url, arrName string, body io.Reader) Users {
+func handleRequestMulti(credentials *ClientCredentials, httpMethod, url, arrName string, body io.Reader) Users {
 	request := setRequest(credentials, httpMethod, url, body)
 
 	response := execRequest(request)
@@ -97,7 +97,7 @@ func readResponse(response *http.Response) map[string]interface{} {
 }
 
 // sets client headers using client credentials
-func setHeaders(credentials ClientCredentials, request *http.Request) {
+func setHeaders(credentials *ClientCredentials, request *http.Request) {
 	request.Header.Set("x-sp-gateway", credentials.gateway)
 	request.Header.Set("x-sp-user-ip", credentials.ipAddress)
 	request.Header.Set("x-sp-user", credentials.userID)
@@ -105,7 +105,7 @@ func setHeaders(credentials ClientCredentials, request *http.Request) {
 }
 
 // updates request headers with method, url, and body (if applicable)
-func setRequest(credentials ClientCredentials, httpMethod, url string, body io.Reader) *http.Request {
+func setRequest(credentials *ClientCredentials, httpMethod, url string, body io.Reader) *http.Request {
 	request, err := http.NewRequest(httpMethod, url, body)
 
 	setHeaders(credentials, request)
