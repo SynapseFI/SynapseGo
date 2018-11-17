@@ -11,7 +11,7 @@ import (
 func (c *ClientCredentials) OAuth(userID, refreshToken string) *http.Response {
 	url := _url + "/oauth/" + userID
 
-	var h Headers
+	var h Header
 	h["x-sp-gateway"] = c.gateway
 	h["x-sp-user-ip"] = c.ipAddress
 	h["x-sp-user"] = c.userID

@@ -18,8 +18,8 @@ type (
 		gateway, ipAddress, userID string
 	}
 
-	// Headers represent headers used in http requests
-	Headers map[string]string
+	// Header represents headers used in http requests
+	Header map[string]string
 
 	// A Node represents a single node object
 	Node struct {
@@ -74,4 +74,6 @@ type (
 		UsersList              []User
 		Payload                Payload
 	}
+
+	UserTest map[string]interface{}
 )

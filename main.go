@@ -2,7 +2,6 @@ package main
 
 import (
 	"api-wrapper/wrapper"
-	"encoding/json"
 	"fmt"
 )
 
@@ -15,7 +14,7 @@ func main() {
 	)
 
 	// data := client.GetUsers()
-	// data := client.GetUser("5bec6ebebaabfc00ab168fa0")
+	data := client.GetUser("5bec6ebebaabfc00ab168fa0")
 	// var newUserDataTest = []byte(`{
 	// 	"logins": [
 	// 		{
@@ -48,10 +47,11 @@ func main() {
 	// 	fmt.Println(err)
 	// }
 
-	payload, err := json.MarshalIndent(data, "", "  ")
+	// payload, err := json.MarshalIndent(data, "", "  ")
 
-	if err != nil {
-	}
+	// if err != nil {
+	// }
 
-	fmt.Println(string(payload))
+	// fmt.Println(string(payload))
+	fmt.Println(data.UserID)
 }

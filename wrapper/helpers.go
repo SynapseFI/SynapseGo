@@ -100,7 +100,7 @@ func readResponse(response *http.Response) map[string]interface{} {
 	return payload.(map[string]interface{})
 }
 
-func makeHeader(h Headers, r *http.Request) {
+func makeHeader(h Header, r *http.Request) {
 	for k := range h {
 		r.Header.Set(k, h[k])
 	}
@@ -108,7 +108,7 @@ func makeHeader(h Headers, r *http.Request) {
 	r.Header.Set("content-type", "application/json")
 }
 
-func createRequest(headers Headers, httpMethod, url string, body io.Reader) *http.Request {
+func createRequest(headers Header, httpMethod, url string, body io.Reader) *http.Request {
 	request, err := http.NewRequest(httpMethod, url, body)
 
 	if err != nil {
