@@ -2,6 +2,7 @@ package wrapper
 
 import (
 	"bytes"
+	"reflect"
 
 	"github.com/fatih/structs"
 )
@@ -19,25 +20,28 @@ type NewUserData struct {
 /********** METHODS **********/
 
 // CreateUser POST method for creating a single user
-func (c *ClientCredentials) CreateUser(data []byte) User {
-	return handleRequest(c, "POST", _usersURL, bytes.NewBuffer(data))
+func (c *ClientCredentials) CreateUser(body []byte) map[string]interface{} {
+	header := genHeader(c)
+	req := createRequest(header, "POST", _usersURL, bytes.NewBuffer(body))
+	res := execRequest(req)
+	data := readResponse(res)
+
+	return formatResponse(data, "user")
+	// return handleRequest(c, "POST", _usersURL, bytes.NewBuffer(data))
 }
 
 // GetUsers GET method to GET information about users associated with client
-// *CHECK* Confirm the correct type to return from function
-func (c *ClientCredentials) GetUsers() Users {
+func (c *ClientCredentials) GetUsers() map[string]interface{} {
 	header := genHeader(c)
 	req := createRequest(header, "GET", _usersURL, nil)
 	res := execRequest(req)
 	data := readResponse(res)
 
-	return formatMultiUserObject(data, "users")
-
-	// return handleRequestMulti(c, "GET", _usersURL, "users", nil)
+	return formatResponse(data, "users")
 }
 
 // GetUser GET method for information about single user associated with client
-func (c *ClientCredentials) GetUser(userID string) User {
+func (c *ClientCredentials) GetUser(userID string) map[string]interface{} {
 	url := _usersURL + "/" + userID
 
 	header := genHeader(c)
@@ -46,47 +50,48 @@ func (c *ClientCredentials) GetUser(userID string) User {
 	data := readResponse(res)
 
 	return formatResponse(data, "user")
-	// return testResponse(data, "user")
-	// return handleRequest(c, "GET", url, nil)
 }
 
 // HELPERS
 
-func testResponse(payload Payload, name string) map[string]interface{} {
-	// var response UserTest
-	var user User
+func formatResponse(payload Payload, name string) map[string]interface{} {
+	var response map[string]interface{}
 
 	switch name {
-	case "user":
-		// response["userID"] = payload["_id"].(string)
-		// response["fullDehydrate"] = "yes"
-		// response["payload"] = payload
-		// }
+	case "users":
+		response = structs.Map(formatUsers(payload, name))
 
-		// user := UserTest{
-		// 	"userID":        payload["_id"].(string),
-		// 	"fullDehydrate": "yes",
-		// 	"payload":       payload,
-		// }
-		// if payload["_id"] != nil {
-		user.UserID = payload["_id"].(string)
-		user.FullDehydrate = "yes"
-		user.Payload = payload
+	default:
+		response = structs.Map(formatUser(payload))
 	}
 
-	// return response
-	return structs.Map(user)
+	return response
 }
 
-func formatResponse(payload Payload, name string) User {
+func formatUser(p Payload) User {
 	var user User
-	if payload["_id"] != nil {
-		user.UserID = payload["_id"].(string)
-		user.FullDehydrate = "yes"
-		user.Payload = payload
-	}
+	user.UserID = p["_id"].(string)
+	user.FullDehydrate = "yes"
+	user.Payload = p
 
 	return user
+}
+
+func formatUsers(p Payload, n string) Users {
+	var users Users
+	users.Limit = p["limit"].(float64)
+	users.Page = p["page"].(float64)
+	users.PageCount = p["page_count"].(float64)
+	users.Payload = p
+
+	list := reflect.ValueOf(p[n])
+
+	for i := 0; i < list.Len(); i++ {
+		user := list.Index(i).Interface().(map[string]interface{})
+		users.UserList = append(users.UserList, formatUser(user))
+	}
+
+	return users
 }
 
 func genHeader(cred *ClientCredentials) Header {

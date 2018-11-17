@@ -55,7 +55,7 @@ func formatMultiUserObject(payload Payload, arrName string) Users {
 			user.FullDehydrate = "yes"
 			user.Payload = userValue
 
-			users.UsersList = append(users.UsersList, user)
+			users.UserList = append(users.UserList, user)
 		}
 	}
 

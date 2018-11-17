@@ -71,7 +71,7 @@ type (
 	// Users represents multiple user objects
 	Users struct {
 		Limit, Page, PageCount float64
-		UsersList              []User
+		UserList               []User
 		Payload                Payload
 	}
 

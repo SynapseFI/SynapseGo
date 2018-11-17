@@ -13,8 +13,8 @@ func main() {
 		"|5beb505292571b00a14dd31a",
 	)
 
-	// data := client.GetUsers()
-	data := client.GetUser("5bec6ebebaabfc00ab168fa0")
+	data := client.GetUsers()
+	// data := client.GetUser("5bec6ebebaabfc00ab168fa0")
 	// var newUserDataTest = []byte(`{
 	// 	"logins": [
 	// 		{
@@ -52,6 +52,6 @@ func main() {
 	// if err != nil {
 	// }
 
-	// fmt.Println(string(payload))
-	fmt.Println(data.UserID)
+	// fmt.Println(data["UserList"])
+	fmt.Println(data)
 }
