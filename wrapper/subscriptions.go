@@ -32,3 +32,33 @@ func (c *ClientCredentials) GetSubscription(subID string) map[string]interface{}
 
 	return format(body)
 }
+
+// CreateSubscription creates a subscription and returns the subscription data
+func (c *ClientCredentials) CreateSubscription(data string) map[string]interface{} {
+	res, body, errs := request.
+		Send(data).
+		Post(subsURL).
+		EndBytes()
+
+	if res != nil && errs != nil {
+		errorLog(errs)
+	}
+
+	return format(body)
+}
+
+// UpdateSubscription updates an existing subscription
+func (c *ClientCredentials) UpdateSubscription(subID string, data string) map[string]interface{} {
+	url := subsURL + "/" + subID
+
+	res, body, errs := request.
+		Send(data).
+		Put(url).
+		EndBytes()
+
+	if res != nil && errs != nil {
+		errorLog(errs)
+	}
+
+	return format(body)
+}
