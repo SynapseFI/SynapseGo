@@ -8,9 +8,14 @@ func NewClient(gateway, ipAddress, userID string, devMode ...bool) ClientCredent
 		developerMode = true
 	}
 
-	return ClientCredentials{
+	credentials := ClientCredentials{
 		gateway:   gateway,
 		ipAddress: ipAddress,
 		userID:    userID,
 	}
+
+	// set default headers
+	header(&credentials, "")
+
+	return credentials
 }

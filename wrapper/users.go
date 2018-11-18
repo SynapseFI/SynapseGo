@@ -5,37 +5,26 @@ const usersURL = _url + "/users"
 
 // GetUsers returns a list of users
 func (c *ClientCredentials) GetUsers() map[string]interface{} {
-	response, body, errs := request.Get(usersURL).
-		Set("x-sp-gateway", c.gateway).
-		Set("x-sp-user-ip", c.ipAddress).
-		Set("x-sp-user", c.userID).
+	res, bytesBody, errs := request.
+		Get(usersURL).
 		EndBytes()
 
-	if response != nil {
-		// fmt.Println(response)
-	}
-
-	if errs != nil {
+	if res != nil && errs != nil {
 		errorLog(errs)
 	}
 
-	return format(body)
+	return format(bytesBody)
 }
 
 // GetUser returns a single user
 func (c *ClientCredentials) GetUser(userID string) map[string]interface{} {
 	url := usersURL + "/" + userID
 
-	response, bytesBody, errs := request.Get(url).
-		Set("x-sp-gateway", c.gateway).
-		Set("x-sp-user-ip", c.ipAddress).
-		Set("x-sp-user", c.userID).
+	res, bytesBody, errs := request.
+		Get(url).
 		EndBytes()
 
-	if response != nil {
-	}
-
-	if errs != nil {
+	if res != nil && errs != nil {
 		errorLog(errs)
 	}
 
@@ -44,17 +33,12 @@ func (c *ClientCredentials) GetUser(userID string) map[string]interface{} {
 
 // CreateUser creates a single user and returns the new user data
 func (c *ClientCredentials) CreateUser(data string) map[string]interface{} {
-	response, bytesBody, errs := request.Post(usersURL).
-		Set("x-sp-gateway", c.gateway).
-		Set("x-sp-user-ip", c.ipAddress).
-		Set("x-sp-user", c.userID).
+	res, bytesBody, errs := request.
 		Send(data).
+		Post(usersURL).
 		EndBytes()
 
-	if response != nil {
-	}
-
-	if errs != nil {
+	if res != nil && errs != nil {
 		errorLog(errs)
 	}
 

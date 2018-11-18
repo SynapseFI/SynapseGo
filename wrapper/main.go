@@ -79,6 +79,4 @@ type (
 		UserList               []User
 		Payload                Payload
 	}
-
-	UserTest map[string]interface{}
 )
