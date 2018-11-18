@@ -21,8 +21,7 @@ type NewUserData struct {
 
 // CreateUser POST method for creating a single user
 func (c *ClientCredentials) CreateUser(body []byte) map[string]interface{} {
-	header := genHeader(c)
-	req := createRequest(header, "POST", _usersURL, bytes.NewBuffer(body))
+	req := createRequest("POST", _usersURL, bytes.NewBuffer(body))
 	res := execRequest(req)
 	data := readResponse(res)
 
@@ -32,8 +31,7 @@ func (c *ClientCredentials) CreateUser(body []byte) map[string]interface{} {
 
 // GetUsers GET method to GET information about users associated with client
 func (c *ClientCredentials) GetUsers() map[string]interface{} {
-	header := genHeader(c)
-	req := createRequest(header, "GET", _usersURL, nil)
+	req := createRequest("GET", _usersURL, nil)
 	res := execRequest(req)
 	data := readResponse(res)
 
@@ -44,8 +42,7 @@ func (c *ClientCredentials) GetUsers() map[string]interface{} {
 func (c *ClientCredentials) GetUser(userID string) map[string]interface{} {
 	url := _usersURL + "/" + userID
 
-	header := genHeader(c)
-	req := createRequest(header, "GET", url, nil)
+	req := createRequest("GET", url, nil)
 	res := execRequest(req)
 	data := readResponse(res)
 
@@ -92,13 +89,4 @@ func formatUsers(p Payload, n string) Users {
 	}
 
 	return users
-}
-
-func genHeader(cred *ClientCredentials) Header {
-	header := make(Header)
-	header["x-sp-gateway"] = cred.gateway
-	header["x-sp-user-ip"] = cred.ipAddress
-	header["x-sp-user"] = cred.userID
-
-	return header
 }
