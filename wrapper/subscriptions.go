@@ -1,14 +1,14 @@
 package wrapper
 
 /********** GLOBAL VARIABLES **********/
-const instiURL = _url + "/institutions"
+const subsURL = _url + "/subscriptions"
 
 /********** METHODS **********/
 
-// GetInstitutions returns all of the nodes associated with a user
-func (c *ClientCredentials) GetInstitutions() map[string]interface{} {
+// GetSubscriptions returns all of the nodes associated with a user
+func (c *ClientCredentials) GetSubscriptions() map[string]interface{} {
 	res, body, errs := request.
-		Get(instiURL).
+		Get(subsURL).
 		EndBytes()
 
 	if res != nil && errs != nil {
