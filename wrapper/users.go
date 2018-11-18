@@ -3,9 +3,11 @@ package wrapper
 /*********** GLOBAL VARIABLES ***********/
 const usersURL = _url + "/users"
 
+/********** METHODS **********/
+
 // GetUsers returns a list of users
 func (c *ClientCredentials) GetUsers() map[string]interface{} {
-	res, bytesBody, errs := request.
+	res, body, errs := request.
 		Get(usersURL).
 		EndBytes()
 
@@ -13,14 +15,14 @@ func (c *ClientCredentials) GetUsers() map[string]interface{} {
 		errorLog(errs)
 	}
 
-	return format(bytesBody)
+	return format(body)
 }
 
 // GetUser returns a single user
 func (c *ClientCredentials) GetUser(userID string) map[string]interface{} {
 	url := usersURL + "/" + userID
 
-	res, bytesBody, errs := request.
+	res, body, errs := request.
 		Get(url).
 		EndBytes()
 
@@ -28,12 +30,12 @@ func (c *ClientCredentials) GetUser(userID string) map[string]interface{} {
 		errorLog(errs)
 	}
 
-	return format(bytesBody)
+	return format(body)
 }
 
 // CreateUser creates a single user and returns the new user data
 func (c *ClientCredentials) CreateUser(data string) map[string]interface{} {
-	res, bytesBody, errs := request.
+	res, body, errs := request.
 		Send(data).
 		Post(usersURL).
 		EndBytes()
@@ -42,5 +44,5 @@ func (c *ClientCredentials) CreateUser(data string) map[string]interface{} {
 		errorLog(errs)
 	}
 
-	return format(bytesBody)
+	return format(body)
 }
