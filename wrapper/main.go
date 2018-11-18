@@ -1,11 +1,16 @@
 package wrapper
 
+import (
+	"github.com/parnurzeal/gorequest"
+)
+
 /********** GLOBAL VARIABLES **********/
 
 const version = "v3.1"
 
 var authKey string
 var developerMode = false
+var request = gorequest.New()
 
 // const _url = "https://api.synapsefi.com/" + version
 const _url = "https://uat-api.synapsefi.com/" + version

@@ -13,28 +13,28 @@ func main() {
 		"|5beb505292571b00a14dd31a",
 	)
 
-	data := client.GetUsers()
+	// data := client.GetUsers()
 	// data := client.GetUser("5bec6ebebaabfc00ab168fa0")
-	// var newUserDataTest = []byte(`{
-	// 	"logins": [
-	// 		{
-	// 			"email": "test@synapsefi.com"
-	// 		}
-	// 	],
-	// 	"phone_numbers": [
-	// 		"901.111.1111",
-	// 		"test@synapsefi.com"
-	// 	],
-	// 	"legal_names": [
-	// 		"Test User"
-	// 	],
-	// 	"extra": {
-	// 		"supp_id": "122eddfgbeafrfvbbb",
-	// 		"cip_tag":1,
-	// 		"is_business": false
-	// 	}
-	// }`)
-	// data := client.CreateUser(newUserDataTest)
+	var newUserData = string(`{
+		"logins": [
+			{
+				"email": "test2@synapsefi.com"
+			}
+		],
+		"phone_numbers": [
+			"901.111.1111",
+			"test@synapsefi.com"
+		],
+		"legal_names": [
+			"Test User"
+		],
+		"extra": {
+			"supp_id": "122eddfgbeafrfvbbb",
+			"cip_tag":1,
+			"is_business": false
+		}
+	}`)
+	data := client.CreateUser(newUserData)
 
 	// data := client.GetClientTransactions()
 	// data := client.GetUserTransactions("5bec6ebebaabfc00ab168fa0")

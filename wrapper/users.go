@@ -1,92 +1,62 @@
 package wrapper
 
-import (
-	"bytes"
-	"reflect"
+/*********** GLOBAL VARIABLES ***********/
+const usersURL = _url + "/users"
 
-	"github.com/fatih/structs"
-)
-
-/********** GLOBAL VARIABLES **********/
-const _usersURL = _url + "/users"
-
-/********** STRUCTS **********/
-
-// NewUserData structure of new user data
-type NewUserData struct {
-	logins, phoneNumbers, legalNames []string
-}
-
-/********** METHODS **********/
-
-// CreateUser POST method for creating a single user
-func (c *ClientCredentials) CreateUser(body []byte) map[string]interface{} {
-	req := createRequest("POST", _usersURL, bytes.NewBuffer(body))
-	res := execRequest(req)
-	data := readResponse(res)
-
-	return formatResponse(data, "user")
-	// return handleRequest(c, "POST", _usersURL, bytes.NewBuffer(data))
-}
-
-// GetUsers GET method to GET information about users associated with client
+// GetUsers returns a list of users
 func (c *ClientCredentials) GetUsers() map[string]interface{} {
-	req := createRequest("GET", _usersURL, nil)
-	res := execRequest(req)
-	data := readResponse(res)
+	response, body, errs := request.Get(usersURL).
+		Set("x-sp-gateway", c.gateway).
+		Set("x-sp-user-ip", c.ipAddress).
+		Set("x-sp-user", c.userID).
+		EndBytes()
 
-	return formatResponse(data, "users")
+	if response != nil {
+		// fmt.Println(response)
+	}
+
+	if errs != nil {
+		errorLog(errs)
+	}
+
+	return format(body)
 }
 
-// GetUser GET method for information about single user associated with client
+// GetUser returns a single user
 func (c *ClientCredentials) GetUser(userID string) map[string]interface{} {
-	url := _usersURL + "/" + userID
+	url := usersURL + "/" + userID
 
-	req := createRequest("GET", url, nil)
-	res := execRequest(req)
-	data := readResponse(res)
+	response, bytesBody, errs := request.Get(url).
+		Set("x-sp-gateway", c.gateway).
+		Set("x-sp-user-ip", c.ipAddress).
+		Set("x-sp-user", c.userID).
+		EndBytes()
 
-	return formatResponse(data, "user")
-}
-
-// HELPERS
-
-func formatResponse(payload Payload, name string) map[string]interface{} {
-	var response map[string]interface{}
-
-	switch name {
-	case "users":
-		response = structs.Map(formatUsers(payload, name))
-
-	default:
-		response = structs.Map(formatUser(payload))
+	if response != nil {
 	}
 
-	return response
-}
-
-func formatUser(p Payload) User {
-	var user User
-	user.UserID = p["_id"].(string)
-	user.FullDehydrate = "yes"
-	user.Payload = p
-
-	return user
-}
-
-func formatUsers(p Payload, n string) Users {
-	var users Users
-	users.Limit = p["limit"].(float64)
-	users.Page = p["page"].(float64)
-	users.PageCount = p["page_count"].(float64)
-	users.Payload = p
-
-	list := reflect.ValueOf(p[n])
-
-	for i := 0; i < list.Len(); i++ {
-		user := list.Index(i).Interface().(map[string]interface{})
-		users.UserList = append(users.UserList, formatUser(user))
+	if errs != nil {
+		errorLog(errs)
 	}
 
-	return users
+	return format(bytesBody)
+}
+
+// CreateUser creates a single user and returns the new user data
+func (c *ClientCredentials) CreateUser(data string) map[string]interface{} {
+	response, bytesBody, errs := request.Post(usersURL).
+		Set("x-sp-gateway", c.gateway).
+		Set("x-sp-user-ip", c.ipAddress).
+		Set("x-sp-user", c.userID).
+		Send(data).
+		EndBytes()
+
+	if response != nil {
+	}
+
+	if errs != nil {
+		errorLog(errs)
+	}
+
+	return format(bytesBody)
 }
