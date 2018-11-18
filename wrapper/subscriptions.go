@@ -17,3 +17,18 @@ func (c *ClientCredentials) GetSubscriptions() map[string]interface{} {
 
 	return format(body)
 }
+
+// GetSubscription returns a single subscription
+func (c *ClientCredentials) GetSubscription(subID string) map[string]interface{} {
+	url := subsURL + "/" + subID
+
+	res, body, errs := request.
+		Get(url).
+		EndBytes()
+
+	if res != nil && errs != nil {
+		errorLog(errs)
+	}
+
+	return format(body)
+}
