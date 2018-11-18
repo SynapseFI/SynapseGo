@@ -8,6 +8,8 @@ package wrapper
 func (c *ClientCredentials) GetPublicKey(scope ...string) map[string]interface{} {
 	url := _url + "/client?issue_public_key=YES"
 
+	header(c, gatewaySetting)
+
 	res, body, errs := request.
 		Get(url).
 		EndBytes()

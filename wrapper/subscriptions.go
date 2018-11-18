@@ -49,6 +49,8 @@ func (c *ClientCredentials) CreateSubscription(data string) map[string]interface
 
 // UpdateSubscription updates an existing subscription
 func (c *ClientCredentials) UpdateSubscription(subID string, data string) map[string]interface{} {
+	header(c, gatewaySetting)
+
 	url := subsURL + "/" + subID
 
 	res, body, errs := request.

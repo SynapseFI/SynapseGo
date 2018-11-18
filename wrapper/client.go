@@ -14,8 +14,5 @@ func NewClient(gateway, ipAddress, userID string, devMode ...bool) ClientCredent
 		userID:    userID,
 	}
 
-	// set default headers
-	header(&credentials, "")
-
 	return credentials
 }

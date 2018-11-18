@@ -7,6 +7,8 @@ const usersURL = _url + "/users"
 
 // GetUsers returns a list of users
 func (c *ClientCredentials) GetUsers() map[string]interface{} {
+	header(c, "")
+
 	res, body, errs := request.
 		Get(usersURL).
 		EndBytes()
@@ -22,6 +24,8 @@ func (c *ClientCredentials) GetUsers() map[string]interface{} {
 func (c *ClientCredentials) GetUser(userID string) map[string]interface{} {
 	url := usersURL + "/" + userID
 
+	header(c, "")
+
 	res, body, errs := request.
 		Get(url).
 		EndBytes()
@@ -35,6 +39,8 @@ func (c *ClientCredentials) GetUser(userID string) map[string]interface{} {
 
 // CreateUser creates a single user and returns the new user data
 func (c *ClientCredentials) CreateUser(data string) map[string]interface{} {
+	header(c, "")
+
 	res, body, errs := request.
 		Send(data).
 		Post(usersURL).

@@ -7,6 +7,8 @@ const transURL = _url + "/trans"
 
 // GetClientTransactions returns all client transactions
 func (c *ClientCredentials) GetClientTransactions() map[string]interface{} {
+	header(c, "")
+
 	res, body, errs := request.
 		Get(transURL).
 		EndBytes()

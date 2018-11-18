@@ -8,6 +8,8 @@ package wrapper
 func (c *ClientCredentials) GetUserNodes(userID string) map[string]interface{} {
 	url := usersURL + "/" + userID + "/nodes"
 
+	header(c, authUserSetting)
+
 	res, body, errs := request.
 		Get(url).
 		EndBytes()
