@@ -55,10 +55,10 @@ func main() {
 	// 	"url": "https://requestb.in/zp216zzp"
 	// }`))
 	// data := client.GetSubscription("5bf2665a7e874a00a9cb32df")
-	data := client.UpdateSubscription("5bf2665a7e874a00a9cb32df", string(`{
-		"is_active": true
-	}`))
-	// data := client.GetUserNodes("5bec6ebebaabfc00ab168fa0")
+	// data := client.UpdateSubscription("5bf2665a7e874a00a9cb32df", string(`{
+	// 	"is_active": true
+	// }`))
+	data := client.GetNodes("5bec6ebebaabfc00ab168fa0")
 	// data := client.GetInstitutions()
 	// data := client.GetPublicKey("OAUTH|POST")
 

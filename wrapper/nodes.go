@@ -1,19 +1,17 @@
 package wrapper
 
 /********** GLOBAL VARIABLES **********/
+const nodesURL = _url + "/nodes"
 
 /********** METHODS **********/
 
-// GetUserNodes returns all of the nodes associated with a user
-func (c *ClientCredentials) GetUserNodes(userID string) map[string]interface{} {
-	url := usersURL + "/" + userID + "/nodes"
-
-	header(c, authUserSetting)
-
+// GetNodes returns all of the nodes associated with a user
+func (c *ClientCredentials) GetNodes(userID string) map[string]interface{} {
 	res, body, errs := request.
-		Get(url).
-		Set("x-sp-user-ip", c.ipAddress).
-		Set("x-sp-user", c.userID).
+		Get(nodesURL).
+		Set("x-sp-gateway", c.gateway).
+		// Set("x-sp-user-ip", c.ipAddress).
+		// Set("x-sp-user", c.userID).
 		EndBytes()
 
 	if res != nil && errs != nil {
