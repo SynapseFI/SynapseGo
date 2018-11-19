@@ -14,8 +14,8 @@ func main() {
 		"|5beb505292571b00a14dd31a",
 	)
 
-	// data := client.GetUsers()
-	data := client.GetUser("5bec6ebebaabfc00ab168fa0")
+	data := client.GetUsers()
+	// data := client.GetUser("5bec6ebebaabfc00ab168fa0")
 	// var newUserData = string(`{
 	// 	"logins": [
 	// 		{

@@ -2,19 +2,9 @@ package wrapper
 
 import (
 	"encoding/json"
-	"fmt"
 )
 
-func read(data []byte) map[string]interface{} {
-	d := make(map[string]interface{})
-	err := json.Unmarshal(data, &d)
-
-	if err != nil {
-		errorLog(err)
-	}
-
-	return d
-}
+/********** METHODS **********/
 
 func multiData(data []byte, setting string) map[string]interface{} {
 	body := make(map[string]interface{})
@@ -35,7 +25,6 @@ func multiData(data []byte, setting string) map[string]interface{} {
 		body["transCount"] = d["trans_count"]
 		body["transList"] = list(d["trans"], "transaction")
 	case "users":
-		fmt.Println(d)
 		body["usersCount"] = d["users_count"]
 		body["usersList"] = list(d["users"], "user")
 	}
@@ -43,52 +32,57 @@ func multiData(data []byte, setting string) map[string]interface{} {
 	return body
 }
 
+func singleData(value map[string]interface{}, setting string) map[string]interface{} {
+	body := make(map[string]interface{})
+
+	switch setting {
+	case "node":
+		body["id"] = value["_id"]
+		body["userID"] = value["user_id"]
+		body["fullDehydrate"] = true
+		body["payload"] = value
+
+	case "subscription":
+		body["id"] = value["_id"]
+		body["url"] = value["url"]
+		body["payload"] = value["payload"]
+
+	case "transaction":
+		body["id"] = value["_id"]
+		body["payload"] = value
+
+	case "user":
+		body["id"] = value["id"]
+		body["fullDehydrate"] = true
+		body["payload"] = value
+	}
+
+	return body
+}
+
+/********** HELPERS **********/
+
 func list(data interface{}, setting string) []interface{} {
 	var list []interface{}
 	d := data.([]interface{})
 
-	switch setting {
-	case "subscription":
-		for i := 0; i < len(d); i++ {
-			v := make(map[string]interface{})
-			v["id"] = d[i].(map[string]interface{})["_id"]
-			v["url"] = d[i]
-			v["payload"] = d[i]
+	for i := 0; i < len(d); i++ {
+		k := d[i].(map[string]interface{})
+		v := singleData(k, setting)
 
-			list = append(list, v)
-		}
-
-	case "user":
-		for i := 0; i < len(d); i++ {
-			v := make(map[string]interface{})
-			v["id"] = d[i].(map[string]interface{})["_id"]
-			v["fullDehydrate"] = true
-			v["payload"] = d[i]
-
-			list = append(list, v)
-		}
-	default:
+		list = append(list, v)
 	}
 
 	return list
 }
 
-func singleData(value []byte, setting string) map[string]interface{} {
-	body := make(map[string]interface{})
-	v := read(value)
+func read(data []byte) map[string]interface{} {
+	d := make(map[string]interface{})
+	err := json.Unmarshal(data, &d)
 
-	switch setting {
-	case "node":
-
-	case "subscription":
-
-	case "transaction":
-
-	case "user":
-		body["id"] = v["id"]
-		body["fullDehydrate"] = true
-		body["payload"] = v
+	if err != nil {
+		errorLog(err)
 	}
 
-	return body
+	return d
 }

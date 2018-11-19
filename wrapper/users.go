@@ -38,7 +38,7 @@ func (c *ClientCredentials) GetUser(userID string) map[string]interface{} {
 		errorLog(errs)
 	}
 
-	return singleData(body, "user")
+	return singleData(read(body), "user")
 }
 
 // CreateUser creates a single user and returns the new user data
