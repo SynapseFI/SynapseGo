@@ -1,16 +1,24 @@
 package wrapper
 
+import (
+	"fmt"
+)
+
 /*********** GLOBAL VARIABLES ***********/
 const usersURL = _url + "/users"
 
 /********** METHODS **********/
 
 // GetUsers returns a list of users
-func (c *ClientCredentials) GetUsers() map[string]interface{} {
+func (c *ClientCredentials) GetUsers(queryParams ...map[string]interface{}) map[string]interface{} {
 	// header(c, "")
+
+	qs := queryString(queryParams)
+	fmt.Println(qs)
 
 	res, body, errs := request.
 		Get(usersURL).
+		Query(qs).
 		Set("x-sp-gateway", c.gateway).
 		Set("x-sp-user-ip", c.ipAddress).
 		Set("x-sp-user", c.userID).

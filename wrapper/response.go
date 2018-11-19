@@ -2,6 +2,7 @@ package wrapper
 
 import (
 	"encoding/json"
+	"strconv"
 )
 
 /********** METHODS **********/
@@ -103,4 +104,16 @@ func read(data []byte) map[string]interface{} {
 	}
 
 	return d
+}
+
+func queryString(params []map[string]interface{}) string {
+	var query string
+
+	for i := 0; i < len(params); i++ {
+		for k := range params[i] {
+			query += k + "=" + strconv.Itoa(params[i][k].(int)) + "&"
+		}
+	}
+
+	return query
 }

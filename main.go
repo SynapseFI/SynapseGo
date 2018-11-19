@@ -14,7 +14,10 @@ func main() {
 		"|5beb505292571b00a14dd31a",
 	)
 
-	// data := client.GetUsers()
+	data := client.GetUsers(map[string]interface{}{
+		"per_page": 3,
+		"page":     2,
+	})
 	// data := client.GetUser("5bec6ebebaabfc00ab168fa0")
 	// var newUserData = string(`{
 	// 	"logins": [
@@ -51,7 +54,7 @@ func main() {
 	// 	],
 	// 	"url": "https://requestb.in/zp216zzp"
 	// }`))
-	data := client.GetSubscription("5bf2665a7e874a00a9cb32df")
+	// data := client.GetSubscription("5bf2665a7e874a00a9cb32df")
 	// data := client.GetUserNodes("5bec6ebebaabfc00ab168fa0")
 	// data := client.GetInstitutions()
 	// data := client.GetPublicKey("OAUTH|POST")
