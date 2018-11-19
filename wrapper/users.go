@@ -20,7 +20,7 @@ func (c *ClientCredentials) GetUsers() map[string]interface{} {
 		errorLog(errs)
 	}
 
-	return response(body, "users")
+	return multiData(body, "users")
 }
 
 // GetUser returns a single user
@@ -38,7 +38,7 @@ func (c *ClientCredentials) GetUser(userID string) map[string]interface{} {
 		errorLog(errs)
 	}
 
-	return response(body, "user")
+	return singleData(body, "user")
 }
 
 // CreateUser creates a single user and returns the new user data
@@ -57,5 +57,5 @@ func (c *ClientCredentials) CreateUser(data string) map[string]interface{} {
 		errorLog(errs)
 	}
 
-	return response(body, "users")
+	return multiData(body, "users")
 }

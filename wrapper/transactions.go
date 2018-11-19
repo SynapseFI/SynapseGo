@@ -17,5 +17,5 @@ func (c *ClientCredentials) GetClientTransactions() map[string]interface{} {
 		errorLog(errs)
 	}
 
-	return response(body, "transactions")
+	return multiData(body, "transactions")
 }

@@ -5,14 +5,20 @@ import (
 	"fmt"
 )
 
-func response(data []byte, setting string) map[string]interface{} {
-	body := make(map[string]interface{})
+func read(data []byte) map[string]interface{} {
 	d := make(map[string]interface{})
 	err := json.Unmarshal(data, &d)
 
 	if err != nil {
 		errorLog(err)
 	}
+
+	return d
+}
+
+func multiData(data []byte, setting string) map[string]interface{} {
+	body := make(map[string]interface{})
+	d := read(data)
 
 	body["limit"] = d["limit"]
 	body["page"] = d["page"]
@@ -65,4 +71,24 @@ func list(data interface{}, setting string) []interface{} {
 	}
 
 	return list
+}
+
+func singleData(value []byte, setting string) map[string]interface{} {
+	body := make(map[string]interface{})
+	v := read(value)
+
+	switch setting {
+	case "node":
+
+	case "subscription":
+
+	case "transaction":
+
+	case "user":
+		body["id"] = v["id"]
+		body["fullDehydrate"] = true
+		body["payload"] = v
+	}
+
+	return body
 }

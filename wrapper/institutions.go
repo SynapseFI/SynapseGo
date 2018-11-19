@@ -17,5 +17,5 @@ func (c *ClientCredentials) GetInstitutions() map[string]interface{} {
 		errorLog(errs)
 	}
 
-	return response(body, "institution")
+	return multiData(body, "institution")
 }

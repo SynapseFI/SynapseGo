@@ -18,5 +18,5 @@ func (c *ClientCredentials) GetPublicKey(scope ...string) map[string]interface{}
 		errorLog(errs)
 	}
 
-	return response(body, "key")
+	return multiData(body, "key")
 }
