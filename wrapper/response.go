@@ -73,13 +73,16 @@ func singleData(value map[string]interface{}, setting string) map[string]interfa
 
 func list(data interface{}, setting string) []interface{} {
 	var list []interface{}
-	d := data.([]interface{})
 
-	for i := 0; i < len(d); i++ {
-		k := d[i].(map[string]interface{})
-		v := singleData(k, setting)
+	if data != nil {
+		d := data.([]interface{})
 
-		list = append(list, v)
+		for i := 0; i < len(d); i++ {
+			k := d[i].(map[string]interface{})
+			v := singleData(k, setting)
+
+			list = append(list, v)
+		}
 	}
 
 	return list
