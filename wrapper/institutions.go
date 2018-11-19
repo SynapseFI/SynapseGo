@@ -17,5 +17,5 @@ func (c *ClientCredentials) GetInstitutions() map[string]interface{} {
 		errorLog(errs)
 	}
 
-	return format(body)
+	return response(body, "institution")
 }
