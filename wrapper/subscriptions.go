@@ -9,6 +9,7 @@ const subsURL = _url + "/subscriptions"
 func (c *ClientCredentials) GetSubscriptions() map[string]interface{} {
 	res, body, errs := request.
 		Get(subsURL).
+		Set("x-sp-gateway", c.gateway).
 		EndBytes()
 
 	if res != nil && errs != nil {
@@ -24,6 +25,7 @@ func (c *ClientCredentials) GetSubscription(subID string) map[string]interface{}
 
 	res, body, errs := request.
 		Get(url).
+		Set("x-sp-gateway", c.gateway).
 		EndBytes()
 
 	if res != nil && errs != nil {
@@ -36,8 +38,9 @@ func (c *ClientCredentials) GetSubscription(subID string) map[string]interface{}
 // CreateSubscription creates a subscription and returns the subscription data
 func (c *ClientCredentials) CreateSubscription(data string) map[string]interface{} {
 	res, body, errs := request.
-		Send(data).
 		Post(subsURL).
+		Set("x-sp-gateway", c.gateway).
+		Send(data).
 		EndBytes()
 
 	if res != nil && errs != nil {
@@ -54,8 +57,9 @@ func (c *ClientCredentials) UpdateSubscription(subID string, data string) map[st
 	url := subsURL + "/" + subID
 
 	res, body, errs := request.
-		Send(data).
 		Put(url).
+		Set("x-sp-gateway", c.gateway).
+		Send(data).
 		EndBytes()
 
 	if res != nil && errs != nil {

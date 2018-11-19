@@ -12,6 +12,8 @@ func (c *ClientCredentials) GetUserNodes(userID string) map[string]interface{} {
 
 	res, body, errs := request.
 		Get(url).
+		Set("x-sp-user-ip", c.ipAddress).
+		Set("x-sp-user", c.userID).
 		EndBytes()
 
 	if res != nil && errs != nil {
