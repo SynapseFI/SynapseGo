@@ -59,7 +59,7 @@ func (c *ClientCredentials) UpdateSubscription(subID string, data string, queryP
 	url := subsURL + "/" + subID
 
 	res, body, errs := request.
-		Put(url).
+		Patch(url).
 		Query(queryString(queryParams)).
 		Set("x-sp-gateway", c.gateway).
 		Send(data).
