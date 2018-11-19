@@ -1,22 +1,21 @@
 package wrapper
 
 /********** GLOBAL VARIABLES **********/
+const instiURL = _url + "/institutions"
 
 /********** METHODS **********/
 
-// GetPublicKey returns all of the nodes associated with a user
-func (c *ClientCredentials) GetPublicKey(scope ...string) map[string]interface{} {
-	url := _url + "/client?issue_public_key=YES"
-
-	header(c, gatewaySetting)
+// GetInstitutions returns all of the nodes associated with a user
+func (c *ClientCredentials) GetInstitutions() map[string]interface{} {
+	header(c, authUserSetting)
 
 	res, body, errs := request.
-		Get(url).
+		Get(instiURL).
 		EndBytes()
 
 	if res != nil && errs != nil {
 		errorLog(errs)
 	}
 
-	return multiData(body, "key")
+	return data(body)
 }
