@@ -68,5 +68,5 @@ func (c *ClientCredentials) CreateUser(data string, queryParams ...map[string]in
 		errorLog(errs)
 	}
 
-	return multiData(body, "users")
+	return singleData(read(body), "user")
 }

@@ -14,15 +14,15 @@ func main() {
 		"|5beb505292571b00a14dd31a",
 	)
 
-	// data := client.GetUsers(map[string]interface{}{
-	// 	"per_page": 3,
-	// 	"page":     2,
-	// })
+	data := client.GetUsers(map[string]interface{}{
+		"per_page": 3,
+		"page":     2,
+	})
 	// data := client.GetUser("5bec6ebebaabfc00ab168fa0", false)
 	// var newUserData = string(`{
 	// 	"logins": [
 	// 		{
-	// 			"email": "test2@synapsefi.com"
+	// 			"email": "test4@synapsefi.com"
 	// 		}
 	// 	],
 	// 	"phone_numbers": [
@@ -39,9 +39,7 @@ func main() {
 	// 	}
 	// }`)
 	// data := client.CreateUser(newUserData)
-
 	// data := client.GetClientTransactions()
-	// data := client.GetUserTransactions("5bec6ebebaabfc00ab168fa0")
 	// data := client.GetSubscriptions()
 	// data := client.CreateSubscription(string(`{
 	// 	"scope": [
@@ -58,7 +56,7 @@ func main() {
 	// data := client.UpdateSubscription("5bf2665a7e874a00a9cb32df", string(`{
 	// 	"is_active": true
 	// }`))
-	data := client.GetNodes("5bec6ebebaabfc00ab168fa0")
+	// data := client.GetNodes("5bec6ebebaabfc00ab168fa0")
 	// data := client.GetInstitutions()
 	// data := client.GetPublicKey("OAUTH|POST")
 

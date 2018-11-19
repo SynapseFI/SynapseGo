@@ -63,12 +63,12 @@ func singleData(value map[string]interface{}, setting string) map[string]interfa
 		body["payload"] = value
 
 	case "user":
-		body["id"] = value["id"]
+		body["id"] = value["_id"]
 		body["fullDehydrate"] = "no"
 		body["payload"] = value
 
 	case "userDehydrate":
-		body["id"] = value["id"]
+		body["id"] = value["_id"]
 		body["fullDehydrate"] = "yes"
 		body["payload"] = value
 	}
