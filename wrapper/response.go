@@ -6,6 +6,15 @@ import (
 
 /********** METHODS **********/
 
+func data(data []byte) map[string]interface{} {
+	body := make(map[string]interface{})
+	d := read(data)
+
+	body["payload"] = d
+
+	return body
+}
+
 func multiData(data []byte, setting string) map[string]interface{} {
 	body := make(map[string]interface{})
 	d := read(data)
