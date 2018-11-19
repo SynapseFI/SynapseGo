@@ -6,9 +6,10 @@ const subsURL = _url + "/subscriptions"
 /********** METHODS **********/
 
 // GetSubscriptions returns all of the nodes associated with a user
-func (c *ClientCredentials) GetSubscriptions() map[string]interface{} {
+func (c *ClientCredentials) GetSubscriptions(queryParams ...map[string]interface{}) map[string]interface{} {
 	res, body, errs := request.
 		Get(subsURL).
+		Query(queryString(queryParams)).
 		Set("x-sp-gateway", c.gateway).
 		EndBytes()
 
@@ -20,11 +21,12 @@ func (c *ClientCredentials) GetSubscriptions() map[string]interface{} {
 }
 
 // GetSubscription returns a single subscription
-func (c *ClientCredentials) GetSubscription(subID string) map[string]interface{} {
+func (c *ClientCredentials) GetSubscription(subID string, queryParams ...map[string]interface{}) map[string]interface{} {
 	url := subsURL + "/" + subID
 
 	res, body, errs := request.
 		Get(url).
+		Query(queryString(queryParams)).
 		Set("x-sp-gateway", c.gateway).
 		EndBytes()
 
@@ -36,9 +38,10 @@ func (c *ClientCredentials) GetSubscription(subID string) map[string]interface{}
 }
 
 // CreateSubscription creates a subscription and returns the subscription data
-func (c *ClientCredentials) CreateSubscription(data string) map[string]interface{} {
+func (c *ClientCredentials) CreateSubscription(data string, queryParams ...map[string]interface{}) map[string]interface{} {
 	res, body, errs := request.
 		Post(subsURL).
+		Query(queryString(queryParams)).
 		Set("x-sp-gateway", c.gateway).
 		Send(data).
 		EndBytes()
@@ -51,13 +54,13 @@ func (c *ClientCredentials) CreateSubscription(data string) map[string]interface
 }
 
 // UpdateSubscription updates an existing subscription
-func (c *ClientCredentials) UpdateSubscription(subID string, data string) map[string]interface{} {
-	header(c, gatewaySetting)
+func (c *ClientCredentials) UpdateSubscription(subID string, data string, queryParams ...map[string]interface{}) map[string]interface{} {
 
 	url := subsURL + "/" + subID
 
 	res, body, errs := request.
 		Put(url).
+		Query(queryString(queryParams)).
 		Set("x-sp-gateway", c.gateway).
 		Send(data).
 		EndBytes()

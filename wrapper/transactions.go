@@ -6,11 +6,11 @@ const transURL = _url + "/trans"
 /********** METHODS **********/
 
 // GetClientTransactions returns all client transactions
-func (c *ClientCredentials) GetClientTransactions() map[string]interface{} {
-	header(c, "")
+func (c *ClientCredentials) GetClientTransactions(queryParams ...map[string]interface{}) map[string]interface{} {
 
 	res, body, errs := request.
 		Get(transURL).
+		Query(queryString(queryParams)).
 		Set("x-sp-gateway", c.gateway).
 		Set("x-sp-user-ip", c.ipAddress).
 		Set("x-sp-user", c.userID).

@@ -1,9 +1,5 @@
 package wrapper
 
-import (
-	"fmt"
-)
-
 /*********** GLOBAL VARIABLES ***********/
 const usersURL = _url + "/users"
 
@@ -13,12 +9,9 @@ const usersURL = _url + "/users"
 func (c *ClientCredentials) GetUsers(queryParams ...map[string]interface{}) map[string]interface{} {
 	// header(c, "")
 
-	qs := queryString(queryParams)
-	fmt.Println(qs)
-
 	res, body, errs := request.
 		Get(usersURL).
-		Query(qs).
+		Query(queryString(queryParams)).
 		Set("x-sp-gateway", c.gateway).
 		Set("x-sp-user-ip", c.ipAddress).
 		Set("x-sp-user", c.userID).
@@ -32,12 +25,13 @@ func (c *ClientCredentials) GetUsers(queryParams ...map[string]interface{}) map[
 }
 
 // GetUser returns a single user
-func (c *ClientCredentials) GetUser(userID string) map[string]interface{} {
+func (c *ClientCredentials) GetUser(userID string, queryParams ...map[string]interface{}) map[string]interface{} {
 	url := usersURL + "/" + userID
 
 	res, body, errs := request.
 		Get(url).
-		Set("x-sp-gateway", c.gateway).
+		Query(queryString(queryParams)).Options
+	Set("x-sp-gateway", c.gateway).
 		Set("x-sp-user-ip", c.ipAddress).
 		Set("x-sp-user", c.userID).
 		EndBytes()
@@ -50,11 +44,12 @@ func (c *ClientCredentials) GetUser(userID string) map[string]interface{} {
 }
 
 // CreateUser creates a single user and returns the new user data
-func (c *ClientCredentials) CreateUser(data string) map[string]interface{} {
+func (c *ClientCredentials) CreateUser(data string, queryParams ...map[string]interface{}) map[string]interface{} {
 	// header(c, "")
 
 	res, body, errs := request.
 		Post(usersURL).
+		Query(queryString(queryParams)).
 		Set("x-sp-gateway", c.gateway).
 		Set("x-sp-user-ip", c.ipAddress).
 		Set("x-sp-user", c.userID).
