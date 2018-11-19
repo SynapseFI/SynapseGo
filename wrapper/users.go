@@ -30,8 +30,8 @@ func (c *ClientCredentials) GetUser(userID string, queryParams ...map[string]int
 
 	res, body, errs := request.
 		Get(url).
-		Query(queryString(queryParams)).Options
-	Set("x-sp-gateway", c.gateway).
+		Query(queryString(queryParams)).
+		Set("x-sp-gateway", c.gateway).
 		Set("x-sp-user-ip", c.ipAddress).
 		Set("x-sp-user", c.userID).
 		EndBytes()
