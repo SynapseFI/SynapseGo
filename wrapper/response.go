@@ -26,7 +26,13 @@ func multiData(data []byte, setting string) map[string]interface{} {
 	switch setting {
 	case "nodes":
 		body["nodeCount"] = d["node_count"]
-		body["nodesList"] = list(d["nodes"].(map[string]interface{}), "node")
+
+		if d["nodes"] != nil {
+			body["nodesList"] = list(d["nodes"].(map[string]interface{}), "node")
+		} else {
+			body["nodesList"] = nil
+		}
+
 	case "subscriptions":
 		body["subscriptionsCount"] = d["subscriptions_count"]
 		body["subsList"] = list(d["subscriptions"], "subscription")

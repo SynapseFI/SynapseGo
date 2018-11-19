@@ -39,8 +39,8 @@ func main() {
 
 	// data := client.GetClientTransactions()
 	// data := client.GetUserTransactions("5bec6ebebaabfc00ab168fa0")
-	data := client.GetSubscriptions()
-	// data := client.GetUserNodes("5bec6ebebaabfc00ab168fa0")
+	// data := client.GetSubscriptions()
+	data := client.GetUserNodes("5bec6ebebaabfc00ab168fa0")
 	// data := client.GetInstitutions()
 	// data := client.OAuth()
 
