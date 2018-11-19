@@ -2,6 +2,7 @@ package wrapper
 
 import (
 	"encoding/json"
+	"fmt"
 )
 
 func response(data []byte, setting string) map[string]interface{} {
@@ -21,15 +22,16 @@ func response(data []byte, setting string) map[string]interface{} {
 	case "nodes":
 		body["nodeCount"] = d["node_count"]
 		body["nodesList"] = list(d["nodes"].(map[string]interface{}), "node")
-	case "subscriptins":
+	case "subscriptions":
 		body["subscriptionsCount"] = d["subscriptions_count"]
 		body["subsList"] = list(d["subscriptions"], "subscription")
 	case "transactions":
 		body["transCount"] = d["trans_count"]
-		body["transList"] = d
+		body["transList"] = list(d["trans"], "transaction")
 	case "users":
+		fmt.Println(d)
 		body["usersCount"] = d["users_count"]
-		body["usersList"] = d
+		body["usersList"] = list(d["users"], "user")
 	}
 
 	return body
@@ -43,16 +45,22 @@ func list(data interface{}, setting string) []interface{} {
 	case "subscription":
 		for i := 0; i < len(d); i++ {
 			v := make(map[string]interface{})
-			v["id"] = d[i]
+			v["id"] = d[i].(map[string]interface{})["_id"]
 			v["url"] = d[i]
 			v["payload"] = d[i]
 
 			list = append(list, v)
 		}
-		// r["id"] = d["_id"]
-		// r["payload"] = d
-		// r["url"] = d["url"]
 
+	case "user":
+		for i := 0; i < len(d); i++ {
+			v := make(map[string]interface{})
+			v["id"] = d[i].(map[string]interface{})["_id"]
+			v["fullDehydrate"] = true
+			v["payload"] = d[i]
+
+			list = append(list, v)
+		}
 	default:
 	}
 
