@@ -14,11 +14,11 @@ func main() {
 		"|5beb505292571b00a14dd31a",
 	)
 
-	data := client.GetUsers(map[string]interface{}{
-		"per_page": 3,
-		"page":     2,
-	})
-	// data := client.GetUser("5bec6ebebaabfc00ab168fa0")
+	// data := client.GetUsers(map[string]interface{}{
+	// 	"per_page": 3,
+	// 	"page":     2,
+	// })
+	data := client.GetUser("5bec6ebebaabfc00ab168fa0", false)
 	// var newUserData = string(`{
 	// 	"logins": [
 	// 		{

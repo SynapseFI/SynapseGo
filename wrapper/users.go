@@ -25,8 +25,12 @@ func (c *ClientCredentials) GetUsers(queryParams ...map[string]interface{}) map[
 }
 
 // GetUser returns a single user
-func (c *ClientCredentials) GetUser(userID string, queryParams ...map[string]interface{}) map[string]interface{} {
+func (c *ClientCredentials) GetUser(userID string, fullDehydrate bool, queryParams ...map[string]interface{}) map[string]interface{} {
 	url := usersURL + "/" + userID
+
+	if fullDehydrate != true {
+		url += "?full_dehydrate=yes"
+	}
 
 	res, body, errs := request.
 		Get(url).
@@ -40,7 +44,11 @@ func (c *ClientCredentials) GetUser(userID string, queryParams ...map[string]int
 		errorLog(errs)
 	}
 
-	return singleData(read(body), "user")
+	if fullDehydrate != true {
+		return singleData(read(body), "user")
+	}
+
+	return singleData(read(body), "userDehydrate")
 }
 
 // CreateUser creates a single user and returns the new user data

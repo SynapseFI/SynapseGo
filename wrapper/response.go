@@ -55,7 +55,7 @@ func singleData(value map[string]interface{}, setting string) map[string]interfa
 	case "node":
 		body["id"] = value["_id"]
 		body["userID"] = value["user_id"]
-		body["fullDehydrate"] = true
+		body["fullDehydrate"] = "no"
 		body["payload"] = value
 
 	case "subscription":
@@ -69,7 +69,12 @@ func singleData(value map[string]interface{}, setting string) map[string]interfa
 
 	case "user":
 		body["id"] = value["id"]
-		body["fullDehydrate"] = true
+		body["fullDehydrate"] = "no"
+		body["payload"] = value
+
+	case "userDehydrate":
+		body["id"] = value["id"]
+		body["fullDehydrate"] = "yes"
 		body["payload"] = value
 	}
 
