@@ -40,9 +40,21 @@ func main() {
 	// data := client.GetClientTransactions()
 	// data := client.GetUserTransactions("5bec6ebebaabfc00ab168fa0")
 	// data := client.GetSubscriptions()
+	// data := client.CreateSubscription(string(`{
+	// 	"scope": [
+	// 		"USERS|POST",
+	// 		"USER|PATCH",
+	// 		"NODES|POST",
+	// 		"NODE|PATCH",
+	// 		"TRANS|POST",
+	// 		"TRAN|PATCH"
+	// 	],
+	// 	"url": "https://requestb.in/zp216zzp"
+	// }`))
+	data := client.GetSubscription("5bf2665a7e874a00a9cb32df")
 	// data := client.GetUserNodes("5bec6ebebaabfc00ab168fa0")
 	// data := client.GetInstitutions()
-	data := client.GetPublicKey("OAUTH|POST")
+	// data := client.GetPublicKey("OAUTH|POST")
 
 	// if err != nil {
 	// 	fmt.Println(err)

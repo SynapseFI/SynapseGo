@@ -32,7 +32,7 @@ func (c *ClientCredentials) GetSubscription(subID string) map[string]interface{}
 		errorLog(errs)
 	}
 
-	return multiData(body, "subscriptions")
+	return singleData(read(body), "subscription")
 }
 
 // CreateSubscription creates a subscription and returns the subscription data
@@ -47,7 +47,7 @@ func (c *ClientCredentials) CreateSubscription(data string) map[string]interface
 		errorLog(errs)
 	}
 
-	return multiData(body, "subscriptions")
+	return singleData(read(body), "subscription")
 }
 
 // UpdateSubscription updates an existing subscription
@@ -66,5 +66,5 @@ func (c *ClientCredentials) UpdateSubscription(subID string, data string) map[st
 		errorLog(errs)
 	}
 
-	return multiData(body, "subscriptions")
+	return singleData(read(body), "subscription")
 }

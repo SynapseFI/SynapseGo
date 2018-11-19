@@ -60,7 +60,7 @@ func singleData(value map[string]interface{}, setting string) map[string]interfa
 	case "subscription":
 		body["id"] = value["_id"]
 		body["url"] = value["url"]
-		body["payload"] = value["payload"]
+		body["payload"] = value
 
 	case "transaction":
 		body["id"] = value["_id"]
