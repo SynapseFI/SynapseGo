@@ -7,8 +7,6 @@ const usersURL = _url + "/users"
 
 // GetUsers returns a list of users
 func (c *ClientCredentials) GetUsers(queryParams ...map[string]interface{}) map[string]interface{} {
-	// header(c, "")
-
 	res, body, errs := request.
 		Get(usersURL).
 		Query(queryString(queryParams)).
@@ -53,8 +51,6 @@ func (c *ClientCredentials) GetUser(userID string, fullDehydrate bool, queryPara
 
 // CreateUser creates a single user and returns the new user data
 func (c *ClientCredentials) CreateUser(data string, queryParams ...map[string]interface{}) map[string]interface{} {
-	// header(c, "")
-
 	res, body, errs := request.
 		Post(usersURL).
 		Query(queryString(queryParams)).
