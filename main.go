@@ -20,7 +20,7 @@ func main() {
 	// 	"per_page": 3,
 	// 	"page":     2,
 	// })
-	data := client.GetUser("5bec6ebebaabfc00ab168fa0", false)
+	// data := client.GetUser("5bec6ebebaabfc00ab168fa0", false)
 	// var newUserData = string(`{
 	// 	"logins": [
 	// 		{
@@ -66,6 +66,32 @@ func main() {
 	// "validation_pin": "923156",
 	// }
 	user := client.GenerateUser("5bec6ebebaabfc00ab168fa0")
+	data := user.AddNewDocuments(string(`{
+		"documents":[{
+			"email":"test@test.com",
+			"phone_number":"901.111.1111",
+			"ip":"::1",
+			"name":"Test User",
+			"alias":"Test",
+			"entity_type":"M",
+			"entity_scope":"Arts & Entertainment",
+			"day":2,
+			"month":5,
+			"year":1989,
+			"virtual_docs":[{
+					"document_value":"2222",
+					"document_type":"SSN"
+			}],
+			"physical_docs":[{
+					"document_value": "data:image/gif;base64,SUQs==",
+					"document_type": "GOVT_ID"
+			}],
+			"social_docs":[{
+					"document_value":"https://www.facebook.com/valid",
+					"document_type":"FACEBOOK"
+			}]
+		}]
+	}`))
 
 	// if err != nil {
 	// 	fmt.Println(err)
@@ -78,5 +104,4 @@ func main() {
 
 	// fmt.Println(data["UserList"])
 	fmt.Println(string(payload))
-	fmt.Println(user)
 }
