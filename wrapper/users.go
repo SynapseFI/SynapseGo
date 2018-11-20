@@ -12,18 +12,21 @@ func (c *Client) GenerateUser(userID string, devMode ...bool) *User {
 	}
 
 	// get refresh token
-	rt := c.GetUser(userID, false)["payload"].(map[string]interface{})["refresh_token"].(string)
+	// rt := c.GetUser(userID, false)["payload"].(map[string]interface{})["refresh_token"].(string)
+	payload := c.GetUser(userID, false)["payload"]
+	rt := payload.(map[string]interface{})["refresh_token"].(string)
 
 	// get auth key
-	ak := auth(c, userID, rt)["oauth_key"].(string)
+	ak := auth(c, userID, rt)["payload"].(map[string]interface{})["oauth_key"].(string)
 
 	user := &User{
 		authKey:       ak,
-		userID:        userID,
 		refreshToken:  rt,
+		userID:        userID,
 		clientGateway: c.gateway,
 		clientID:      c.userID,
 		clientIP:      c.ipAddress,
+		Payload:       payload,
 	}
 
 	return user

@@ -20,27 +20,27 @@ func main() {
 	// 	"per_page": 3,
 	// 	"page":     2,
 	// })
-	// data := client.GetUser("5bec6ebebaabfc00ab168fa0", false)
-	var newUserData = string(`{
-		"logins": [
-			{
-				"email": "test5@synapsefi.com"
-			}
-		],
-		"phone_numbers": [
-			"901.111.1111",
-			"test@synapsefi.com"
-		],
-		"legal_names": [
-			"Test User"
-		],
-		"extra": {
-			"supp_id": "122eddfgbeafrfvbbb",
-			"cip_tag":1,
-			"is_business": false
-		}
-	}`)
-	data := client.CreateUser(newUserData)
+	data := client.GetUser("5bec6ebebaabfc00ab168fa0", false)
+	// var newUserData = string(`{
+	// 	"logins": [
+	// 		{
+	// 			"email": "test5@synapsefi.com"
+	// 		}
+	// 	],
+	// 	"phone_numbers": [
+	// 		"901.111.1111",
+	// 		"test@synapsefi.com"
+	// 	],
+	// 	"legal_names": [
+	// 		"Test User"
+	// 	],
+	// 	"extra": {
+	// 		"supp_id": "122eddfgbeafrfvbbb",
+	// 		"cip_tag":1,
+	// 		"is_business": false
+	// 	}
+	// }`)
+	// data := client.CreateUser(newUserData)
 	// data := client.GetClientTransactions()
 	// data := client.GetSubscriptions()
 	// data := client.CreateSubscription(string(`{
@@ -65,6 +65,7 @@ func main() {
 	// "phone_number": "8085542146",
 	// "validation_pin": "923156",
 	// }
+	user := client.GenerateUser("5bec6ebebaabfc00ab168fa0")
 
 	// if err != nil {
 	// 	fmt.Println(err)
@@ -77,4 +78,5 @@ func main() {
 
 	// fmt.Println(data["UserList"])
 	fmt.Println(string(payload))
+	fmt.Println(user)
 }
