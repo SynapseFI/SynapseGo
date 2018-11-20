@@ -93,3 +93,24 @@ func (c *Client) CreateUser(data string, queryParams ...map[string]interface{}) 
 
 	return responseSingle(read(body), "user")
 }
+
+/********** USER METHODS **********/
+
+// AddNewDocuments adds new documents to a user
+func (u *User) AddNewDocuments(data string, bodyParams ...string) map[string]interface{} {
+	url := usersURL + "/" + u.userID
+
+	res, body, errs := request.
+		Patch(url).
+		Set("x-sp-gateway", u.clientGateway).
+		Set("x-sp-user-ip", u.clientIP).
+		Set("x-sp-user", u.authKey+"|"+u.clientID).
+		Send(data).
+		EndBytes()
+
+	if res != nil && errs != nil {
+		errorLog(errs)
+	}
+
+	return responseSingle(read(body), "user")
+}
