@@ -53,7 +53,7 @@ data := client.GetInstitutions()
 ## Nodes
 
 ```go
-data := client.GetNodes(userID string, queryParams map[string]interface{})
+data := client.GetNodes(queryParams map[string]interface{})
 ```
 
 ## Subscriptions
