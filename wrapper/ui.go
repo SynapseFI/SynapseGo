@@ -10,7 +10,7 @@ const publicKeyURL = _url + "/client?issue_public_key=YES&amp;scope="
 /********** METHODS **********/
 
 // GetPublicKey returns a public key as a token representing client credentials
-func (c *ClientCredentials) GetPublicKey(scope ...string) map[string]interface{} {
+func (c *Client) GetPublicKey(scope ...string) map[string]interface{} {
 	var urlParams = publicKeyURL
 
 	for i := 0; i < len(scope); i++ {

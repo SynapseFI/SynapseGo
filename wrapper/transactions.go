@@ -6,7 +6,7 @@ const transURL = _url + "/trans"
 /********** METHODS **********/
 
 // GetClientTransactions returns all client transactions
-func (c *ClientCredentials) GetClientTransactions(queryParams ...map[string]interface{}) map[string]interface{} {
+func (c *Client) GetClientTransactions(queryParams ...map[string]interface{}) map[string]interface{} {
 
 	res, body, errs := request.
 		Get(transURL).

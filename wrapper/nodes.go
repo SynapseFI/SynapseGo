@@ -6,7 +6,7 @@ const nodesURL = _url + "/nodes"
 /********** METHODS **********/
 
 // GetNodes returns all of the nodes associated with a user
-func (c *ClientCredentials) GetNodes(userID string) map[string]interface{} {
+func (c *Client) GetNodes(userID string) map[string]interface{} {
 	res, body, errs := request.
 		Get(nodesURL).
 		Set("x-sp-gateway", c.gateway).

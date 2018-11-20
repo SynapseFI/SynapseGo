@@ -6,7 +6,7 @@ const subsURL = _url + "/subscriptions"
 /********** METHODS **********/
 
 // GetSubscriptions returns all of the nodes associated with a user
-func (c *ClientCredentials) GetSubscriptions(queryParams ...map[string]interface{}) map[string]interface{} {
+func (c *Client) GetSubscriptions(queryParams ...map[string]interface{}) map[string]interface{} {
 	res, body, errs := request.
 		Get(subsURL).
 		Query(queryString(queryParams)).
@@ -21,7 +21,7 @@ func (c *ClientCredentials) GetSubscriptions(queryParams ...map[string]interface
 }
 
 // GetSubscription returns a single subscription
-func (c *ClientCredentials) GetSubscription(subID string, queryParams ...map[string]interface{}) map[string]interface{} {
+func (c *Client) GetSubscription(subID string, queryParams ...map[string]interface{}) map[string]interface{} {
 	url := subsURL + "/" + subID
 
 	res, body, errs := request.
@@ -38,7 +38,7 @@ func (c *ClientCredentials) GetSubscription(subID string, queryParams ...map[str
 }
 
 // CreateSubscription creates a subscription and returns the subscription data
-func (c *ClientCredentials) CreateSubscription(data string, queryParams ...map[string]interface{}) map[string]interface{} {
+func (c *Client) CreateSubscription(data string, queryParams ...map[string]interface{}) map[string]interface{} {
 	res, body, errs := request.
 		Post(subsURL).
 		Query(queryString(queryParams)).
@@ -54,7 +54,7 @@ func (c *ClientCredentials) CreateSubscription(data string, queryParams ...map[s
 }
 
 // UpdateSubscription updates an existing subscription
-func (c *ClientCredentials) UpdateSubscription(subID string, data string, queryParams ...map[string]interface{}) map[string]interface{} {
+func (c *Client) UpdateSubscription(subID string, data string, queryParams ...map[string]interface{}) map[string]interface{} {
 
 	url := subsURL + "/" + subID
 

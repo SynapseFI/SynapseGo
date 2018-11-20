@@ -4,7 +4,7 @@ const authUserSetting = "auth_user"
 const userSetting = "user"
 const gatewaySetting = "gateway"
 
-func header(c *ClientCredentials, setting string) {
+func header(c *Client, setting string) {
 	switch setting {
 	case authUserSetting:
 		request.

@@ -6,7 +6,7 @@ const instiURL = _url + "/institutions"
 /********** METHODS **********/
 
 // GetInstitutions returns all of the nodes associated with a user
-func (c *ClientCredentials) GetInstitutions() map[string]interface{} {
+func (c *Client) GetInstitutions() map[string]interface{} {
 	header(c, authUserSetting)
 
 	res, body, errs := request.

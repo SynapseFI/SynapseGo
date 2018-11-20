@@ -6,7 +6,7 @@ const usersURL = _url + "/users"
 /********** METHODS **********/
 
 // GetUsers returns a list of users
-func (c *ClientCredentials) GetUsers(queryParams ...map[string]interface{}) map[string]interface{} {
+func (c *Client) GetUsers(queryParams ...map[string]interface{}) map[string]interface{} {
 	res, body, errs := request.
 		Get(usersURL).
 		Query(queryString(queryParams)).
@@ -23,7 +23,7 @@ func (c *ClientCredentials) GetUsers(queryParams ...map[string]interface{}) map[
 }
 
 // GetUser returns a single user
-func (c *ClientCredentials) GetUser(userID string, fullDehydrate bool, queryParams ...map[string]interface{}) map[string]interface{} {
+func (c *Client) GetUser(userID string, fullDehydrate bool, queryParams ...map[string]interface{}) map[string]interface{} {
 	url := usersURL + "/" + userID
 
 	if fullDehydrate != true {
@@ -50,7 +50,7 @@ func (c *ClientCredentials) GetUser(userID string, fullDehydrate bool, queryPara
 }
 
 // CreateUser creates a single user and returns the new user data
-func (c *ClientCredentials) CreateUser(data string, queryParams ...map[string]interface{}) map[string]interface{} {
+func (c *Client) CreateUser(data string, queryParams ...map[string]interface{}) map[string]interface{} {
 	res, body, errs := request.
 		Post(usersURL).
 		Query(queryString(queryParams)).

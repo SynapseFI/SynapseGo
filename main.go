@@ -8,16 +8,17 @@ import (
 
 func main() {
 	// DEVELOPER WILL DO THE FOLLOWING:
+
 	client := wrapper.NewClient(
 		"client_id_pSdgBAaNfvRCcFmqK682tIhXOyD5iEV0rJx3nskQ|client_secret_7GfSOVxD5seYHRC8o2X0grlvZtd9azmhMpn3U1Ju",
 		"127.0.0.1",
 		"|5beb505292571b00a14dd31a",
 	)
 
-	data := client.GetUsers(map[string]interface{}{
-		"per_page": 3,
-		"page":     2,
-	})
+	// data := client.GetUsers(map[string]interface{}{
+	// 	"per_page": 3,
+	// 	"page":     2,
+	// })
 	// data := client.GetUser("5bec6ebebaabfc00ab168fa0", false)
 	// var newUserData = string(`{
 	// 	"logins": [
@@ -59,6 +60,10 @@ func main() {
 	// data := client.GetNodes("5bec6ebebaabfc00ab168fa0")
 	// data := client.GetInstitutions()
 	// data := client.GetPublicKey("OAUTH|POST")
+	data := client.Auth("5bec6ebebaabfc00ab168fa0", "refresh_HnCeXRh5PjfaAU1Wo7FKw3klisuDEbTvLgr0xm9O", map[string]interface{}{
+		// "phone_number": "8085542146",
+		"validation_pin": "923156",
+	})
 
 	// if err != nil {
 	// 	fmt.Println(err)
