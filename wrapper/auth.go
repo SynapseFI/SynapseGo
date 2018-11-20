@@ -23,5 +23,5 @@ func (c *Client) Auth(userID string, refreshToken string, bodyParams ...map[stri
 		errorLog(errs)
 	}
 
-	return data(body)
+	return response(body)
 }

@@ -28,5 +28,5 @@ func (c *Client) GetPublicKey(scope ...string) map[string]interface{} {
 		errorLog(errs)
 	}
 
-	return data(body)
+	return response(body)
 }

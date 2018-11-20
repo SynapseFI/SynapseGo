@@ -19,7 +19,7 @@ func (c *Client) GetUsers(queryParams ...map[string]interface{}) map[string]inte
 		errorLog(errs)
 	}
 
-	return multiData(body, "users")
+	return responseMulti(body, "users")
 }
 
 // GetUser returns a single user
@@ -43,10 +43,10 @@ func (c *Client) GetUser(userID string, fullDehydrate bool, queryParams ...map[s
 	}
 
 	if fullDehydrate != true {
-		return singleData(read(body), "user")
+		return responseSingle(read(body), "user")
 	}
 
-	return singleData(read(body), "userDehydrate")
+	return responseSingle(read(body), "userDehydrate")
 }
 
 // CreateUser creates a single user and returns the new user data
@@ -64,5 +64,5 @@ func (c *Client) CreateUser(data string, queryParams ...map[string]interface{}) 
 		errorLog(errs)
 	}
 
-	return singleData(read(body), "user")
+	return responseSingle(read(body), "user")
 }

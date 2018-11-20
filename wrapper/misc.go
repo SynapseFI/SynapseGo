@@ -17,5 +17,5 @@ func (c *Client) GetInstitutions() map[string]interface{} {
 		errorLog(errs)
 	}
 
-	return data(body)
+	return response(body)
 }
