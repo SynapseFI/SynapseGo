@@ -25,5 +25,6 @@ type (
 	// User represents a user object
 	User struct {
 		authKey, clientGateway, clientIP, clientID, userID, refreshToken string
+		Payload                                                          interface{}
 	}
 )
