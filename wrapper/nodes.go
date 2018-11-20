@@ -18,5 +18,5 @@ func (c *Client) GetNodes(userID string) map[string]interface{} {
 		errorLog(errs)
 	}
 
-	return multiData(body, "nodes")
+	return responseMulti(body, "nodes")
 }

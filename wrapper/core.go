@@ -19,7 +19,7 @@ const _url = "https://uat-api.synapsefi.com/" + version
 type (
 	// Client represents the credentials used by the developer to instantiate a client
 	Client struct {
-		gateway, ipAddress, userID string
+		gateway, ipAddress, userID, authKey string
 	}
 
 	// User represents a user object

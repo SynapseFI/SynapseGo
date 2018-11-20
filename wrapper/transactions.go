@@ -20,5 +20,5 @@ func (c *Client) GetClientTransactions(queryParams ...map[string]interface{}) ma
 		errorLog(errs)
 	}
 
-	return multiData(body, "transactions")
+	return responseMulti(body, "transactions")
 }

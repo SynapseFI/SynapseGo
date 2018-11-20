@@ -7,7 +7,7 @@ import (
 
 /********** METHODS **********/
 
-func data(data []byte) map[string]interface{} {
+func response(data []byte) map[string]interface{} {
 	body := make(map[string]interface{})
 	d := read(data)
 
@@ -16,7 +16,7 @@ func data(data []byte) map[string]interface{} {
 	return body
 }
 
-func multiData(data []byte, setting string) map[string]interface{} {
+func responseMulti(data []byte, setting string) map[string]interface{} {
 	body := make(map[string]interface{})
 	d := read(data)
 
@@ -43,7 +43,7 @@ func multiData(data []byte, setting string) map[string]interface{} {
 	return body
 }
 
-func singleData(value map[string]interface{}, setting string) map[string]interface{} {
+func responseSingle(value map[string]interface{}, setting string) map[string]interface{} {
 	body := make(map[string]interface{})
 
 	switch setting {
@@ -86,7 +86,7 @@ func list(data interface{}, setting string) []interface{} {
 
 		for i := 0; i < len(d); i++ {
 			k := d[i].(map[string]interface{})
-			v := singleData(k, setting)
+			v := responseSingle(k, setting)
 
 			list = append(list, v)
 		}

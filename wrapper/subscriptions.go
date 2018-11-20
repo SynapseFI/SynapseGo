@@ -17,7 +17,7 @@ func (c *Client) GetSubscriptions(queryParams ...map[string]interface{}) map[str
 		errorLog(errs)
 	}
 
-	return multiData(body, "subscriptions")
+	return responseMulti(body, "subscriptions")
 }
 
 // GetSubscription returns a single subscription
@@ -34,7 +34,7 @@ func (c *Client) GetSubscription(subID string, queryParams ...map[string]interfa
 		errorLog(errs)
 	}
 
-	return singleData(read(body), "subscription")
+	return responseSingle(read(body), "subscription")
 }
 
 // CreateSubscription creates a subscription and returns the subscription data
@@ -50,7 +50,7 @@ func (c *Client) CreateSubscription(data string, queryParams ...map[string]inter
 		errorLog(errs)
 	}
 
-	return singleData(read(body), "subscription")
+	return responseSingle(read(body), "subscription")
 }
 
 // UpdateSubscription updates an existing subscription
@@ -69,5 +69,5 @@ func (c *Client) UpdateSubscription(subID string, data string, queryParams ...ma
 		errorLog(errs)
 	}
 
-	return singleData(read(body), "subscription")
+	return responseSingle(read(body), "subscription")
 }
