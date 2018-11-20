@@ -3,7 +3,7 @@ package wrapper
 /********** GLOBAL VARIABLES **********/
 const authURL = _url + "/oauth"
 
-func (c *Client) Auth(userID string, refreshToken string, bodyParams ...map[string]interface{}) map[string]interface{} {
+func auth(c *Client, userID string, refreshToken string, bodyParams ...map[string]interface{}) map[string]interface{} {
 	url := authURL + "/" + userID
 	rt := map[string]interface{}{
 		"refresh_token": refreshToken,

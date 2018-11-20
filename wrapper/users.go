@@ -3,7 +3,31 @@ package wrapper
 /*********** GLOBAL VARIABLES ***********/
 const usersURL = _url + "/users"
 
-/********** METHODS **********/
+/********** CLIENT METHODS **********/
+
+// GenerateUser creates a new user object
+func (c *Client) GenerateUser(userID string, devMode ...bool) *User {
+	if len(devMode) == 1 && devMode[0] == true {
+		developerMode = true
+	}
+
+	// get refresh token
+	rt := c.GetUser(userID, false)["payload"].(map[string]interface{})["refresh_token"].(string)
+
+	// get auth key
+	ak := auth(c, userID, rt)["oauth_key"].(string)
+
+	user := &User{
+		authKey:       ak,
+		userID:        userID,
+		refreshToken:  rt,
+		clientGateway: c.gateway,
+		clientID:      c.userID,
+		clientIP:      c.ipAddress,
+	}
+
+	return user
+}
 
 // GetUsers returns a list of users
 func (c *Client) GetUsers(queryParams ...map[string]interface{}) map[string]interface{} {
