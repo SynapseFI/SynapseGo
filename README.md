@@ -21,11 +21,11 @@ See main.go for each method in use
 ```go
 // credentials used to set headers for each method request
 var credentials = map[string]interface{}{
-		"clientID":     "CLIENT_ID",
-		"clientSecret": "CLIENT_SECRET",
-		"ipAddress":    "IP_ADDRESS",
-		"userID":       "USER_ID",
-	}
+"clientID":     "CLIENT_ID",
+"clientSecret": "CLIENT_SECRET",
+"ipAddress":    "IP_ADDRESS",
+"userID":       "USER_ID",
+}
 var client = wrapper.Client(credentials)
 ```
 
@@ -33,12 +33,12 @@ To enable logging (development mode):
 
 ```go
 var credentials = map[string]interface{}{
-		"clientID":     "CLIENT_ID",
-		"clientSecret": "CLIENT_SECRET",
-		"ipAddress":    "IP_ADDRESS",
-    "userID":       "USER_ID",
-    "devMode":      true,
-	}
+"clientID":     "CLIENT_ID",
+"clientSecret": "CLIENT_SECRET",
+"ipAddress":    "IP_ADDRESS",
+"userID":       "USER_ID",
+"devMode":      true,
+}
 var client = wrapper.Client(credentials)
 ```
 
