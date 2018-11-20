@@ -14,7 +14,7 @@ import github.com/synapsefi/
 
 See main.go for each method in use
 
-**queryParams** and **scope** are optional parameters
+*queryParams* and *scope* are optional parameters
 
 ## Client
 
