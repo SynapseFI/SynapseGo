@@ -7,7 +7,7 @@ $ go get github.com/synapsefi/synapsefi-go
 ```
 
 ```go
-import github.com/synapsefi/
+import github.com/synapsefi/synapsefi-go
 ```
 
 # Code Examples
