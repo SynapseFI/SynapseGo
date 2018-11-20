@@ -13,7 +13,7 @@ func (c *Client) GetClientTransactions(queryParams ...map[string]interface{}) ma
 		Query(queryString(queryParams)).
 		Set("x-sp-gateway", c.gateway).
 		Set("x-sp-user-ip", c.ipAddress).
-		Set("x-sp-user", c.userID).
+		Set("x-sp-user", c.fingerprint).
 		EndBytes()
 
 	if res != nil && errs != nil {

@@ -12,9 +12,9 @@ func GenerateClient(params interface{}) *Client {
 	}
 
 	client := &Client{
-		gateway:   p["clientID"].(string) + "|" + p["clientSecret"].(string),
-		ipAddress: p["ipAddress"].(string),
-		userID:    "|" + p["userID"].(string),
+		gateway:     p["clientID"].(string) + "|" + p["clientSecret"].(string),
+		ipAddress:   p["ipAddress"].(string),
+		fingerprint: "|" + p["fingerprint"].(string),
 	}
 
 	return client
