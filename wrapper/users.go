@@ -20,13 +20,13 @@ func (c *Client) GenerateUser(userID string, devMode ...bool) *User {
 	ak := auth(c, userID, rt)["payload"].(map[string]interface{})["oauth_key"].(string)
 
 	user := &User{
-		authKey:       ak,
-		refreshToken:  rt,
-		userID:        userID,
-		clientGateway: c.gateway,
-		clientID:      c.userID,
-		clientIP:      c.ipAddress,
-		Payload:       payload,
+		authKey:           ak,
+		refreshToken:      rt,
+		userID:            userID,
+		clientGateway:     c.gateway,
+		clientFingerprint: c.fingerprint,
+		clientIP:          c.ipAddress,
+		Payload:           payload,
 	}
 
 	return user
@@ -39,7 +39,7 @@ func (c *Client) GetUsers(queryParams ...map[string]interface{}) map[string]inte
 		Query(queryString(queryParams)).
 		Set("x-sp-gateway", c.gateway).
 		Set("x-sp-user-ip", c.ipAddress).
-		Set("x-sp-user", c.userID).
+		Set("x-sp-user", c.fingerprint).
 		EndBytes()
 
 	if res != nil && errs != nil {
@@ -62,7 +62,7 @@ func (c *Client) GetUser(userID string, fullDehydrate bool, queryParams ...map[s
 		Query(queryString(queryParams)).
 		Set("x-sp-gateway", c.gateway).
 		Set("x-sp-user-ip", c.ipAddress).
-		Set("x-sp-user", c.userID).
+		Set("x-sp-user", c.fingerprint).
 		EndBytes()
 
 	if res != nil && errs != nil {
@@ -83,7 +83,7 @@ func (c *Client) CreateUser(data string, queryParams ...map[string]interface{}) 
 		Query(queryString(queryParams)).
 		Set("x-sp-gateway", c.gateway).
 		Set("x-sp-user-ip", c.ipAddress).
-		Set("x-sp-user", c.userID).
+		Set("x-sp-user", c.fingerprint).
 		Send(data).
 		EndBytes()
 
@@ -104,7 +104,7 @@ func (u *User) AddNewDocuments(data string) map[string]interface{} {
 		Patch(url).
 		Set("x-sp-gateway", u.clientGateway).
 		Set("x-sp-user-ip", u.clientIP).
-		Set("x-sp-user", u.authKey+"|"+u.clientID).
+		Set("x-sp-user", u.authKey+"|"+u.clientFingerprint).
 		Send(data).
 		EndBytes()
 
@@ -123,7 +123,7 @@ func (u *User) UpdateDocuments(data string) map[string]interface{} {
 		Patch(url).
 		Set("x-sp-gateway", u.clientGateway).
 		Set("x-sp-user-ip", u.clientIP).
-		Set("x-sp-user", u.authKey+"|"+u.clientID).
+		Set("x-sp-user", u.authKey+"|"+u.clientFingerprint).
 		Send(data).
 		EndBytes()
 

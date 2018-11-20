@@ -13,7 +13,7 @@ func main() {
 		"clientID":     "client_id_pSdgBAaNfvRCcFmqK682tIhXOyD5iEV0rJx3nskQ",
 		"clientSecret": "client_secret_7GfSOVxD5seYHRC8o2X0grlvZtd9azmhMpn3U1Ju",
 		"ipAddress":    "127.0.0.1",
-		"userID":       "e88f41462eca394f6691da155d0cb73d",
+		"fingerprint":  "e88f41462eca394f6691da155d0cb73d",
 	}
 	client := wrapper.GenerateClient(credentials)
 	// "client_id_pSdgBAaNfvRCcFmqK682tIhXOyD5iEV0rJx3nskQ|client_secret_7GfSOVxD5seYHRC8o2X0grlvZtd9azmhMpn3U1Ju",

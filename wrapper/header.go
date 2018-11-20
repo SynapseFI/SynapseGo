@@ -13,7 +13,7 @@ func header(c *Client, setting string) {
 	case userSetting:
 		request.
 			Set("x-sp-user-ip", c.ipAddress).
-			Set("x-sp-user", c.userID)
+			Set("x-sp-user", c.fingerprint)
 	case gatewaySetting:
 		request.
 			Set("x-sp-gateway", c.gateway)
@@ -21,6 +21,6 @@ func header(c *Client, setting string) {
 		request.
 			Set("x-sp-gateway", c.gateway).
 			Set("x-sp-user-ip", c.ipAddress).
-			Set("x-sp-user", c.userID)
+			Set("x-sp-user", c.fingerprint)
 	}
 }
