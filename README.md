@@ -20,23 +20,26 @@ See main.go for each method in use
 
 ```go
 // credentials used to set headers for each method request
-var client = wrapper.Client(
-  "CLIENT_ID|CLIENT_SECRET ",
-  "IP_ADDRESS",
-  "USER_ID"
-)
+var credentials = map[string]interface{}{
+		"clientID":     "CLIENT_ID",
+		"clientSecret": "CLIENT_SECRET",
+		"ipAddress":    "IP_ADDRESS",
+		"userID":       "USER_ID",
+	}
+var client = wrapper.Client(credentials)
 ```
 
-To enable logging:
+To enable logging (development mode):
 
 ```go
-var client = wrapper.Client(
-  "CLIENT_ID|CLIENT_SECRET ",
-  "IP_ADDRESS",
-  "USER_ID",
-  // pass true as fourth variable
-  true
-)
+var credentials = map[string]interface{}{
+		"clientID":     "CLIENT_ID",
+		"clientSecret": "CLIENT_SECRET",
+		"ipAddress":    "IP_ADDRESS",
+    "userID":       "USER_ID",
+    "devMode":      true,
+	}
+var client = wrapper.Client(credentials)
 ```
 
 ## Misc
