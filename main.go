@@ -9,18 +9,23 @@ import (
 func main() {
 	// DEVELOPER WILL DO THE FOLLOWING:
 
-	client := wrapper.GenerateClient(
-		"client_id_pSdgBAaNfvRCcFmqK682tIhXOyD5iEV0rJx3nskQ|client_secret_7GfSOVxD5seYHRC8o2X0grlvZtd9azmhMpn3U1Ju",
-		"127.0.0.1",
-		// "|5beb505292571b00a14dd31a",
-		"|e88f41462eca394f6691da155d0cb73d",
-	)
+	credentials := map[string]interface{}{
+		"clientID":     "client_id_pSdgBAaNfvRCcFmqK682tIhXOyD5iEV0rJx3nskQ",
+		"clientSecret": "client_secret_7GfSOVxD5seYHRC8o2X0grlvZtd9azmhMpn3U1Ju",
+		"ipAddress":    "127.0.0.1",
+		"userID":       "e88f41462eca394f6691da155d0cb73d",
+	}
+	client := wrapper.GenerateClient(credentials)
+	// "client_id_pSdgBAaNfvRCcFmqK682tIhXOyD5iEV0rJx3nskQ|client_secret_7GfSOVxD5seYHRC8o2X0grlvZtd9azmhMpn3U1Ju",
+	// "127.0.0.1",
+	// // "|5beb505292571b00a14dd31a",
+	// "|e88f41462eca394f6691da155d0cb73d",
 
 	// data := client.GetUsers(map[string]interface{}{
 	// 	"per_page": 3,
 	// 	"page":     2,
 	// })
-	// data := client.GetUser("5bec6ebebaabfc00ab168fa0", false)
+	data := client.GetUser("5bec6ebebaabfc00ab168fa0", false)
 	// var newUserData = string(`{
 	// 	"logins": [
 	// 		{
@@ -65,33 +70,33 @@ func main() {
 	// "phone_number": "8085542146",
 	// "validation_pin": "923156",
 	// }
-	user := client.GenerateUser("5bec6ebebaabfc00ab168fa0")
-	data := user.AddNewDocuments(string(`{
-		"documents":[{
-			"email":"test@test.com",
-			"phone_number":"901.111.1111",
-			"ip":"::1",
-			"name":"Test User",
-			"alias":"Test",
-			"entity_type":"M",
-			"entity_scope":"Arts & Entertainment",
-			"day":2,
-			"month":5,
-			"year":1989,
-			"virtual_docs":[{
-					"document_value":"2222",
-					"document_type":"SSN"
-			}],
-			"physical_docs":[{
-					"document_value": "data:image/gif;base64,SUQs==",
-					"document_type": "GOVT_ID"
-			}],
-			"social_docs":[{
-					"document_value":"https://www.facebook.com/valid",
-					"document_type":"FACEBOOK"
-			}]
-		}]
-	}`))
+	// user := client.GenerateUser("5bec6ebebaabfc00ab168fa0")
+	// data := user.AddNewDocuments(string(`{
+	// 	"documents":[{
+	// 		"email":"test@test.com",
+	// 		"phone_number":"901.111.1111",
+	// 		"ip":"::1",
+	// 		"name":"Test User",
+	// 		"alias":"Test",
+	// 		"entity_type":"M",
+	// 		"entity_scope":"Arts & Entertainment",
+	// 		"day":2,
+	// 		"month":5,
+	// 		"year":1989,
+	// 		"virtual_docs":[{
+	// 				"document_value":"2222",
+	// 				"document_type":"SSN"
+	// 		}],
+	// 		"physical_docs":[{
+	// 				"document_value": "data:image/gif;base64,SUQs==",
+	// 				"document_type": "GOVT_ID"
+	// 		}],
+	// 		"social_docs":[{
+	// 				"document_value":"https://www.facebook.com/valid",
+	// 				"document_type":"FACEBOOK"
+	// 		}]
+	// 	}]
+	// }`))
 
 	// if err != nil {
 	// 	fmt.Println(err)

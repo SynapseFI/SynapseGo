@@ -3,15 +3,18 @@ package wrapper
 /********** METHODS **********/
 
 // GenerateClient creates a client object
-func GenerateClient(gateway, ipAddress, userID string, devMode ...bool) *Client {
-	if len(devMode) == 1 && devMode[0] == true {
+// func GenerateClient(gateway, ipAddress, userID string, devMode ...bool) *Client {
+func GenerateClient(params interface{}) *Client {
+	p := params.(map[string]interface{})
+
+	if p["devMode"] == true {
 		developerMode = true
 	}
 
 	client := &Client{
-		gateway:   gateway,
-		ipAddress: ipAddress,
-		userID:    userID,
+		gateway:   p["clientID"].(string) + "|" + p["clientSecret"].(string),
+		ipAddress: p["ipAddress"].(string),
+		userID:    "|" + p["userID"].(string),
 	}
 
 	return client
