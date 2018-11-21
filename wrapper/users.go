@@ -171,3 +171,40 @@ func (u *User) DeleteExistingDocument(data string) map[string]interface{} {
 
 	return responseSingle(read(body), "user")
 }
+
+// GetNodes returns all of the nodes associated with a user
+func (u *User) GetNodes(queryParams ...map[string]interface{}) map[string]interface{} {
+	url := usersURL + "/" + u.userID + "/nodes"
+
+	res, body, errs := request.
+		Get(url).
+		Set("x-sp-user-ip", u.clientIP).
+		Set("x-sp-user", u.authKey+"|"+u.clientFingerprint).
+		EndBytes()
+
+	if res != nil && errs != nil {
+		errorLog(errs)
+	}
+
+	return responseMulti(body, "nodes")
+}
+
+// CreateDepositNode creates an deposit account
+func (u *User) CreateDepositNode(data string) map[string]interface{} {
+	url := usersURL + "/" + u.userID + "/nodes"
+
+	res, body, errs := request.
+		Post(url).
+		Set("x-sp-user-ip", u.clientIP).
+		Set("x-sp-user", u.authKey+"|"+u.clientFingerprint).
+		Send(data).
+		EndBytes()
+
+	if res != nil && errs != nil {
+		errorLog(errs)
+	}
+
+	return responseSingle(read(body), "node")
+}
+
+//

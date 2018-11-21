@@ -5,8 +5,8 @@ const nodesURL = _url + "/nodes"
 
 /********** METHODS **********/
 
-// GetNodes returns all of the nodes associated with a user
-func (c *Client) GetNodes(queryParams ...map[string]interface{}) map[string]interface{} {
+// GetAllNodes returns all of the nodes
+func (c *Client) GetAllNodes(queryParams ...map[string]interface{}) map[string]interface{} {
 	res, body, errs := request.
 		Get(nodesURL).
 		Query(queryString(queryParams)).
