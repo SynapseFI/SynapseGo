@@ -1,9 +1,5 @@
 package wrapper
 
-import (
-	"fmt"
-)
-
 /*********** GLOBAL VARIABLES ***********/
 const usersURL = _url + "/users"
 
@@ -50,8 +46,6 @@ func (c *Client) GetUsers(queryParams ...map[string]interface{}) map[string]inte
 	if res != nil && errs != nil {
 		errorLog(errs)
 	}
-
-	fmt.Println(string(body))
 
 	return responseMulti(body, "users")
 }
