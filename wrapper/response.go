@@ -109,9 +109,11 @@ func read(data []byte) map[string]interface{} {
 func queryString(params []map[string]interface{}) string {
 	var query string
 
-	for i := 0; i < len(params); i++ {
-		for k := range params[i] {
-			query += k + "=" + strconv.Itoa(params[i][k].(int)) + "&"
+	for k := range params[0] {
+		if k == "query" || k == "show_refresh_tokens" {
+			query += k + "=" + params[0][k].(string) + "&"
+		} else if k == "page" || k == "per_page" {
+			query += k + "=" + strconv.Itoa(params[0][k].(int)) + "&"
 		}
 	}
 

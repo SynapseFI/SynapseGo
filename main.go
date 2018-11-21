@@ -21,11 +21,12 @@ func main() {
 	// // "|5beb505292571b00a14dd31a",
 	// "|e88f41462eca394f6691da155d0cb73d",
 
-	// data := client.GetUsers(map[string]interface{}{
-	// 	"per_page": 3,
-	// 	"page":     2,
-	// })
-	data := client.GetUser("5bec6ebebaabfc00ab168fa0", false)
+	data := client.GetUsers(map[string]interface{}{
+		"query":    "test",
+		"per_page": 3,
+		"page":     2,
+	})
+	// data := client.GetUser("5bec6ebebaabfc00ab168fa0", false)
 	// var newUserData = string(`{
 	// 	"logins": [
 	// 		{
@@ -63,7 +64,7 @@ func main() {
 	// data := client.UpdateSubscription("5bf2665a7e874a00a9cb32df", string(`{
 	// 	"is_active": true
 	// }`))
-	// data := client.GetNodes("5bec6ebebaabfc00ab168fa0")
+	// data := client.GetAllNodes()
 	// data := client.GetInstitutions()
 	// data := client.GetPublicKey("OAUTH|POST")
 	// data := client.Auth("5bec6ebebaabfc00ab168fa0", "refresh_HnCeXRh5PjfaAU1Wo7FKw3klisuDEbTvLgr0xm9O") // map[string]interface{}{
@@ -71,6 +72,7 @@ func main() {
 	// "validation_pin": "923156",
 	// }
 	// user := client.GenerateUser("5bec6ebebaabfc00ab168fa0")
+	// data := user.GetNodes()
 	// data := user.AddNewDocuments(string(`{
 	// 	"documents":[{
 	// 		"email":"test@test.com",
