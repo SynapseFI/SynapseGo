@@ -13,10 +13,10 @@ func generateUser(c *Client, data []byte, dehydrate bool) *User {
 	rt := d["refresh_token"].(string)
 
 	// get auth key
-	ak := auth(c, d["_id"].(string), rt)["payload"].(map[string]interface{})["oauth_key"].(string)
+	// ak := auth(c, d["_id"].(string), rt)["payload"].(map[string]interface{})["oauth_key"].(string)
 
 	return &User{
-		authKey:           ak,
+		// authKey:           ak,
 		clientGateway:     c.gateway,
 		clientFingerprint: c.fingerprint,
 		clientIP:          c.ipAddress,

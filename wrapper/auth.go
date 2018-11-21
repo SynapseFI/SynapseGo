@@ -3,10 +3,11 @@ package wrapper
 /********** GLOBAL VARIABLES **********/
 const authURL = _url + "/oauth"
 
-func auth(c *Client, userID string, refreshToken string, bodyParams ...map[string]interface{}) map[string]interface{} {
-	url := authURL + "/" + userID
+// Auth returns an oauth key and sets it to the user object
+func (u *User) Auth(c *Client, bodyParams ...map[string]interface{}) map[string]interface{} {
+	url := authURL + "/" + u.userID
 	rt := map[string]interface{}{
-		"refresh_token": refreshToken,
+		"refresh_token": u.refreshToken,
 	}
 
 	res, body, errs := request.
@@ -21,5 +22,5 @@ func auth(c *Client, userID string, refreshToken string, bodyParams ...map[strin
 		errorLog(errs)
 	}
 
-	return response(body)
+	return response(body, "oauth_key")
 }

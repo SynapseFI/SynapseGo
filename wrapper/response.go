@@ -7,11 +7,15 @@ import (
 
 /********** METHODS **********/
 
-func response(data []byte) map[string]interface{} {
+func response(data []byte, key ...string) map[string]interface{} {
 	body := make(map[string]interface{})
 	d := read(data)
 
-	body["payload"] = d
+	if len(key) != 0 {
+		body[key[0]] = d[key[0]]
+	} else {
+		body["payload"] = d
+	}
 
 	return body
 }
