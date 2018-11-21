@@ -2,7 +2,6 @@ package main
 
 import (
 	"api-wrapper/wrapper"
-	"encoding/json"
 	"fmt"
 )
 
@@ -21,12 +20,12 @@ func main() {
 	// // "|5beb505292571b00a14dd31a",
 	// "|e88f41462eca394f6691da155d0cb73d",
 
-	data := client.GetUsers(map[string]interface{}{
-		"query":    "test",
-		"per_page": 3,
-		"page":     2,
-	})
-	// data := client.GetUser("5bec6ebebaabfc00ab168fa0", false)
+	// data := client.GetUsers(map[string]interface{}{
+	// 	"query":    "test",
+	// 	"per_page": 3,
+	// 	"page":     2,
+	// })
+	user := client.GetUser("5bec6ebebaabfc00ab168fa0", false)
 	// var newUserData = string(`{
 	// 	"logins": [
 	// 		{
@@ -71,7 +70,6 @@ func main() {
 	// "phone_number": "8085542146",
 	// "validation_pin": "923156",
 	// }
-	// user := client.GenerateUser("5bec6ebebaabfc00ab168fa0")
 	// data := user.GetNodes()
 	// data := user.AddNewDocuments(string(`{
 	// 	"documents":[{
@@ -104,11 +102,12 @@ func main() {
 	// 	fmt.Println(err)
 	// }
 
-	payload, err := json.MarshalIndent(data, "", "  ")
+	// payload, err := json.MarshalIndent(data, "", "  ")
 
-	if err != nil {
-	}
+	// if err != nil {
+	// }
 
 	// fmt.Println(data["UserList"])
-	fmt.Println(string(payload))
+	// fmt.Println(string(payload))
+	fmt.Println(user)
 }
