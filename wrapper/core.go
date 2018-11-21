@@ -24,7 +24,8 @@ type (
 
 	// User represents a user object
 	User struct {
-		authKey, clientGateway, clientIP, clientFingerprint, fullDehydrate, userID, refreshToken string
-		Payload                                                                                  interface{}
+		authKey, clientGateway, clientIP, clientFingerprint, userID, refreshToken string
+		fullDehydrate                                                             bool
+		Payload                                                                   interface{}
 	}
 )
