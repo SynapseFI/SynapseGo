@@ -15,18 +15,12 @@ func generateUser(c *Client, data []byte, dehydrate bool) *User {
 	// get auth key
 	ak := auth(c, d["_id"].(string), rt)["payload"].(map[string]interface{})["oauth_key"].(string)
 
-	// check fullDehydrate
-	var fullDehydrate = "no"
-	if dehydrate == true {
-		fullDehydrate = "yes"
-	}
-
 	return &User{
 		authKey:           ak,
 		clientGateway:     c.gateway,
 		clientFingerprint: c.fingerprint,
 		clientIP:          c.ipAddress,
-		fullDehydrate:     fullDehydrate,
+		fullDehydrate:     dehydrate,
 		refreshToken:      rt,
 		userID:            d["_id"].(string),
 		Payload:           d,

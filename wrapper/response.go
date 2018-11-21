@@ -37,7 +37,7 @@ func responseMulti(data []byte, setting string) map[string]interface{} {
 		body["transList"] = list(d["trans"], "transaction")
 	case "users":
 		body["usersCount"] = d["users_count"]
-		body["usersList"] = list(d["users"], "user")
+		body["usersList"] = list(d["users"], "singleUser")
 	}
 
 	return body
@@ -65,12 +65,6 @@ func responseSingle(data []byte, setting string) map[string]interface{} {
 
 	case "user":
 		body["id"] = d["_id"]
-		body["fullDehydrate"] = "no"
-		body["payload"] = d
-
-	case "userDehydrate":
-		body["id"] = d["_id"]
-		body["fullDehydrate"] = "yes"
 		body["payload"] = d
 	}
 
