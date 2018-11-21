@@ -86,9 +86,13 @@ func list(data interface{}, setting string) []interface{} {
 		d := data.([]interface{})
 
 		for i := 0; i < len(d); i++ {
-			k := d[i].(map[string]interface{})
-			v := responseSingle(k, setting)
+			k, err := json.Marshal(d[i].(map[string]interface{}))
 
+			if err != nil {
+				errorLog(err)
+			}
+
+			v := responseSingle(k, setting)
 			list = append(list, v)
 		}
 	}

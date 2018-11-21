@@ -10,30 +10,31 @@ const usersURL = _url + "/users"
 /********** CLIENT METHODS **********/
 
 // GenerateUser creates a new user object
-func (c *Client) GenerateUser(userID string, devMode ...bool) *User {
-	if len(devMode) == 1 && devMode[0] == true {
-		developerMode = true
-	}
+func generateUser(c *Client, data []byte, dehydrate bool) *User {
+	d := read(data)
 
 	// get refresh token
-	// rt := c.GetUser(userID, false)["payload"].(map[string]interface{})["refresh_token"].(string)
-	payload := c.GetUser(userID, false)["payload"]
-	rt := payload.(map[string]interface{})["refresh_token"].(string)
+	rt := d["refresh_token"].(string)
 
 	// get auth key
-	ak := auth(c, userID, rt)["payload"].(map[string]interface{})["oauth_key"].(string)
+	ak := auth(c, d["_id"].(string), rt)["payload"].(map[string]interface{})["oauth_key"].(string)
 
-	user := &User{
+	// check fullDehydrate
+	var fullDehydrate = "no"
+	if dehydrate == true {
+		fullDehydrate = "yes"
+	}
+
+	return &User{
 		authKey:           ak,
-		refreshToken:      rt,
-		userID:            userID,
 		clientGateway:     c.gateway,
 		clientFingerprint: c.fingerprint,
 		clientIP:          c.ipAddress,
-		Payload:           payload,
+		fullDehydrate:     fullDehydrate,
+		refreshToken:      rt,
+		userID:            d["_id"].(string),
+		Payload:           d,
 	}
-
-	return user
 }
 
 // GetUsers returns a list of users
@@ -56,7 +57,7 @@ func (c *Client) GetUsers(queryParams ...map[string]interface{}) map[string]inte
 }
 
 // GetUser returns a single user
-func (c *Client) GetUser(userID string, fullDehydrate bool, queryParams ...map[string]interface{}) map[string]interface{} {
+func (c *Client) GetUser(userID string, fullDehydrate bool, queryParams ...map[string]interface{}) *User {
 	url := usersURL + "/" + userID
 
 	if fullDehydrate != true {
@@ -75,15 +76,11 @@ func (c *Client) GetUser(userID string, fullDehydrate bool, queryParams ...map[s
 		errorLog(errs)
 	}
 
-	if fullDehydrate != true {
-		return responseSingle(read(body), "user")
-	}
-
-	return responseSingle(read(body), "userDehydrate")
+	return generateUser(c, body, fullDehydrate)
 }
 
 // CreateUser creates a single user and returns the new user data
-func (c *Client) CreateUser(data string, queryParams ...map[string]interface{}) map[string]interface{} {
+func (c *Client) CreateUser(data string, queryParams ...map[string]interface{}) *User {
 	res, body, errs := request.
 		Post(usersURL).
 		Query(queryString(queryParams)).
@@ -97,7 +94,7 @@ func (c *Client) CreateUser(data string, queryParams ...map[string]interface{}) 
 		errorLog(errs)
 	}
 
-	return responseSingle(read(body), "user")
+	return generateUser(c, body, false)
 }
 
 /********** USER METHODS **********/
@@ -118,7 +115,7 @@ func (u *User) UpdateUser(data string, queryParams ...map[string]interface{}) ma
 		errorLog(errs)
 	}
 
-	return responseSingle(read(body), "user")
+	return responseSingle(body, "user")
 }
 
 // AddNewDocuments adds new documents to a user
@@ -137,7 +134,7 @@ func (u *User) AddNewDocuments(data string) map[string]interface{} {
 		errorLog(errs)
 	}
 
-	return responseSingle(read(body), "user")
+	return responseSingle(body, "user")
 }
 
 // UpdateExistingDocument updates existing user documents
@@ -156,7 +153,7 @@ func (u *User) UpdateExistingDocument(data string) map[string]interface{} {
 		errorLog(errs)
 	}
 
-	return responseSingle(read(body), "user")
+	return responseSingle(body, "user")
 }
 
 // DeleteExistingDocument updates existing user documents
@@ -175,7 +172,7 @@ func (u *User) DeleteExistingDocument(data string) map[string]interface{} {
 		errorLog(errs)
 	}
 
-	return responseSingle(read(body), "user")
+	return responseSingle(body, "user")
 }
 
 // GetNodes returns all of the nodes associated with a user
@@ -212,7 +209,5 @@ func (u *User) CreateDepositNode(data string) map[string]interface{} {
 		errorLog(errs)
 	}
 
-	return responseSingle(read(body), "node")
+	return responseSingle(body, "node")
 }
-
-//
