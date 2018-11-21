@@ -12,9 +12,7 @@ func response(data []byte, key ...string) map[string]interface{} {
 	d := read(data)
 
 	if len(key) != 0 {
-		body[key[0]] = d[key[0]]
-	} else {
-		body["payload"] = d
+		return d[key[0]].(map[string]interface{})
 	}
 
 	return body
