@@ -43,34 +43,35 @@ func responseMulti(data []byte, setting string) map[string]interface{} {
 	return body
 }
 
-func responseSingle(value map[string]interface{}, setting string) map[string]interface{} {
+func responseSingle(data []byte, setting string) map[string]interface{} {
 	body := make(map[string]interface{})
+	d := read(data)
 
 	switch setting {
 	case "node":
-		body["id"] = value["_id"]
-		body["userID"] = value["user_id"]
+		body["id"] = d["_id"]
+		body["userID"] = d["user_id"]
 		body["fullDehydrate"] = "no"
-		body["payload"] = value
+		body["payload"] = d
 
 	case "subscription":
-		body["id"] = value["_id"]
-		body["url"] = value["url"]
-		body["payload"] = value
+		body["id"] = d["_id"]
+		body["url"] = d["url"]
+		body["payload"] = d
 
 	case "transaction":
-		body["id"] = value["_id"]
-		body["payload"] = value
+		body["id"] = d["_id"]
+		body["payload"] = d
 
 	case "user":
-		body["id"] = value["_id"]
+		body["id"] = d["_id"]
 		body["fullDehydrate"] = "no"
-		body["payload"] = value
+		body["payload"] = d
 
 	case "userDehydrate":
-		body["id"] = value["_id"]
+		body["id"] = d["_id"]
 		body["fullDehydrate"] = "yes"
-		body["payload"] = value
+		body["payload"] = d
 	}
 
 	return body

@@ -34,7 +34,7 @@ func (c *Client) GetSubscription(subID string, queryParams ...map[string]interfa
 		errorLog(errs)
 	}
 
-	return responseSingle(read(body), "subscription")
+	return responseSingle(body, "subscription")
 }
 
 // CreateSubscription creates a subscription and returns the subscription data
@@ -50,7 +50,7 @@ func (c *Client) CreateSubscription(data string, queryParams ...map[string]inter
 		errorLog(errs)
 	}
 
-	return responseSingle(read(body), "subscription")
+	return responseSingle(body, "subscription")
 }
 
 // UpdateSubscription updates an existing subscription
@@ -69,5 +69,5 @@ func (c *Client) UpdateSubscription(subID string, data string, queryParams ...ma
 		errorLog(errs)
 	}
 
-	return responseSingle(read(body), "subscription")
+	return responseSingle(body, "subscription")
 }
