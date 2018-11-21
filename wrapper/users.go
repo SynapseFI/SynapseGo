@@ -16,13 +16,13 @@ func generateUser(c *Client, data []byte, dehydrate bool) *User {
 	// ak := auth(c, d["_id"].(string), rt)["payload"].(map[string]interface{})["oauth_key"].(string)
 
 	return &User{
-		// authKey:           ak,
+		// AuthKey:           ak,
 		clientGateway:     c.gateway,
 		clientFingerprint: c.fingerprint,
 		clientIP:          c.ipAddress,
 		fullDehydrate:     dehydrate,
-		refreshToken:      rt,
-		userID:            d["_id"].(string),
+		RefreshToken:      rt,
+		UserID:            d["_id"].(string),
 		Payload:           d,
 	}
 }
@@ -45,8 +45,8 @@ func (c *Client) GetUsers(queryParams ...map[string]interface{}) map[string]inte
 }
 
 // GetUser returns a single user
-func (c *Client) GetUser(userID string, fullDehydrate bool, queryParams ...map[string]interface{}) *User {
-	url := usersURL + "/" + userID
+func (c *Client) GetUser(UserID string, fullDehydrate bool, queryParams ...map[string]interface{}) *User {
+	url := usersURL + "/" + UserID
 
 	if fullDehydrate != true {
 		url += "?full_dehydrate=yes"
@@ -87,15 +87,17 @@ func (c *Client) CreateUser(data string, queryParams ...map[string]interface{}) 
 
 /********** USER METHODS **********/
 
+// func (u *User) Ge
+
 // UpdateUser updates a single user and returns the updated user information
 func (u *User) UpdateUser(data string, queryParams ...map[string]interface{}) map[string]interface{} {
-	url := usersURL + "/" + u.userID
+	url := usersURL + "/" + u.UserID
 
 	res, body, errs := request.
 		Patch(url).
 		Set("x-sp-gateway", u.clientGateway).
 		Set("x-sp-user-ip", u.clientIP).
-		Set("x-sp-user", u.authKey+"|"+u.clientFingerprint).
+		Set("x-sp-user", u.AuthKey+"|"+u.clientFingerprint).
 		Send(data).
 		EndBytes()
 
@@ -108,13 +110,13 @@ func (u *User) UpdateUser(data string, queryParams ...map[string]interface{}) ma
 
 // AddNewDocuments adds new documents to a user
 func (u *User) AddNewDocuments(data string) map[string]interface{} {
-	url := usersURL + "/" + u.userID
+	url := usersURL + "/" + u.UserID
 
 	res, body, errs := request.
 		Patch(url).
 		Set("x-sp-gateway", u.clientGateway).
 		Set("x-sp-user-ip", u.clientIP).
-		Set("x-sp-user", u.authKey+"|"+u.clientFingerprint).
+		Set("x-sp-user", u.AuthKey+"|"+u.clientFingerprint).
 		Send(data).
 		EndBytes()
 
@@ -127,13 +129,13 @@ func (u *User) AddNewDocuments(data string) map[string]interface{} {
 
 // UpdateExistingDocument updates existing user documents
 func (u *User) UpdateExistingDocument(data string) map[string]interface{} {
-	url := usersURL + "/" + u.userID
+	url := usersURL + "/" + u.UserID
 
 	res, body, errs := request.
 		Patch(url).
 		Set("x-sp-gateway", u.clientGateway).
 		Set("x-sp-user-ip", u.clientIP).
-		Set("x-sp-user", u.authKey+"|"+u.clientFingerprint).
+		Set("x-sp-user", u.AuthKey+"|"+u.clientFingerprint).
 		Send(data).
 		EndBytes()
 
@@ -146,13 +148,13 @@ func (u *User) UpdateExistingDocument(data string) map[string]interface{} {
 
 // DeleteExistingDocument updates existing user documents
 func (u *User) DeleteExistingDocument(data string) map[string]interface{} {
-	url := usersURL + "/" + u.userID
+	url := usersURL + "/" + u.UserID
 
 	res, body, errs := request.
 		Patch(url).
 		Set("x-sp-gateway", u.clientGateway).
 		Set("x-sp-user-ip", u.clientIP).
-		Set("x-sp-user", u.authKey+"|"+u.clientFingerprint).
+		Set("x-sp-user", u.AuthKey+"|"+u.clientFingerprint).
 		Send(data).
 		EndBytes()
 
@@ -165,31 +167,31 @@ func (u *User) DeleteExistingDocument(data string) map[string]interface{} {
 
 // GetNodes returns all of the nodes associated with a user
 func (u *User) GetNodes(queryParams ...map[string]interface{}) map[string]interface{} {
-	url := usersURL + "/" + u.userID + "/nodes"
+	url := usersURL + "/" + u.UserID + "/nodes"
 
 	res, body, errs := request.
 		Get(url).
 		Set("x-sp-user-ip", u.clientIP).
-		Set("x-sp-user", u.authKey+"|"+u.clientFingerprint).
+		Set("x-sp-user", u.AuthKey+"|"+u.clientFingerprint).
 		EndBytes()
 
 	if res != nil && errs != nil {
 		errorLog(errs)
 	}
 
-	u.authKey = "NEW KEY"
+	u.AuthKey = "NEW KEY"
 
 	return responseMulti(body, "nodes")
 }
 
 // CreateDepositNode creates an deposit account
 func (u *User) CreateDepositNode(data string) map[string]interface{} {
-	url := usersURL + "/" + u.userID + "/nodes"
+	url := usersURL + "/" + u.UserID + "/nodes"
 
 	res, body, errs := request.
 		Post(url).
 		Set("x-sp-user-ip", u.clientIP).
-		Set("x-sp-user", u.authKey+"|"+u.clientFingerprint).
+		Set("x-sp-user", u.AuthKey+"|"+u.clientFingerprint).
 		Send(data).
 		EndBytes()
 

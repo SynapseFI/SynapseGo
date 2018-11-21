@@ -5,9 +5,9 @@ const authURL = _url + "/oauth"
 
 // Auth returns an oauth key and sets it to the user object
 func (u *User) Auth(c *Client, bodyParams ...map[string]interface{}) map[string]interface{} {
-	url := authURL + "/" + u.userID
+	url := authURL + "/" + u.UserID
 	rt := map[string]interface{}{
-		"refresh_token": u.refreshToken,
+		"refresh_token": u.RefreshToken,
 	}
 
 	res, body, errs := request.
@@ -21,6 +21,8 @@ func (u *User) Auth(c *Client, bodyParams ...map[string]interface{}) map[string]
 	if res != nil && errs != nil {
 		errorLog(errs)
 	}
+
+	u.AuthKey = read(body)["oauth_key"].(string)
 
 	return response(body, "oauth_key")
 }
