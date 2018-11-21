@@ -87,8 +87,6 @@ func (c *Client) CreateUser(data string, queryParams ...map[string]interface{}) 
 
 /********** USER METHODS **********/
 
-// func (u *User) Ge
-
 // UpdateUser updates a single user and returns the updated user information
 func (u *User) UpdateUser(data string, queryParams ...map[string]interface{}) map[string]interface{} {
 	url := usersURL + "/" + u.UserID
