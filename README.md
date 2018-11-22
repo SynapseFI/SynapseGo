@@ -16,7 +16,7 @@ See main.go for each method in use
 
 *queryParams* and *scope* are optional parameters
 
-## Client
+## Client (developer)
 
 ```go
 // credentials used to set headers for each method request
@@ -42,21 +42,21 @@ var credentials = map[string]interface{}{
 var client = wrapper.Client(credentials)
 ```
 
-## Misc
+### Misc
 
-### Institutions
+#### Institutions
 
 ```go
 data := client.GetInstitutions()
 ```
 
-## Nodes
+### Nodes
 
 ```go
 data := client.GetNodes(queryParams map[string]interface{})
 ```
 
-## Subscriptions
+### Subscriptions
 
 ```go
 data := client.GetSubscriptions(queryParams map[string]interface{})
@@ -65,24 +65,47 @@ data := client.CreateSubscription(data string, queryParams map[string]interface{
 data := client.UpdateSubscription(subID string, query)
 ```
 
-## Transactions
+### Transactions
 
 ```go
 data := client.GetClientTransactions(queryParams map[string]interface{})
 ```
 
-## User Interface
+### User Interface
 
-### Issue Public Key
+#### Issue Public Key
 
 ```go
 data := client.GetPublicKey(scope string)
 ```
 
-## Users
+### Users
 
 ```go
 data := client.GetUsers(queryParams map[string]interface{})
-data := client.GetUser(userID string, fullDehydrate bool, queryParams map[string]interface{})
-data := client.CreateUser(data string, queryParams map[string]interface{})
+
+// instantiate User object
+user := client.GetUser(userID string, fullDehydrate bool, queryParams map[string]interface{})
+user := client.CreateUser(data string, queryParams map[string]interface{})
+```
+
+## User
+
+```go
+data := user.Update(data string, bodyParams map[string]interface{})
+```
+
+### Documents
+
+```go
+data := user.AddNewDocuments(data string)
+data := user.UpdateExistingDocument(data string)
+data := user.DeleteExistingDocument(data string)
+```
+
+### Nodes
+
+```go
+data := user.GetNodes(queryParams ...map[string]interface{})
+data := user.CreateDepositeNode(data string)
 ```
