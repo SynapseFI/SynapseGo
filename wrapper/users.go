@@ -87,8 +87,8 @@ func (c *Client) CreateUser(data string, queryParams ...map[string]interface{}) 
 
 /********** USER METHODS **********/
 
-// UpdateUser updates a single user and returns the updated user information
-func (u *User) UpdateUser(data string, queryParams ...map[string]interface{}) map[string]interface{} {
+// Update updates a single user and returns the updated user information
+func (u *User) Update(data string, queryParams ...map[string]interface{}) map[string]interface{} {
 	url := usersURL + "/" + u.UserID
 
 	res, body, errs := request.
