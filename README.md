@@ -95,6 +95,12 @@ user := client.CreateUser(data string, queryParams map[string]interface{})
 data := user.Update(data string, bodyParams map[string]interface{})
 ```
 
+### Authentication
+
+```go
+data := user.Auth(data string)
+```
+
 ### Documents
 
 ```go
