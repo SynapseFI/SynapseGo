@@ -4,18 +4,15 @@ package wrapper
 const authURL = _url + "/oauth"
 
 // Auth returns an oauth key and sets it to the user object
-func (u *User) Auth(c *Client, bodyParams ...map[string]interface{}) map[string]interface{} {
+func (u *User) Auth(data string) map[string]interface{} {
 	url := authURL + "/" + u.UserID
-	rt := map[string]interface{}{
-		"refresh_token": u.RefreshToken,
-	}
 
 	res, body, errs := request.
 		Post(url).
-		Set("x-sp-gateway", c.gateway).
-		Set("x-sp-user-ip", c.ipAddress).
-		Set("x-sp-user", c.fingerprint).
-		Send(rt).
+		Set("x-sp-gateway", u.clientGateway).
+		Set("x-sp-user-ip", u.clientIP).
+		Set("x-sp-user", u.clientFingerprint).
+		Send(data).
 		EndBytes()
 
 	if res != nil && errs != nil {

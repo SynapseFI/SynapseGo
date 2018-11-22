@@ -8,14 +8,7 @@ import (
 /********** METHODS **********/
 
 func response(data []byte, key ...string) map[string]interface{} {
-	body := make(map[string]interface{})
-	d := read(data)
-
-	if len(key) != 0 {
-		return d[key[0]].(map[string]interface{})
-	}
-
-	return body
+	return read(data)
 }
 
 func responseMulti(data []byte, setting string) map[string]interface{} {
