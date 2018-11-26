@@ -11,11 +11,18 @@ func GenerateClient(params interface{}) *Client {
 		developerMode = true
 	}
 
-	client := &Client{
+	return &Client{
 		gateway:     p["clientID"].(string) + "|" + p["clientSecret"].(string),
 		ipAddress:   p["ipAddress"].(string),
 		fingerprint: "|" + p["fingerprint"].(string),
 	}
+}
 
-	return client
+// Info returns client credentials
+func (c *Client) Info() map[string]interface{} {
+	return map[string]interface{}{
+		"gateway":     c.gateway,
+		"ipAddress":   c.ipAddress,
+		"fingerprint": c.fingerprint,
+	}
 }
