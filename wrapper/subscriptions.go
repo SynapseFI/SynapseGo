@@ -6,68 +6,37 @@ const subsURL = _url + "/subscriptions"
 /********** METHODS **********/
 
 // GetSubscriptions returns all of the nodes associated with a user
-func (c *Client) GetSubscriptions(queryParams ...map[string]interface{}) map[string]interface{} {
-	res, body, errs := request.
-		Get(subsURL).
-		Query(queryString(queryParams)).
-		Set("x-sp-gateway", c.gateway).
-		EndBytes()
+func (c *Client) GetSubscriptions(queryParams ...string) map[string]interface{} {
+	h := c.getHeaderInfo("gateway")
+	r := apiRequest(GET, subsURL, h, queryParams)
 
-	if res != nil && errs != nil {
-		errorLog(errs)
-	}
-
-	return responseMulti(body, "subscriptions")
+	return responseMulti(r, "subscriptions")
 }
 
 // GetSubscription returns a single subscription
-func (c *Client) GetSubscription(subID string, queryParams ...map[string]interface{}) map[string]interface{} {
+func (c *Client) GetSubscription(subID string, queryParams ...string) map[string]interface{} {
 	url := subsURL + "/" + subID
 
-	res, body, errs := request.
-		Get(url).
-		Query(queryString(queryParams)).
-		Set("x-sp-gateway", c.gateway).
-		EndBytes()
+	h := c.getHeaderInfo("gateway")
+	r := apiRequest(GET, url, h, queryParams)
 
-	if res != nil && errs != nil {
-		errorLog(errs)
-	}
-
-	return responseSingle(body, "subscription")
+	return responseSingle(r, "subscription")
 }
 
 // CreateSubscription creates a subscription and returns the subscription data
-func (c *Client) CreateSubscription(data string, queryParams ...map[string]interface{}) map[string]interface{} {
-	res, body, errs := request.
-		Post(subsURL).
-		Query(queryString(queryParams)).
-		Set("x-sp-gateway", c.gateway).
-		Send(data).
-		EndBytes()
+func (c *Client) CreateSubscription(data string, queryParams ...string) map[string]interface{} {
+	h := c.getHeaderInfo("gateway")
+	r := apiRequest(GET, usersURL, h, queryParams, data)
 
-	if res != nil && errs != nil {
-		errorLog(errs)
-	}
-
-	return responseSingle(body, "subscription")
+	return responseSingle(r, "subscription")
 }
 
 // UpdateSubscription updates an existing subscription
-func (c *Client) UpdateSubscription(subID string, data string, queryParams ...map[string]interface{}) map[string]interface{} {
-
+func (c *Client) UpdateSubscription(subID string, data string, queryParams ...string) map[string]interface{} {
 	url := subsURL + "/" + subID
 
-	res, body, errs := request.
-		Patch(url).
-		Query(queryString(queryParams)).
-		Set("x-sp-gateway", c.gateway).
-		Send(data).
-		EndBytes()
+	h := c.getHeaderInfo("gateway")
+	r := apiRequest(GET, url, h, queryParams, data)
 
-	if res != nil && errs != nil {
-		errorLog(errs)
-	}
-
-	return responseSingle(body, "subscription")
+	return responseSingle(r, "subscription")
 }
