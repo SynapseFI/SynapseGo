@@ -29,169 +29,93 @@ func generateUser(c *Client, data []byte, dehydrate bool) *User {
 
 // GetUsers returns a list of users
 func (c *Client) GetUsers(queryParams ...string) map[string]interface{} {
-	headers := map[string]interface{}{
-		"x-sp-gateway": c.gateway,
-		"x-sp-user-ip": c.ipAddress,
-		// "x-sp-user":    c.fingerprint,
-	}
-
-	r := apiRequest(GET, usersURL, headers, queryParams)
+	h := c.getHeaderInfo("")
+	r := apiRequest(GET, usersURL, h, queryParams)
 
 	return responseMulti(r, "users")
 }
 
 // GetUser returns a single user
-func (c *Client) GetUser(UserID string, fullDehydrate bool, queryParams ...map[string]interface{}) *User {
+func (c *Client) GetUser(UserID string, fullDehydrate bool, queryParams ...string) *User {
 	url := usersURL + "/" + UserID
 
 	if fullDehydrate != true {
 		url += "?full_dehydrate=yes"
 	}
 
-	res, body, errs := request.
-		Get(url).
-		Query(queryString(queryParams)).
-		Set("x-sp-gateway", c.gateway).
-		Set("x-sp-user-ip", c.ipAddress).
-		Set("x-sp-user", c.fingerprint).
-		EndBytes()
-
-	if res != nil && errs != nil {
-		errorLog(errs)
-	}
-
-	return generateUser(c, body, fullDehydrate)
+	h := c.getHeaderInfo("")
+	r := apiRequest(GET, url, h, queryParams)
+	return generateUser(c, r, fullDehydrate)
 }
 
 // CreateUser creates a single user and returns the new user data
-func (c *Client) CreateUser(data string, queryParams ...map[string]interface{}) *User {
-	res, body, errs := request.
-		Post(usersURL).
-		Query(queryString(queryParams)).
-		Set("x-sp-gateway", c.gateway).
-		Set("x-sp-user-ip", c.ipAddress).
-		Set("x-sp-user", c.fingerprint).
-		Send(data).
-		EndBytes()
+func (c *Client) CreateUser(data string, queryParams ...string) *User {
+	h := c.getHeaderInfo("")
+	r := apiRequest(POST, usersURL, h, queryParams, data)
 
-	if res != nil && errs != nil {
-		errorLog(errs)
-	}
-
-	return generateUser(c, body, false)
+	return generateUser(c, r, false)
 }
 
 /********** USER METHODS **********/
 
 // Update updates a single user and returns the updated user information
-func (u *User) Update(data string, queryParams ...map[string]interface{}) map[string]interface{} {
+func (u *User) Update(data string, queryParams ...string) map[string]interface{} {
 	url := usersURL + "/" + u.UserID
 
-	res, body, errs := request.
-		Patch(url).
-		Set("x-sp-gateway", u.clientGateway).
-		Set("x-sp-user-ip", u.clientIP).
-		Set("x-sp-user", u.AuthKey+"|"+u.clientFingerprint).
-		Send(data).
-		EndBytes()
+	h := u.getHeaderInfo("")
+	r := apiRequest(PATCH, url, h, queryParams, data)
 
-	if res != nil && errs != nil {
-		errorLog(errs)
-	}
-
-	return responseSingle(body, "user")
+	return responseSingle(r, "user")
 }
 
 // AddNewDocuments adds new documents to a user
 func (u *User) AddNewDocuments(data string) map[string]interface{} {
 	url := usersURL + "/" + u.UserID
 
-	res, body, errs := request.
-		Patch(url).
-		Set("x-sp-gateway", u.clientGateway).
-		Set("x-sp-user-ip", u.clientIP).
-		Set("x-sp-user", u.AuthKey+"|"+u.clientFingerprint).
-		Send(data).
-		EndBytes()
+	h := u.getHeaderInfo("")
+	r := apiRequest(PATCH, url, h, nil, data)
 
-	if res != nil && errs != nil {
-		errorLog(errs)
-	}
-
-	return responseSingle(body, "user")
+	return responseSingle(r, "user")
 }
 
 // UpdateExistingDocument updates existing user documents
 func (u *User) UpdateExistingDocument(data string) map[string]interface{} {
 	url := usersURL + "/" + u.UserID
 
-	res, body, errs := request.
-		Patch(url).
-		Set("x-sp-gateway", u.clientGateway).
-		Set("x-sp-user-ip", u.clientIP).
-		Set("x-sp-user", u.AuthKey+"|"+u.clientFingerprint).
-		Send(data).
-		EndBytes()
+	h := u.getHeaderInfo("")
+	r := apiRequest(PATCH, url, h, nil, data)
 
-	if res != nil && errs != nil {
-		errorLog(errs)
-	}
-
-	return responseSingle(body, "user")
+	return responseSingle(r, "user")
 }
 
 // DeleteExistingDocument updates existing user documents
 func (u *User) DeleteExistingDocument(data string) map[string]interface{} {
 	url := usersURL + "/" + u.UserID
 
-	res, body, errs := request.
-		Patch(url).
-		Set("x-sp-gateway", u.clientGateway).
-		Set("x-sp-user-ip", u.clientIP).
-		Set("x-sp-user", u.AuthKey+"|"+u.clientFingerprint).
-		Send(data).
-		EndBytes()
+	h := u.getHeaderInfo("")
+	r := apiRequest(PATCH, url, h, nil, data)
 
-	if res != nil && errs != nil {
-		errorLog(errs)
-	}
-
-	return responseSingle(body, "user")
+	return responseSingle(r, "user")
 }
 
 // GetNodes returns all of the nodes associated with a user
-func (u *User) GetNodes(queryParams ...map[string]interface{}) map[string]interface{} {
+func (u *User) GetNodes(queryParams ...string) map[string]interface{} {
 	url := usersURL + "/" + u.UserID + "/nodes"
 
-	res, body, errs := request.
-		Get(url).
-		Set("x-sp-user-ip", u.clientIP).
-		Set("x-sp-user", u.AuthKey+"|"+u.clientFingerprint).
-		EndBytes()
-
-	if res != nil && errs != nil {
-		errorLog(errs)
-	}
+	h := u.getHeaderInfo("no gateway")
+	r := apiRequest(PATCH, url, h, queryParams)
 
 	u.AuthKey = "NEW KEY"
 
-	return responseMulti(body, "nodes")
+	return responseMulti(r, "nodes")
 }
 
 // CreateDepositNode creates an deposit account
 func (u *User) CreateDepositNode(data string) map[string]interface{} {
 	url := usersURL + "/" + u.UserID + "/nodes"
 
-	res, body, errs := request.
-		Post(url).
-		Set("x-sp-user-ip", u.clientIP).
-		Set("x-sp-user", u.AuthKey+"|"+u.clientFingerprint).
-		Send(data).
-		EndBytes()
+	h := u.getHeaderInfo("no gateway")
+	r := apiRequest(PATCH, url, h, nil, data)
 
-	if res != nil && errs != nil {
-		errorLog(errs)
-	}
-
-	return responseSingle(body, "node")
+	return responseSingle(r, "node")
 }
