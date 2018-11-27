@@ -30,7 +30,7 @@ func generateUser(c *Client, data []byte, dehydrate bool) *User {
 // GetUsers returns a list of users
 func (c *Client) GetUsers(queryParams ...string) map[string]interface{} {
 	h := c.getHeaderInfo("")
-	r := apiRequest(GET, usersURL, h, queryParams)
+	r := request(GET, usersURL, h, queryParams)
 
 	return responseMulti(r, "users")
 }
@@ -44,14 +44,14 @@ func (c *Client) GetUser(UserID string, fullDehydrate bool, queryParams ...strin
 	}
 
 	h := c.getHeaderInfo("")
-	r := apiRequest(GET, url, h, queryParams)
+	r := request(GET, url, h, queryParams)
 	return generateUser(c, r, fullDehydrate)
 }
 
 // CreateUser creates a single user and returns the new user data
 func (c *Client) CreateUser(data string, queryParams ...string) *User {
 	h := c.getHeaderInfo("")
-	r := apiRequest(POST, usersURL, h, queryParams, data)
+	r := request(POST, usersURL, h, queryParams, data)
 
 	return generateUser(c, r, false)
 }
@@ -63,7 +63,7 @@ func (u *User) Update(data string, queryParams ...string) map[string]interface{}
 	url := usersURL + "/" + u.UserID
 
 	h := u.getHeaderInfo("")
-	r := apiRequest(PATCH, url, h, queryParams, data)
+	r := request(PATCH, url, h, queryParams, data)
 
 	return responseSingle(r, "user")
 }
@@ -73,7 +73,7 @@ func (u *User) AddNewDocuments(data string) map[string]interface{} {
 	url := usersURL + "/" + u.UserID
 
 	h := u.getHeaderInfo("")
-	r := apiRequest(PATCH, url, h, nil, data)
+	r := request(PATCH, url, h, nil, data)
 
 	return responseSingle(r, "user")
 }
@@ -83,7 +83,7 @@ func (u *User) UpdateExistingDocument(data string) map[string]interface{} {
 	url := usersURL + "/" + u.UserID
 
 	h := u.getHeaderInfo("")
-	r := apiRequest(PATCH, url, h, nil, data)
+	r := request(PATCH, url, h, nil, data)
 
 	return responseSingle(r, "user")
 }
@@ -93,7 +93,7 @@ func (u *User) DeleteExistingDocument(data string) map[string]interface{} {
 	url := usersURL + "/" + u.UserID
 
 	h := u.getHeaderInfo("")
-	r := apiRequest(PATCH, url, h, nil, data)
+	r := request(PATCH, url, h, nil, data)
 
 	return responseSingle(r, "user")
 }
@@ -103,7 +103,7 @@ func (u *User) GetNodes(queryParams ...string) map[string]interface{} {
 	url := usersURL + "/" + u.UserID + "/nodes"
 
 	h := u.getHeaderInfo("no gateway")
-	r := apiRequest(PATCH, url, h, queryParams)
+	r := request(PATCH, url, h, queryParams)
 
 	u.AuthKey = "NEW KEY"
 
@@ -115,7 +115,7 @@ func (u *User) CreateDepositNode(data string) map[string]interface{} {
 	url := usersURL + "/" + u.UserID + "/nodes"
 
 	h := u.getHeaderInfo("no gateway")
-	r := apiRequest(PATCH, url, h, nil, data)
+	r := request(PATCH, url, h, nil, data)
 
 	return responseSingle(r, "node")
 }

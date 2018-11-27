@@ -9,7 +9,7 @@ const transURL = _url + "/trans"
 func (c *Client) GetClientTransactions(queryParams ...string) map[string]interface{} {
 
 	h := c.getHeaderInfo("")
-	r := apiRequest(GET, transURL, h, queryParams)
+	r := request(GET, transURL, h, queryParams)
 
 	return responseMulti(r, "transactions")
 }

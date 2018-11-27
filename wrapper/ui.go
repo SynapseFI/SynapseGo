@@ -19,14 +19,8 @@ func (c *Client) GetPublicKey(scope ...string) map[string]interface{} {
 
 	urlParams = strings.TrimSuffix(urlParams, ",")
 
-	res, body, errs := request.
-		Get(urlParams).
-		Set("x-sp-gateway", c.gateway).
-		EndBytes()
+	h := c.getHeaderInfo("")
+	r := request(GET, urlParams, h, nil)
 
-	if res != nil && errs != nil {
-		errorLog(errs)
-	}
-
-	return response(body, "public_key_obj")
+	return response(r, "public_key_obj")
 }
