@@ -16,10 +16,10 @@ const (
 
 /********** METHODS **********/
 
-func apiRequest(method, url string, headers map[string]interface{}, data []string) []byte {
+func apiRequest(method, url string, headers map[string]interface{}, params []string, data ...string) []byte {
 	var req = gorequest.New()
 	req = setMethod(method, url)
-	req = setParams(req, data)
+	req = setParams(req, params, data)
 	req = setHeader(req, headers)
 
 	res, body, errs := req.EndBytes()
@@ -36,6 +36,7 @@ func apiRequest(method, url string, headers map[string]interface{}, data []strin
 }
 
 func setHeader(r *gorequest.SuperAgent, h map[string]interface{}) *gorequest.SuperAgent {
+
 	for k := range h {
 		r.Set(k, h[k].(string))
 	}
@@ -43,17 +44,18 @@ func setHeader(r *gorequest.SuperAgent, h map[string]interface{}) *gorequest.Sup
 	return r
 }
 
-func setParams(req *gorequest.SuperAgent, data []string) *gorequest.SuperAgent {
-	switch len(data) {
-	case 1:
-		return req.Send(data[0])
+func setParams(req *gorequest.SuperAgent, params, data []string) *gorequest.SuperAgent {
+	var p, d string
 
-	case 2:
-		return req.Send(data[0]).Query(data[1])
-
-	default:
-		return req
+	if len(params) > 0 {
+		p = params[0]
 	}
+
+	if len(data) > 0 {
+		d = data[0]
+	}
+
+	return req.Query(p).Send(d)
 }
 
 func setMethod(m, u string) *gorequest.SuperAgent {
