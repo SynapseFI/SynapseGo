@@ -7,19 +7,10 @@ const authURL = _url + "/oauth"
 func (u *User) Auth(data string) map[string]interface{} {
 	url := authURL + "/" + u.UserID
 
-	res, body, errs := request.
-		Post(url).
-		Set("x-sp-gateway", u.clientGateway).
-		Set("x-sp-user-ip", u.clientIP).
-		Set("x-sp-user", u.clientFingerprint).
-		Send(data).
-		EndBytes()
+	h := u.getHeaderInfo("")
+	r := request(POST, transURL, h, nil, data)
 
-	if res != nil && errs != nil {
-		errorLog(errs)
-	}
+	u.AuthKey = read(r)["oauth_key"].(string)
 
-	u.AuthKey = read(body)["oauth_key"].(string)
-
-	return response(body, "oauth_key")
+	return response(r, "oauth_key")
 }

@@ -1,11 +1,9 @@
 package wrapper
 
-import (
-	"github.com/parnurzeal/gorequest"
-)
+import "github.com/parnurzeal/gorequest"
 
 /********** GLOBAL VARIABLES **********/
-var request = gorequest.New()
+var goreq = gorequest.New()
 
 // http methods used
 const (
@@ -16,7 +14,7 @@ const (
 
 /********** METHODS **********/
 
-func apiRequest(method, url string, headers map[string]interface{}, params []string, data ...string) []byte {
+func request(method, url string, headers map[string]interface{}, params []string, data ...string) []byte {
 	var req = gorequest.New()
 	req = setMethod(method, url)
 	req = setParams(req, params, data)
@@ -61,12 +59,12 @@ func setParams(req *gorequest.SuperAgent, params, data []string) *gorequest.Supe
 func setMethod(m, u string) *gorequest.SuperAgent {
 	switch m {
 	case POST:
-		return request.Post(u)
+		return goreq.Post(u)
 
 	case PATCH:
-		return request.Patch(u)
+		return goreq.Patch(u)
 
 	default:
-		return request.Get(u)
+		return goreq.Get(u)
 	}
 }
