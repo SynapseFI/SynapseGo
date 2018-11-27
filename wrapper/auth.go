@@ -8,7 +8,7 @@ func (u *User) Auth(data string) map[string]interface{} {
 	url := authURL + "/" + u.UserID
 
 	h := u.getHeaderInfo("")
-	r := request(POST, transURL, h, nil, data)
+	r := request(POST, url, h, nil, data)
 
 	u.AuthKey = read(r)["oauth_key"].(string)
 
