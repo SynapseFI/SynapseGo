@@ -8,6 +8,8 @@ func (c *Client) getHeaderInfo(setting string) map[string]interface{} {
 	var info = make(map[string]interface{})
 
 	switch setting {
+	case "gateway":
+		info["x-sp-gateway"] = c.gateway
 	default:
 		info["x-sp-gateway"] = c.gateway
 		info["x-sp-user-ip"] = c.ipAddress
