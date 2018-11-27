@@ -28,20 +28,16 @@ func generateUser(c *Client, data []byte, dehydrate bool) *User {
 }
 
 // GetUsers returns a list of users
-func (c *Client) GetUsers(queryParams ...map[string]interface{}) map[string]interface{} {
-	res, body, errs := request.
-		Get(usersURL).
-		Query(queryString(queryParams)).
-		Set("x-sp-gateway", c.gateway).
-		Set("x-sp-user-ip", c.ipAddress).
-		Set("x-sp-user", c.fingerprint).
-		EndBytes()
-
-	if res != nil && errs != nil {
-		errorLog(errs)
+func (c *Client) GetUsers(queryParams ...string) map[string]interface{} {
+	headers := map[string]interface{}{
+		"x-sp-gateway": c.gateway,
+		"x-sp-user-ip": c.ipAddress,
+		// "x-sp-user":    c.fingerprint,
 	}
 
-	return responseMulti(body, "users")
+	r := apiRequest(GET, usersURL, headers, queryParams)
+
+	return responseMulti(r, "users")
 }
 
 // GetUser returns a single user

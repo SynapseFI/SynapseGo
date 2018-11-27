@@ -1,10 +1,7 @@
 package wrapper
 
-import (
-	"fmt"
-)
+import "github.com/parnurzeal/gorequest"
 
-func handleError(err map[string]interface{}) {
-	fmt.Println(err)
-	panic(err["error"].(map[string]interface{})["en"].(string))
+func handleError(r *gorequest.Response) {
+
 }

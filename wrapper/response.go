@@ -97,9 +97,9 @@ func read(data []byte) map[string]interface{} {
 		errorLog(err)
 	}
 
-	if d["error_code"] != nil && d["error_code"] != "0" {
-		handleError(d)
-	}
+	// if d["error_code"] != nil && d["error_code"] != "0" {
+	// 	handleError(d)
+	// }
 
 	return d
 }
