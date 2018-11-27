@@ -7,37 +7,61 @@ import (
 /********** GLOBAL VARIABLES **********/
 var request = gorequest.New()
 
-const get = "get"
-const post = "post"
-const patch = "patch"
+// http methods used
+const (
+	GET   = "GET"
+	POST  = "POST"
+	PATCH = "PATCH"
+)
 
 /********** METHODS **********/
 
-func apiRequest(method, url string, data ...string) *gorequest.SuperAgent {
+func apiRequest(method, url string, headers map[string]interface{}, data []string) []byte {
 	var req = gorequest.New()
 	req = setMethod(method, url)
+	req = setParams(req, data)
+	req = setHeader(req, headers)
 
-	switch len(data) {
-	case 1:
-		req = req.Send(data[0])
+	res, body, errs := req.EndBytes()
 
-	case 2:
-		req = req.Send(data[0]).Query(data[1])
+	if len(errs) > 0 {
+		errorLog(errs)
 	}
 
-	return req
+	if res.StatusCode != 200 {
+		panic(string(body))
+	}
+
+	return body
 }
 
-func setHeader() {
+func setHeader(r *gorequest.SuperAgent, h map[string]interface{}) *gorequest.SuperAgent {
+	for k := range h {
+		r.Set(k, h[k].(string))
+	}
 
+	return r
+}
+
+func setParams(req *gorequest.SuperAgent, data []string) *gorequest.SuperAgent {
+	switch len(data) {
+	case 1:
+		return req.Send(data[0])
+
+	case 2:
+		return req.Send(data[0]).Query(data[1])
+
+	default:
+		return req
+	}
 }
 
 func setMethod(m, u string) *gorequest.SuperAgent {
 	switch m {
-	case "post":
+	case POST:
 		return request.Post(u)
 
-	case "patch":
+	case PATCH:
 		return request.Patch(u)
 
 	default:
