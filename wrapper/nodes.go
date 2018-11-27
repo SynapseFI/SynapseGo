@@ -6,16 +6,9 @@ const nodesURL = _url + "/nodes"
 /********** METHODS **********/
 
 // GetAllNodes returns all of the nodes
-func (c *Client) GetAllNodes(queryParams ...map[string]interface{}) map[string]interface{} {
-	res, body, errs := request.
-		Get(nodesURL).
-		Query(queryString(queryParams)).
-		Set("x-sp-gateway", c.gateway).
-		EndBytes()
+func (c *Client) GetAllNodes(queryParams ...string) map[string]interface{} {
+	h := c.getHeaderInfo("gateway")
+	r := apiRequest(GET, usersURL, h, queryParams)
 
-	if res != nil && errs != nil {
-		errorLog(errs)
-	}
-
-	return responseMulti(body, "nodes")
+	return responseMulti(r, "nodes")
 }
