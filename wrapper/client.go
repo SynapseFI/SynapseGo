@@ -1,5 +1,17 @@
 package wrapper
 
+/********** GLOBAL VARIABLES **********/
+var developerMode = false
+
+/********** TYPES **********/
+
+type (
+	// Client represents the credentials used by the developer to instantiate a client
+	Client struct {
+		gateway, ipAddress, fingerprint string
+	}
+)
+
 /********** METHODS **********/
 
 // GenerateClient creates a client object

@@ -3,6 +3,23 @@ package wrapper
 /*********** GLOBAL VARIABLES ***********/
 const usersURL = _url + "/users"
 
+/********** TYPE **********/
+
+type (
+	// User represents a user object
+	User struct {
+		AuthKey, clientGateway, clientIP, clientFingerprint, UserID, RefreshToken string
+		fullDehydrate                                                             bool
+		Payload                                                                   interface{}
+	}
+
+	// Users represents a collection of user objects
+	Users struct {
+		usersCount map[string]interface{}
+		usersList  []interface{}
+	}
+)
+
 /********** CLIENT METHODS **********/
 
 // GenerateUser creates a new user object
@@ -29,7 +46,7 @@ func generateUser(c *Client, data []byte, dehydrate bool) *User {
 
 // GetUsers returns a list of users
 func (c *Client) GetUsers(queryParams ...string) map[string]interface{} {
-	h := c.getHeaderInfo("")
+	h := c.getHeaderInfo("gateway")
 	r := request(GET, usersURL, h, queryParams)
 
 	return responseMulti(r, "users")
