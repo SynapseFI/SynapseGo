@@ -6,7 +6,7 @@ const usersURL = _url + "/users"
 /********** TYPE **********/
 
 type (
-	// User represents a user object
+	// User represents a single user object
 	User struct {
 		AuthKey, clientGateway, clientIP, clientFingerprint, UserID, RefreshToken string
 		fullDehydrate                                                             bool
@@ -15,8 +15,8 @@ type (
 
 	// Users represents a collection of user objects
 	Users struct {
-		usersCount map[string]interface{}
-		usersList  []interface{}
+		limit, page, pageCount, usersCount int
+		users                              []User
 	}
 )
 
