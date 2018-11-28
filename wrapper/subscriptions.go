@@ -3,6 +3,22 @@ package wrapper
 /********** GLOBAL VARIABLES **********/
 const subsURL = _url + "/subscriptions"
 
+/********** TYPES **********/
+
+type (
+	// Subscription represents a single subscription object
+	Subscription struct {
+		subID, url string
+		response   interface{}
+	}
+
+	// Subscriptions represents a list of subscription objects
+	Subscriptions struct {
+		limit, nodeCount, page, pageCount int
+		subscriptions                     []Subscription
+	}
+)
+
 /********** METHODS **********/
 
 // GetSubscriptions returns all of the nodes associated with a user
