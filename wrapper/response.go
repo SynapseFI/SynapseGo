@@ -89,21 +89,6 @@ func list(data interface{}, setting string) []interface{} {
 	return list
 }
 
-func read(data []byte) map[string]interface{} {
-	d := make(map[string]interface{})
-	err := json.Unmarshal(data, &d)
-
-	if err != nil {
-		errorLog(err)
-	}
-
-	// if d["error_code"] != nil && d["error_code"] != "0" {
-	// 	handleError(d)
-	// }
-
-	return d
-}
-
 func queryString(params []map[string]interface{}) string {
 	var query string
 

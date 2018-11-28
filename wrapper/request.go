@@ -1,8 +1,15 @@
 package wrapper
 
-import "github.com/parnurzeal/gorequest"
+import (
+	"github.com/parnurzeal/gorequest"
+)
 
 /********** GLOBAL VARIABLES **********/
+const version = "v3.1"
+
+// const _url = "https://api.synapsefi.com/" + version
+const _url = "https://uat-api.synapsefi.com/" + version
+
 var goreq = gorequest.New()
 
 // http methods used
@@ -27,7 +34,7 @@ func request(method, url string, headers map[string]interface{}, params []string
 	}
 
 	if res.StatusCode != 200 {
-		panic(string(body))
+		handleHTTPError(read(body)["http_code"].(string))
 	}
 
 	return body
