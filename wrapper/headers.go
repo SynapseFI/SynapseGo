@@ -9,11 +9,11 @@ func (c *Client) getHeaderInfo(setting string) map[string]interface{} {
 
 	switch setting {
 	case "gateway":
-		info["x-sp-gateway"] = c.gateway
+		info["x-sp-gateway"] = c.Gateway
 	default:
-		info["x-sp-gateway"] = c.gateway
-		info["x-sp-user-ip"] = c.ipAddress
-		info["x-sp-user"] = c.fingerprint
+		info["x-sp-gateway"] = c.Gateway
+		info["x-sp-user-ip"] = c.IP
+		info["x-sp-user"] = c.Fingerprint
 	}
 
 	return info
