@@ -26,7 +26,7 @@ func (c *Client) GetSubscription(subID string, queryParams ...string) map[string
 // CreateSubscription creates a subscription and returns the subscription data
 func (c *Client) CreateSubscription(data string, queryParams ...string) map[string]interface{} {
 	h := c.getHeaderInfo("gateway")
-	r := request(GET, usersURL, h, queryParams, data)
+	r := request(POST, usersURL, h, queryParams, data)
 
 	return responseSingle(r, "subscription")
 }
@@ -36,7 +36,7 @@ func (c *Client) UpdateSubscription(subID string, data string, queryParams ...st
 	url := subsURL + "/" + subID
 
 	h := c.getHeaderInfo("gateway")
-	r := request(GET, url, h, queryParams, data)
+	r := request(PATCH, url, h, queryParams, data)
 
 	return responseSingle(r, "subscription")
 }
