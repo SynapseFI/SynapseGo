@@ -34,9 +34,9 @@ func generateUser(c *Client, data []byte, dehydrate bool) *User {
 
 	return &User{
 		// AuthKey:           ak,
-		clientGateway:     c.gateway,
-		clientFingerprint: c.fingerprint,
-		clientIP:          c.ipAddress,
+		clientGateway:     c.Gateway,
+		clientFingerprint: c.Fingerprint,
+		clientIP:          c.IP,
 		fullDehydrate:     dehydrate,
 		RefreshToken:      rt,
 		UserID:            d["_id"].(string),

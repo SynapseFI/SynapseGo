@@ -8,7 +8,7 @@ var developerMode = false
 type (
 	// Client represents the credentials used by the developer to instantiate a client
 	Client struct {
-		gateway, ipAddress, fingerprint string
+		Gateway, IP, Fingerprint string
 	}
 )
 
@@ -24,17 +24,8 @@ func GenerateClient(params interface{}) *Client {
 	}
 
 	return &Client{
-		gateway:     p["clientID"].(string) + "|" + p["clientSecret"].(string),
-		ipAddress:   p["ipAddress"].(string),
-		fingerprint: "|" + p["fingerprint"].(string),
-	}
-}
-
-// Info returns client credentials
-func (c *Client) Info() map[string]interface{} {
-	return map[string]interface{}{
-		"gateway":     c.gateway,
-		"ipAddress":   c.ipAddress,
-		"fingerprint": c.fingerprint,
+		Gateway:     p["clientID"].(string) + "|" + p["clientSecret"].(string),
+		IP:          p["ipAddress"].(string),
+		Fingerprint: "|" + p["fingerprint"].(string),
 	}
 }
