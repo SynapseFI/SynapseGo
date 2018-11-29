@@ -8,9 +8,10 @@ const nodesURL = _url + "/nodes"
 type (
 	// Node represents a single node object
 	Node struct {
-		nodeID, userID string
-		fullDehydrate  bool
-		response       interface{}
+		NodeID        string `json:"_id"`
+		UserID        string `json:"user_id"`
+		FullDehydrate bool
+		Response      interface{}
 	}
 
 	// Nodes represents a list of node objects
@@ -30,7 +31,7 @@ func (c *Client) GetAllNodes(queryParams ...string) (*Nodes, *Error) {
 	var nodes Nodes
 
 	h := c.getHeaderInfo("")
-	req := newRequest(c, h)
+	req := c.newRequest(h)
 
 	_, err := req.Get(nodesURL, queryParams[0], &nodes)
 

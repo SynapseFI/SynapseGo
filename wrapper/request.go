@@ -31,11 +31,20 @@ type (
 
 /********** METHODS **********/
 
-func newRequest(c *Client, headers interface{}) *Request {
+func (c *Client) newRequest(headers interface{}) *Request {
 	return &Request{
 		fingerprint: c.Fingerprint,
 		gateway:     c.Gateway,
 		ipAddress:   c.IP,
+		headers:     headers,
+	}
+}
+
+func (u *User) newRequest(headers interface{}) *Request {
+	return &Request{
+		fingerprint: u.clientFingerprint,
+		gateway:     u.clientGateway,
+		ipAddress:   u.clientIP,
 		headers:     headers,
 	}
 }

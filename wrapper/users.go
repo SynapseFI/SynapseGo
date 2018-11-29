@@ -35,7 +35,7 @@ func (c *Client) GetUsers(queryParams ...string) (*Users, *Error) {
 	var users Users
 
 	h := c.getHeaderInfo("")
-	req := newRequest(c, h)
+	req := c.newRequest(h)
 
 	_, err := req.Get(usersURL, "", &users)
 
@@ -57,7 +57,7 @@ func (c *Client) GetUser(UserID string, fullDehydrate bool, queryParams ...strin
 	}
 
 	h := c.getHeaderInfo("")
-	req := newRequest(c, h)
+	req := c.newRequest(h)
 
 	body, err := req.Get(url, "", &user)
 
@@ -76,7 +76,7 @@ func (c *Client) CreateUser(data string, queryParams ...string) (*User, *Error) 
 	var user User
 
 	h := c.getHeaderInfo("")
-	req := newRequest(c, h)
+	req := c.newRequest(h)
 
 	body, err := req.Post(usersURL, data, "", &user)
 
@@ -92,63 +92,117 @@ func (c *Client) CreateUser(data string, queryParams ...string) (*User, *Error) 
 /********** USER METHODS **********/
 
 // Update updates a single user and returns the updated user information
-func (u *User) Update(data string, queryParams ...string) map[string]interface{} {
+func (u *User) Update(data string, queryParams ...string) (*User, *Error) {
+	var user User
+
 	url := usersURL + "/" + u.UserID
 
 	h := u.getHeaderInfo("")
-	r := request(PATCH, url, h, queryParams, data)
+	req := u.newRequest(h)
 
-	return responseSingle(r, "user")
+	body, err := req.Patch(url, data, "", &user)
+
+	if err != nil {
+		return nil, err
+	}
+
+	user.Response = read(body)
+
+	return &user, nil
 }
 
 // AddNewDocuments adds new documents to a user
-func (u *User) AddNewDocuments(data string) map[string]interface{} {
+func (u *User) AddNewDocuments(data string) (*User, *Error) {
+	var user User
+
 	url := usersURL + "/" + u.UserID
 
 	h := u.getHeaderInfo("")
-	r := request(PATCH, url, h, nil, data)
+	req := u.newRequest(h)
 
-	return responseSingle(r, "user")
+	body, err := req.Patch(url, data, "", &user)
+
+	if err != nil {
+		return nil, err
+	}
+
+	user.Response = read(body)
+
+	return &user, nil
 }
 
 // UpdateExistingDocument updates existing user documents
-func (u *User) UpdateExistingDocument(data string) map[string]interface{} {
+func (u *User) UpdateExistingDocument(data string) (*User, *Error) {
+	var user User
+
 	url := usersURL + "/" + u.UserID
 
 	h := u.getHeaderInfo("")
-	r := request(PATCH, url, h, nil, data)
+	req := u.newRequest(h)
 
-	return responseSingle(r, "user")
+	body, err := req.Patch(url, data, "", &user)
+
+	if err != nil {
+		return nil, err
+	}
+
+	user.Response = read(body)
+
+	return &user, nil
 }
 
 // DeleteExistingDocument updates existing user documents
-func (u *User) DeleteExistingDocument(data string) map[string]interface{} {
+func (u *User) DeleteExistingDocument(data string) (*User, *Error) {
+	var user User
+
 	url := usersURL + "/" + u.UserID
 
 	h := u.getHeaderInfo("")
-	r := request(PATCH, url, h, nil, data)
+	req := u.newRequest(h)
 
-	return responseSingle(r, "user")
+	body, err := req.Patch(url, data, "", &user)
+
+	if err != nil {
+		return nil, err
+	}
+
+	user.Response = read(body)
+
+	return &user, nil
 }
 
 // GetNodes returns all of the nodes associated with a user
-func (u *User) GetNodes(queryParams ...string) map[string]interface{} {
+func (u *User) GetNodes(queryParams ...string) (*Nodes, *Error) {
+	var nodes Nodes
+
 	url := usersURL + "/" + u.UserID + "/nodes"
 
 	h := u.getHeaderInfo("no gateway")
-	r := request(PATCH, url, h, queryParams)
+	req := u.newRequest(h)
 
-	u.AuthKey = "NEW KEY"
+	_, err := req.Get(url, "", &nodes)
 
-	return responseMulti(r, "nodes")
+	if err != nil {
+		return nil, err
+	}
+
+	return &nodes, nil
 }
 
-// CreateDepositNode creates an deposit account
-func (u *User) CreateDepositNode(data string) map[string]interface{} {
+// CreateDepositAccount creates an deposit account
+func (u *User) CreateDepositAccount(data string) (*Nodes, *Error) {
+	var nodes Nodes
+
 	url := usersURL + "/" + u.UserID + "/nodes"
 
 	h := u.getHeaderInfo("no gateway")
-	r := request(PATCH, url, h, nil, data)
+	req := u.newRequest(h)
 
-	return responseSingle(r, "node")
+	_, err := req.Post(url, data, "", &nodes)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &nodes, nil
 }
