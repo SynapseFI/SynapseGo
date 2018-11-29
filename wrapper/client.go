@@ -17,16 +17,14 @@ type (
 /********** METHODS **********/
 
 // NewClient creates a client object
-func NewClient(params interface{}) *Client {
-	p := params.(map[string]interface{})
-
-	if p["devMode"] == true {
+func NewClient(clientID, clientSecret, fingerprint, ipAddress string, devMode bool) *Client {
+	if devMode == true {
 		developerMode = true
 	}
 
 	return &Client{
-		Fingerprint: "|" + p["fingerprint"].(string),
-		Gateway:     p["clientID"].(string) + "|" + p["clientSecret"].(string),
-		IP:          p["ipAddress"].(string),
+		Fingerprint: "|" + fingerprint,
+		Gateway:     clientID + "|" + clientSecret,
+		IP:          ipAddress,
 	}
 }
