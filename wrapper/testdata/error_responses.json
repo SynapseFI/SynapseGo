@@ -1,0 +1,114 @@
+[
+  {
+    "http_code":  "202",
+    "error_code": "10",
+    "error": {
+      "en": "Action pending"
+    },
+    "success": false
+  },
+  {
+    "http_code":  "400",
+    "error_code": "100",
+    "error": {
+      "en": "Incorrect client credentials"
+    },
+    "success": false
+  },
+  {
+    "http_code":  "400",
+    "error_code": "110",
+    "error": {
+      "en": "Incorrect user credentials"
+    },
+    "success": false
+  },
+  {
+    "http_code":  "400",
+    "error_code": "120",
+    "error": {
+      "en": "Unauthorized fingerprint"
+    },
+    "success": false
+  },
+  {
+    "http_code":  "400",
+    "error_code": "200",
+    "error": {
+      "en": "Error in payload"
+    },
+    "success": false
+  },
+  {
+    "http_code":  "400",
+    "error_code": "300",
+    "error": {
+      "en": "Unauthorized action"
+    },
+    "success": false
+  },
+  {
+    "http_code":  "400",
+    "error_code": "400",
+    "error": {
+      "en": "Incorrect values supplied"
+    },
+    "success": false
+  },
+  {
+    "http_code":  "400",
+    "error_code": "404",
+    "error": {
+      "en": "Object not found"
+    },
+    "success": false
+  },
+  {
+    "http_code":  "400",
+    "error_code": "410",
+    "error": {
+      "en": "Action not allowed on the object"
+    },
+    "success": false
+  },
+  {
+    "http_code":  "400",
+    "error_code": "429",
+    "error": {
+      "en": "Too many requests hit the API too quickly"
+    },
+    "success": false
+  },
+  {
+    "http_code":  "400",
+    "error_code": "450",
+    "error": {
+      "en": "Idempotency key already in use"
+    },
+    "success": false
+  },
+  {
+    "http_code":  "400",
+    "error_code": "460",
+    "error": {
+      "en": "Request failed but not due to server error"
+    },
+    "success": false
+  },
+  {
+    "http_code":  "500",
+    "error_code": "500",
+    "error": {
+      "en": "Server error"
+    },
+    "success": false
+  },
+  {
+    "http_code":  "500",
+    "error_code": "503",
+    "error": {
+      "en": "Service unavailable. The server is currently unable to handle the request due to a temporary overload or scheduled maintenance."
+    },
+    "success": false
+  }
+]
