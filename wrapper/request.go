@@ -12,13 +12,6 @@ const _url = "https://uat-api.synapsefi.com/" + version
 
 var goreq = gorequest.New()
 
-// http methods used
-const (
-	GET   = "GET"
-	POST  = "POST"
-	PATCH = "PATCH"
-)
-
 /********** TYPES **********/
 
 type (
@@ -30,24 +23,6 @@ type (
 )
 
 /********** METHODS **********/
-
-func (c *Client) newRequest(headers interface{}) *Request {
-	return &Request{
-		fingerprint: c.Fingerprint,
-		gateway:     c.Gateway,
-		ipAddress:   c.IP,
-		headers:     headers,
-	}
-}
-
-func (u *User) newRequest(headers interface{}) *Request {
-	return &Request{
-		fingerprint: u.clientFingerprint,
-		gateway:     u.clientGateway,
-		ipAddress:   u.clientIP,
-		headers:     headers,
-	}
-}
 
 // Get performs a GET request
 func (req *Request) Get(url, params string, result interface{}) ([]byte, error) {
