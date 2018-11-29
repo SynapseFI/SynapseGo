@@ -7,9 +7,10 @@ package wrapper
 type (
 	// Error represents an error returned by the SynapseFI API
 	Error struct {
-		errorCode, httpCode int
-		message             string
-		response            interface{}
+		ErrorCode string      `json:"errorCode"`
+		HTTPCode  string      `json:"httpCode"`
+		Message   interface{} `json:"message"`
+		Response  interface{} `json:"response"`
 	}
 )
 
@@ -22,8 +23,15 @@ var httpStatusResponses = map[string]interface{}{
 	"401": "Authentication Error",
 }
 
-func handleHTTPError(code string) {
+func handleHTTPError(data []byte) *Error {
+	d := read(data)
 
+	return &Error{
+		ErrorCode: d["error_code"].(string),
+		HTTPCode:  d["http_code"].(string),
+		Message:   d["error"].(map[string]interface{})["en"].(string),
+		Response:  d,
+	}
 }
 
 func handleAPIError(code int) {

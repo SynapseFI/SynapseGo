@@ -1,8 +1,12 @@
 package wrapper
 
-type header interface {
-	getHeaderInfo() map[string]interface{}
-}
+/********** TYPES **********/
+
+type (
+	header interface {
+		getHeaderInfo() map[string]interface{}
+	}
+)
 
 func (c *Client) getHeaderInfo(setting string) map[string]interface{} {
 	var info = make(map[string]interface{})

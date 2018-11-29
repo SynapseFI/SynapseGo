@@ -1,31 +1,41 @@
 package wrapper
 
 /********** GLOBAL VARIABLES **********/
-const transURL = _url + "/trans"
+const transactionsURL = _url + "/trans"
 
 /********** TYPES **********/
 
 type (
 	// Transaction represents a single transaction object
 	Transaction struct {
-		transactionID string
-		response      interface{}
+		TransactionID string
+		Response      interface{}
 	}
 
 	// Transactions represents a list of transaction objects
 	Transactions struct {
-		limit, transactionCount, page, pageCount int
-		transactions                             []Transaction
+		Limit            int64         `json:"limit"`
+		Page             int64         `json:"page"`
+		PageCount        int64         `json:"page_count"`
+		TransactionCount int64         `json:"trans_count"`
+		Transactions     []Transaction `json:"trans"`
 	}
 )
 
 /********** METHODS **********/
 
 // GetClientTransactions returns all client transactions
-func (c *Client) GetClientTransactions(queryParams ...string) map[string]interface{} {
+func (c *Client) GetClientTransactions(queryParams ...string) (*Transactions, *Error) {
+	var transactions Transactions
 
 	h := c.getHeaderInfo("")
-	r := request(GET, transURL, h, queryParams)
+	req := newRequest(c, h)
 
-	return responseMulti(r, "transactions")
+	_, err := req.Get(transactionsURL, queryParams[0], &transactions)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &transactions, nil
 }

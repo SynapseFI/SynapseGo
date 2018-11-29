@@ -8,52 +8,48 @@ const usersURL = _url + "/users"
 type (
 	// User represents a single user object
 	User struct {
-		AuthKey, clientGateway, clientIP, clientFingerprint, UserID, RefreshToken string
-		fullDehydrate                                                             bool
-		Payload                                                                   interface{}
+		AuthKey           string `json:"oauth_key"`
+		clientGateway     string
+		clientIP          string
+		clientFingerprint string
+		FullDehydrate     bool
+		UserID            string `json:"_id"`
+		RefreshToken      string `json:"refresh_token"`
+		Response          interface{}
 	}
 
 	// Users represents a collection of user objects
 	Users struct {
-		limit, page, pageCount, usersCount int
-		users                              []User
+		Limit      int64  `json:"limit"`
+		Page       int64  `json:"page"`
+		PageCount  int64  `json:"page_count"`
+		UsersCount int64  `json:"users_count"`
+		Users      []User `json:"users"`
 	}
 )
 
 /********** CLIENT METHODS **********/
 
-// GenerateUser creates a new user object
-func generateUser(c *Client, data []byte, dehydrate bool) *User {
-	d := read(data)
-
-	// get refresh token
-	rt := d["refresh_token"].(string)
-
-	// get auth key
-	// ak := auth(c, d["_id"].(string), rt)["payload"].(map[string]interface{})["oauth_key"].(string)
-
-	return &User{
-		// AuthKey:           ak,
-		clientGateway:     c.Gateway,
-		clientFingerprint: c.Fingerprint,
-		clientIP:          c.IP,
-		fullDehydrate:     dehydrate,
-		RefreshToken:      rt,
-		UserID:            d["_id"].(string),
-		Payload:           d,
-	}
-}
-
 // GetUsers returns a list of users
-func (c *Client) GetUsers(queryParams ...string) map[string]interface{} {
-	h := c.getHeaderInfo("gateway")
-	r := request(GET, usersURL, h, queryParams)
+func (c *Client) GetUsers(queryParams ...string) (*Users, *Error) {
+	var users Users
 
-	return responseMulti(r, "users")
+	h := c.getHeaderInfo("")
+	req := newRequest(c, h)
+
+	_, err := req.Get(usersURL, "", &users)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &users, nil
 }
 
 // GetUser returns a single user
-func (c *Client) GetUser(UserID string, fullDehydrate bool, queryParams ...string) *User {
+func (c *Client) GetUser(UserID string, fullDehydrate bool, queryParams ...string) (*User, *Error) {
+	var user User
+
 	url := usersURL + "/" + UserID
 
 	if fullDehydrate != true {
@@ -61,16 +57,36 @@ func (c *Client) GetUser(UserID string, fullDehydrate bool, queryParams ...strin
 	}
 
 	h := c.getHeaderInfo("")
-	r := request(GET, url, h, queryParams)
-	return generateUser(c, r, fullDehydrate)
+	req := newRequest(c, h)
+
+	body, err := req.Get(url, "", &user)
+
+	if err != nil {
+		return nil, err
+	}
+
+	user.FullDehydrate = fullDehydrate
+	user.Response = read(body)
+
+	return &user, nil
 }
 
 // CreateUser creates a single user and returns the new user data
-func (c *Client) CreateUser(data string, queryParams ...string) *User {
-	h := c.getHeaderInfo("")
-	r := request(POST, usersURL, h, queryParams, data)
+func (c *Client) CreateUser(data string, queryParams ...string) (*User, *Error) {
+	var user User
 
-	return generateUser(c, r, false)
+	h := c.getHeaderInfo("")
+	req := newRequest(c, h)
+
+	body, err := req.Post(usersURL, data, "", &user)
+
+	if err != nil {
+		return nil, err
+	}
+
+	user.Response = read(body)
+
+	return &user, nil
 }
 
 /********** USER METHODS **********/
