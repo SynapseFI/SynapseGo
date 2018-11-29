@@ -234,6 +234,6 @@ func handleHTTPError(d []byte) error {
 
 // HELPER METHODS
 
-func formatErrorMessage(errorCode, message string) string {
-	return "ERROR_CODE " + errorCode + "\n" + message
+func formatErrorMessage(code, msg string) string {
+	return "ERROR_CODE " + code + "\n" + msg
 }
