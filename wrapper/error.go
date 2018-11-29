@@ -1,10 +1,5 @@
 package wrapper
 
-import (
-	"encoding/json"
-	"fmt"
-)
-
 /********** GLOBAL VARIABLES **********/
 
 /********** TYPES **********/
@@ -20,136 +15,209 @@ type (
 
 	// ActionPending represents ERROR_CODE 10
 	// Accepted, but action pending
-	ActionPending struct{ Message string }
+	ActionPending struct {
+		ErrorCode string      `json:"errorCode"`
+		HTTPCode  string      `json:"httpCode"`
+		Message   string      `json:"message"`
+		Response  interface{} `json:"response"`
+	}
 
 	// IncorrectClientCredentials represents ERROR_CODE 100
 	// Incorrect Client Credentials
-	IncorrectClientCredentials struct{ Message string }
+	IncorrectClientCredentials struct {
+		ErrorCode string      `json:"errorCode"`
+		HTTPCode  string      `json:"httpCode"`
+		Message   string      `json:"message"`
+		Response  interface{} `json:"response"`
+	}
 
 	// IncorrectUserCredentials represents ERROR_CODE 110
 	// Incorrect User Credentials
-	IncorrectUserCredentials struct{ Message string }
+	IncorrectUserCredentials struct {
+		ErrorCode string      `json:"errorCode"`
+		HTTPCode  string      `json:"httpCode"`
+		Message   string      `json:"message"`
+		Response  interface{} `json:"response"`
+	}
 
 	// UnauthorizedFingerprint represents ERROR_CODE 120
 	// Unauthorized Fingerprint
-	UnauthorizedFingerprint struct{ Message string }
+	UnauthorizedFingerprint struct {
+		ErrorCode string      `json:"errorCode"`
+		HTTPCode  string      `json:"httpCode"`
+		Message   string      `json:"message"`
+		Response  interface{} `json:"response"`
+	}
 
 	// PayloadError represents ERROR_CODE 200
 	// Error in Payload (Error in payload formatting)
-	PayloadError struct{ Message string }
+	PayloadError struct {
+		ErrorCode string      `json:"errorCode"`
+		HTTPCode  string      `json:"httpCode"`
+		Message   string      `json:"message"`
+		Response  interface{} `json:"response"`
+	}
 
 	// UnauthorizedAction represents ERROR_CODE 300
 	// Unauthorized action (User/Client not allowed to perform this action)
-	UnauthorizedAction struct{ Message string }
+	UnauthorizedAction struct {
+		ErrorCode string      `json:"errorCode"`
+		HTTPCode  string      `json:"httpCode"`
+		Message   string      `json:"message"`
+		Response  interface{} `json:"response"`
+	}
 
 	// IncorrectValues represents ERROR_CODE 400
 	// Incorrect Values Supplied (eg. Insufficient balance, wrong MFA response, incorrect micro deposits)
-	IncorrectValues struct{ Message string }
+	IncorrectValues struct {
+		ErrorCode string      `json:"errorCode"`
+		HTTPCode  string      `json:"httpCode"`
+		Message   string      `json:"message"`
+		Response  interface{} `json:"response"`
+	}
 
 	// ObjectNotFound represents ERROR_CODE 404
 	// Object not found
-	ObjectNotFound struct{ Message string }
+	ObjectNotFound struct {
+		ErrorCode string      `json:"errorCode"`
+		HTTPCode  string      `json:"httpCode"`
+		Message   string      `json:"message"`
+		Response  interface{} `json:"response"`
+	}
 
 	// ActionNotAllowed represents ERROR_CODE 410
 	// Action Not Allowed on the object (either you do not have permissions or the action on this object is not supported)
-	ActionNotAllowed struct{ Message string }
+	ActionNotAllowed struct {
+		ErrorCode string      `json:"errorCode"`
+		HTTPCode  string      `json:"httpCode"`
+		Message   string      `json:"message"`
+		Response  interface{} `json:"response"`
+	}
 
 	// TooManyRequests represents ERROR_CODE 429
 	// Too many requests hit the API too quickly.
-	TooManyRequests struct{ Message string }
+	TooManyRequests struct {
+		ErrorCode string      `json:"errorCode"`
+		HTTPCode  string      `json:"httpCode"`
+		Message   string      `json:"message"`
+		Response  interface{} `json:"response"`
+	}
 
 	// IdempotencyConflict represents ERROR_CODE 450
 	// Idempotency key already in use
-	IdempotencyConflict struct{ Message string }
+	IdempotencyConflict struct {
+		ErrorCode string      `json:"errorCode"`
+		HTTPCode  string      `json:"httpCode"`
+		Message   string      `json:"message"`
+		Response  interface{} `json:"response"`
+	}
 
 	// RequestFailed represents ERROR_CODE 460
 	// Request Failed but not due to server error
-	RequestFailed struct{ Message string }
+	RequestFailed struct {
+		ErrorCode string      `json:"errorCode"`
+		HTTPCode  string      `json:"httpCode"`
+		Message   string      `json:"message"`
+		Response  interface{} `json:"response"`
+	}
 
 	// ServerError represents ERROR_CODE 500
 	// Server Error
-	ServerError struct{ Message string }
+	ServerError struct {
+		ErrorCode string      `json:"errorCode"`
+		HTTPCode  string      `json:"httpCode"`
+		Message   string      `json:"message"`
+		Response  interface{} `json:"response"`
+	}
 
 	// ServiceUnavailable represents ERROR_CODE 503
 	// Service Unavailable. The server is currently unable to handle the request due to a temporary overload or scheduled maintenance.
-	ServiceUnavailable struct{ Message string }
+	ServiceUnavailable struct {
+		ErrorCode string      `json:"errorCode"`
+		HTTPCode  string      `json:"httpCode"`
+		Message   string      `json:"message"`
+		Response  interface{} `json:"response"`
+	}
 )
 
 /********** METHODS **********/
 
 func (e *ActionPending) Error() string {
-	return e.Message
+	return formatErrorMessage(e.ErrorCode, e.Message)
 }
 
 func (e *IncorrectClientCredentials) Error() string {
-	return e.Message
+	return formatErrorMessage(e.ErrorCode, e.Message)
 }
 
 func (e *IncorrectUserCredentials) Error() string {
-	return e.Message
+	return formatErrorMessage(e.ErrorCode, e.Message)
 }
 
 func (e *UnauthorizedFingerprint) Error() string {
-	return e.Message
+	return formatErrorMessage(e.ErrorCode, e.Message)
 }
 
 func (e *PayloadError) Error() string {
-	return e.Message
+	return formatErrorMessage(e.ErrorCode, e.Message)
 }
 
 func (e *UnauthorizedAction) Error() string {
-	return e.Message
+	return formatErrorMessage(e.ErrorCode, e.Message)
 }
 
 func (e *IncorrectValues) Error() string {
-	return e.Message
+	return formatErrorMessage(e.ErrorCode, e.Message)
 }
 
 func (e *ObjectNotFound) Error() string {
-	return e.Message
+	return formatErrorMessage(e.ErrorCode, e.Message)
 }
 
 func (e *ActionNotAllowed) Error() string {
-	return e.Message
+	return formatErrorMessage(e.ErrorCode, e.Message)
 }
 
 func (e *TooManyRequests) Error() string {
-	return e.Message
+	return formatErrorMessage(e.ErrorCode, e.Message)
 }
 
 func (e *IdempotencyConflict) Error() string {
-	return e.Message
+	return formatErrorMessage(e.ErrorCode, e.Message)
 }
 
 func (e *RequestFailed) Error() string {
-	return e.Message
+	return formatErrorMessage(e.ErrorCode, e.Message)
 }
 
 func (e *ServerError) Error() string {
-	return e.Message
+	return formatErrorMessage(e.ErrorCode, e.Message)
 }
 
 func (e *ServiceUnavailable) Error() string {
-	return e.Message
+	return formatErrorMessage(e.ErrorCode, e.Message)
 }
 
-func handleAPIError(errorCode, message string) error {
+func handleAPIError(errorCode, httpCode, message string, data map[string]interface{}) error {
+
 	apiErrors := map[string]error{
-		"":    nil,
-		"10":  &ActionPending{message},
-		"100": &IncorrectClientCredentials{message},
-		"110": &IncorrectUserCredentials{message},
-		"120": &UnauthorizedFingerprint{message},
-		"200": &PayloadError{message},
-		"300": &UnauthorizedAction{message},
-		"400": &IncorrectValues{message},
-		"404": &ObjectNotFound{message},
-		"410": &ActionNotAllowed{message},
-		"429": &TooManyRequests{message},
-		"450": &IdempotencyConflict{message},
-		"460": &RequestFailed{message},
-		"500": &ServerError{message},
-		"503": &ServiceUnavailable{message},
+		"": nil,
+		"10": &ActionPending{
+			errorCode, httpCode, message, data,
+		},
+		"100": &IncorrectClientCredentials{errorCode, httpCode, message, data},
+		"110": &IncorrectUserCredentials{errorCode, httpCode, message, data},
+		"120": &UnauthorizedFingerprint{errorCode, httpCode, message, data},
+		"200": &PayloadError{errorCode, httpCode, message, data},
+		"300": &UnauthorizedAction{errorCode, httpCode, message, data},
+		"400": &IncorrectValues{errorCode, httpCode, message, data},
+		"404": &ObjectNotFound{errorCode, httpCode, message, data},
+		"410": &ActionNotAllowed{errorCode, httpCode, message, data},
+		"429": &TooManyRequests{errorCode, httpCode, message, data},
+		"450": &IdempotencyConflict{errorCode, httpCode, message, data},
+		"460": &RequestFailed{errorCode, httpCode, message, data},
+		"500": &ServerError{errorCode, httpCode, message, data},
+		"503": &ServiceUnavailable{errorCode, httpCode, message, data},
 	}
 
 	return apiErrors[errorCode]
@@ -161,20 +229,11 @@ func handleHTTPError(d []byte) error {
 	httpCode := data["http_code"].(string)
 	msg := data["error"].(map[string]interface{})["en"].(string)
 
-	res := &ResponseError{
-		ErrorCode: errCode,
-		HTTPCode:  httpCode,
-		Message:   msg,
-		Response:  data,
-	}
+	return handleAPIError(errCode, httpCode, msg, data)
+}
 
-	md, err := json.MarshalIndent(&res, "", "  ")
+// HELPER METHODS
 
-	if err != nil {
-		panic(err)
-	}
-
-	fmt.Println(string(md))
-
-	return handleAPIError(errCode, msg)
+func formatErrorMessage(errorCode, message string) string {
+	return "ERROR_CODE " + errorCode + "\n" + message
 }
