@@ -43,8 +43,8 @@ func handleHTTPError(data []byte) *Error {
 func handleStackTrace(message string) (int, error) {
 	if developerMode == true {
 		cause := errors.New(message)
-		err := errors.WithStack(cause)
-		return fmt.Printf("%+v", err)
+		errMsg := errors.WithStack(cause)
+		return fmt.Printf("\n%+v\n\n", errMsg)
 	}
 
 	return 0, nil
