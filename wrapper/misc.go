@@ -14,17 +14,13 @@ type (
 /********** METHODS **********/
 
 // GetInstitutions returns all of the nodes associated with a user
-func (c *Client) GetInstitutions() (*Institutions, *Error) {
+func (c *Client) GetInstitutions() *Institutions {
 	var institutions Institutions
 
 	h := c.getHeaderInfo("")
 	req := c.newRequest(h)
 
-	_, err := req.Get(institutionsURL, "", &institutions)
+	req.Get(institutionsURL, "", &institutions)
 
-	if err != nil {
-		return nil, err
-	}
-
-	return &institutions, nil
+	return &institutions
 }

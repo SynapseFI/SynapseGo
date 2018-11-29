@@ -25,7 +25,7 @@ type (
 /********** METHODS **********/
 
 // GetClientTransactions returns all client transactions
-func (c *Client) GetClientTransactions(queryParams ...string) (*Transactions, *Error) {
+func (c *Client) GetClientTransactions(queryParams ...string) *Transactions {
 	var transactions Transactions
 
 	h := c.getHeaderInfo("")
@@ -34,8 +34,8 @@ func (c *Client) GetClientTransactions(queryParams ...string) (*Transactions, *E
 	_, err := req.Get(transactionsURL, queryParams[0], &transactions)
 
 	if err != nil {
-		return nil, err
+		panic(err)
 	}
 
-	return &transactions, nil
+	return &transactions
 }

@@ -26,7 +26,7 @@ type (
 /********** METHODS **********/
 
 // GetSubscriptions returns all of the nodes associated with a user
-func (c *Client) GetSubscriptions(queryParams ...string) (*Subscriptions, *Error) {
+func (c *Client) GetSubscriptions(queryParams ...string) *Subscriptions {
 	var subscriptions Subscriptions
 
 	h := c.getHeaderInfo("")
@@ -35,14 +35,14 @@ func (c *Client) GetSubscriptions(queryParams ...string) (*Subscriptions, *Error
 	_, err := req.Get(subscriptionsURL, "", &subscriptions)
 
 	if err != nil {
-		return nil, err
+		panic(err)
 	}
 
-	return &subscriptions, nil
+	return &subscriptions
 }
 
 // GetSubscription returns a single subscription
-func (c *Client) GetSubscription(subID string, queryParams ...string) (*Subscription, *Error) {
+func (c *Client) GetSubscription(subID string, queryParams ...string) *Subscription {
 	var subscription Subscription
 
 	url := subscriptionsURL + "/" + subID
@@ -53,16 +53,16 @@ func (c *Client) GetSubscription(subID string, queryParams ...string) (*Subscrip
 	body, err := req.Get(url, "", &subscription)
 
 	if err != nil {
-		return nil, err
+		panic(err)
 	}
 
 	subscription.Response = read(body)
 
-	return &subscription, nil
+	return &subscription
 }
 
 // CreateSubscription creates a subscription and returns the subscription data
-func (c *Client) CreateSubscription(data string, queryParams ...string) (*Subscription, *Error) {
+func (c *Client) CreateSubscription(data string, queryParams ...string) *Subscription {
 	var subscription Subscription
 
 	h := c.getHeaderInfo("")
@@ -71,16 +71,16 @@ func (c *Client) CreateSubscription(data string, queryParams ...string) (*Subscr
 	body, err := req.Post(subscriptionsURL, data, "", &subscription)
 
 	if err != nil {
-		return nil, err
+		panic(err)
 	}
 
 	subscription.Response = read(body)
 
-	return &subscription, nil
+	return &subscription
 }
 
 // UpdateSubscription updates an existing subscription
-func (c *Client) UpdateSubscription(subID string, data string, queryParams ...string) (*Subscription, *Error) {
+func (c *Client) UpdateSubscription(subID string, data string, queryParams ...string) *Subscription {
 	var subscription Subscription
 
 	h := c.getHeaderInfo("")
@@ -89,10 +89,10 @@ func (c *Client) UpdateSubscription(subID string, data string, queryParams ...st
 	body, err := req.Patch(subscriptionsURL, data, "", &subscription)
 
 	if err != nil {
-		return nil, err
+		panic(err)
 	}
 
 	subscription.Response = read(body)
 
-	return &subscription, nil
+	return &subscription
 }

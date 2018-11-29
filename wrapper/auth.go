@@ -13,7 +13,7 @@ type (
 )
 
 // Auth returns an oauth key and sets it to the user object
-func (u *User) Auth(data string) (*Auth, *Error) {
+func (u *User) Auth(data string) *Auth {
 	var auth Auth
 
 	url := authURL + "/" + u.UserID
@@ -24,10 +24,10 @@ func (u *User) Auth(data string) (*Auth, *Error) {
 	_, err := req.Post(url, data, "", &auth)
 
 	if err != nil {
-		return nil, err
+		panic(err)
 	}
 
 	u.AuthKey = auth.Key
 
-	return &auth, nil
+	return &auth
 }

@@ -50,7 +50,7 @@ func (u *User) newRequest(headers interface{}) *Request {
 }
 
 // Get performs a GET request
-func (req *Request) Get(url, params string, result interface{}) ([]byte, *Error) {
+func (req *Request) Get(url, params string, result interface{}) ([]byte, error) {
 	res, body, errs := goreq.
 		Get(url).
 		Set("x-sp-gateway", req.gateway).
@@ -67,7 +67,7 @@ func (req *Request) Get(url, params string, result interface{}) ([]byte, *Error)
 }
 
 // Post performs a POST request
-func (req *Request) Post(url, data, params string, result interface{}) ([]byte, *Error) {
+func (req *Request) Post(url, data, params string, result interface{}) ([]byte, error) {
 	res, body, errs := goreq.
 		Post(url).
 		Set("x-sp-gateway", req.gateway).
@@ -85,7 +85,7 @@ func (req *Request) Post(url, data, params string, result interface{}) ([]byte, 
 }
 
 // Patch performs a PATCH request
-func (req *Request) Patch(url, data, params string, result interface{}) ([]byte, *Error) {
+func (req *Request) Patch(url, data, params string, result interface{}) ([]byte, error) {
 	res, body, errs := goreq.
 		Patch(url).
 		Set("x-sp-gateway", req.gateway).
