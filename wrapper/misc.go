@@ -1,13 +1,30 @@
 package wrapper
 
 /********** GLOBAL VARIABLES **********/
-const instiURL = _url + "/institutions"
+const institutionsURL = _url + "/institutions"
+
+/********** TYPES **********/
+type (
+	// Institutions represents a list of Synapse institutions
+	Institutions struct {
+		Banks interface{} `json:"banks"`
+	}
+)
 
 /********** METHODS **********/
 
 // GetInstitutions returns all of the nodes associated with a user
-func (c *Client) GetInstitutions() map[string]interface{} {
-	r := request(GET, instiURL, nil, nil)
+func (c *Client) GetInstitutions() (*Institutions, *Error) {
+	var institutions Institutions
 
-	return response(r)
+	h := c.getHeaderInfo("")
+	req := newRequest(c, h)
+
+	_, err := req.Get(institutionsURL, "", &institutions)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &institutions, nil
 }

@@ -15,17 +15,28 @@ type (
 
 	// Nodes represents a list of node objects
 	Nodes struct {
-		limit, nodeCount, page, pageCount int
-		nodes                             []Node
+		Limit     int64  `json:"limit"`
+		NodeCount int64  `json:"node_count"`
+		Page      int64  `json:"page"`
+		PageCount int64  `json:"page_count"`
+		Nodes     []Node `json:"nodes"`
 	}
 )
 
 /********** METHODS **********/
 
 // GetAllNodes returns all of the nodes
-func (c *Client) GetAllNodes(queryParams ...string) map[string]interface{} {
-	h := c.getHeaderInfo("gateway")
-	r := request(GET, usersURL, h, queryParams)
+func (c *Client) GetAllNodes(queryParams ...string) (*Nodes, *Error) {
+	var nodes Nodes
 
-	return responseMulti(r, "nodes")
+	h := c.getHeaderInfo("")
+	req := newRequest(c, h)
+
+	_, err := req.Get(nodesURL, queryParams[0], &nodes)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &nodes, nil
 }

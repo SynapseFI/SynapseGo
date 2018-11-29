@@ -1,58 +1,98 @@
 package wrapper
 
 /********** GLOBAL VARIABLES **********/
-const subsURL = _url + "/subscriptions"
+const subscriptionsURL = _url + "/subscriptions"
 
 /********** TYPES **********/
 
 type (
 	// Subscription represents a single subscription object
 	Subscription struct {
-		subID, url string
-		response   interface{}
+		SubscriptionID string `json:"_id"`
+		URL            string `json:"url"`
+		Response       interface{}
 	}
 
 	// Subscriptions represents a list of subscription objects
 	Subscriptions struct {
-		limit, nodeCount, page, pageCount int
-		subscriptions                     []Subscription
+		Limit              int64          `json:"limit"`
+		Page               int64          `json:"page"`
+		PageCount          int64          `json:"page_count"`
+		SubscriptionsCount int64          `json:"subscriptions_count"`
+		Subscriptions      []Subscription `json:"subscriptions"`
 	}
 )
 
 /********** METHODS **********/
 
 // GetSubscriptions returns all of the nodes associated with a user
-func (c *Client) GetSubscriptions(queryParams ...string) map[string]interface{} {
-	h := c.getHeaderInfo("gateway")
-	r := request(GET, subsURL, h, queryParams)
+func (c *Client) GetSubscriptions(queryParams ...string) (*Subscriptions, *Error) {
+	var subscriptions Subscriptions
 
-	return responseMulti(r, "subscriptions")
+	h := c.getHeaderInfo("")
+	req := newRequest(c, h)
+
+	_, err := req.Get(subscriptionsURL, "", &subscriptions)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &subscriptions, nil
 }
 
 // GetSubscription returns a single subscription
-func (c *Client) GetSubscription(subID string, queryParams ...string) map[string]interface{} {
-	url := subsURL + "/" + subID
+func (c *Client) GetSubscription(subID string, queryParams ...string) (*Subscription, *Error) {
+	var subscription Subscription
 
-	h := c.getHeaderInfo("gateway")
-	r := request(GET, url, h, queryParams)
+	url := subscriptionsURL + "/" + subID
 
-	return responseSingle(r, "subscription")
+	h := c.getHeaderInfo("")
+	req := newRequest(c, h)
+
+	body, err := req.Get(url, "", &subscription)
+
+	if err != nil {
+		return nil, err
+	}
+
+	subscription.Response = read(body)
+
+	return &subscription, nil
 }
 
 // CreateSubscription creates a subscription and returns the subscription data
-func (c *Client) CreateSubscription(data string, queryParams ...string) map[string]interface{} {
-	h := c.getHeaderInfo("gateway")
-	r := request(POST, usersURL, h, queryParams, data)
+func (c *Client) CreateSubscription(data string, queryParams ...string) (*Subscription, *Error) {
+	var subscription Subscription
 
-	return responseSingle(r, "subscription")
+	h := c.getHeaderInfo("")
+	req := newRequest(c, h)
+
+	body, err := req.Post(subscriptionsURL, data, "", &subscription)
+
+	if err != nil {
+		return nil, err
+	}
+
+	subscription.Response = read(body)
+
+	return &subscription, nil
 }
 
 // UpdateSubscription updates an existing subscription
-func (c *Client) UpdateSubscription(subID string, data string, queryParams ...string) map[string]interface{} {
-	url := subsURL + "/" + subID
+func (c *Client) UpdateSubscription(subID string, data string, queryParams ...string) (*Subscription, *Error) {
+	var subscription Subscription
 
-	h := c.getHeaderInfo("gateway")
-	r := request(PATCH, url, h, queryParams, data)
+	h := c.getHeaderInfo("")
+	req := newRequest(c, h)
 
-	return responseSingle(r, "subscription")
+	body, err := req.Patch(subscriptionsURL, data, "", &subscription)
+
+	if err != nil {
+		return nil, err
+	}
+
+	subscription.Response = read(body)
+
+	return &subscription, nil
 }
