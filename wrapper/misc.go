@@ -18,7 +18,7 @@ func (c *Client) GetInstitutions() (*Institutions, *Error) {
 	var institutions Institutions
 
 	h := c.getHeaderInfo("")
-	req := newRequest(c, h)
+	req := c.newRequest(h)
 
 	_, err := req.Get(institutionsURL, "", &institutions)
 

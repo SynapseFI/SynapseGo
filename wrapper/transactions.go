@@ -29,7 +29,7 @@ func (c *Client) GetClientTransactions(queryParams ...string) (*Transactions, *E
 	var transactions Transactions
 
 	h := c.getHeaderInfo("")
-	req := newRequest(c, h)
+	req := c.newRequest(h)
 
 	_, err := req.Get(transactionsURL, queryParams[0], &transactions)
 

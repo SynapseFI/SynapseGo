@@ -30,7 +30,7 @@ func (c *Client) GetSubscriptions(queryParams ...string) (*Subscriptions, *Error
 	var subscriptions Subscriptions
 
 	h := c.getHeaderInfo("")
-	req := newRequest(c, h)
+	req := c.newRequest(h)
 
 	_, err := req.Get(subscriptionsURL, "", &subscriptions)
 
@@ -48,7 +48,7 @@ func (c *Client) GetSubscription(subID string, queryParams ...string) (*Subscrip
 	url := subscriptionsURL + "/" + subID
 
 	h := c.getHeaderInfo("")
-	req := newRequest(c, h)
+	req := c.newRequest(h)
 
 	body, err := req.Get(url, "", &subscription)
 
@@ -66,7 +66,7 @@ func (c *Client) CreateSubscription(data string, queryParams ...string) (*Subscr
 	var subscription Subscription
 
 	h := c.getHeaderInfo("")
-	req := newRequest(c, h)
+	req := c.newRequest(h)
 
 	body, err := req.Post(subscriptionsURL, data, "", &subscription)
 
@@ -84,7 +84,7 @@ func (c *Client) UpdateSubscription(subID string, data string, queryParams ...st
 	var subscription Subscription
 
 	h := c.getHeaderInfo("")
-	req := newRequest(c, h)
+	req := c.newRequest(h)
 
 	body, err := req.Patch(subscriptionsURL, data, "", &subscription)
 
