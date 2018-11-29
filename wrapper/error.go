@@ -1,5 +1,11 @@
 package wrapper
 
+import (
+	"fmt"
+
+	"github.com/pkg/errors"
+)
+
 /********** GLOBAL VARIABLES **********/
 
 /********** TYPES **********/
@@ -9,31 +15,33 @@ type (
 	Error struct {
 		ErrorCode string      `json:"errorCode"`
 		HTTPCode  string      `json:"httpCode"`
-		Message   interface{} `json:"message"`
+		Message   string      `json:"message"`
 		Response  interface{} `json:"response"`
 	}
 )
 
 /********** METHODS **********/
 
-var httpStatusResponses = map[string]interface{}{
-	"200": "OK",
-	"202": "Accepted, but not final response",
-	"400": "Bad request to API. Missing a field or invalid field",
-	"401": "Authentication Error",
+func handleAPIError(code int) {
+
 }
 
 func handleHTTPError(data []byte) *Error {
 	d := read(data)
+	msg := d["error"].(map[string]interface{})["en"].(string)
+
+	handleStackTrace(msg)
 
 	return &Error{
 		ErrorCode: d["error_code"].(string),
 		HTTPCode:  d["http_code"].(string),
-		Message:   d["error"].(map[string]interface{})["en"].(string),
+		Message:   msg,
 		Response:  d,
 	}
 }
 
-func handleAPIError(code int) {
-
+func handleStackTrace(message string) (int, error) {
+	cause := errors.New(message)
+	err := errors.WithStack(cause)
+	return fmt.Printf("%+v", err)
 }
