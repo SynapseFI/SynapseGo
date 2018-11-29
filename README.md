@@ -20,26 +20,24 @@ See main.go for each method in use
 
 ```go
 // credentials used to set headers for each method request
-var credentials = map[string]interface{}{
+var client = wrapper.Client(
 "clientID":     "CLIENT_ID",
 "clientSecret": "CLIENT_SECRET",
 "ipAddress":    "IP_ADDRESS",
-"userID":       "USER_ID",
-}
-var client = wrapper.Client(credentials)
+"userID":       "USER_ID"
+)
 ```
 
 To enable logging (development mode):
 
 ```go
-var credentials = map[string]interface{}{
+var client = wrapper.Client(
 "clientID":     "CLIENT_ID",
 "clientSecret": "CLIENT_SECRET",
 "ipAddress":    "IP_ADDRESS",
 "userID":       "USER_ID",
-"devMode":      true,
-}
-var client = wrapper.Client(credentials)
+"devMode":      true
+)
 ```
 
 ### Misc
@@ -53,22 +51,22 @@ data := client.GetInstitutions()
 ### Nodes
 
 ```go
-data := client.GetNodes(queryParams map[string]interface{})
+data := client.GetNodes(queryParams ...string)
 ```
 
 ### Subscriptions
 
 ```go
-data := client.GetSubscriptions(queryParams map[string]interface{})
-data := client.GetSubscription(subID string, queryParams map[string]interface{})
-data := client.CreateSubscription(data string, queryParams map[string]interface{})
-data := client.UpdateSubscription(subID string, query)
+data := client.GetSubscriptions(queryParams ...string)
+data := client.GetSubscription(subID string, queryParams ...string)
+data := client.CreateSubscription(data string, queryParams ...string)
+data := client.UpdateSubscription(subID string, queryParams ...string)
 ```
 
 ### Transactions
 
 ```go
-data := client.GetClientTransactions(queryParams map[string]interface{})
+data := client.GetClientTransactions(queryParams ...string)
 ```
 
 ### User Interface
@@ -76,42 +74,42 @@ data := client.GetClientTransactions(queryParams map[string]interface{})
 #### Issue Public Key
 
 ```go
-data := client.GetPublicKey(scope string)
+data := client.GetPublicKey(scope ...string)
 ```
 
 ### Users
 
 ```go
-data := client.GetUsers(queryParams map[string]interface{})
+data := client.GetUsers(queryParams ...string)
 
 // instantiate User object
-user := client.GetUser(userID string, fullDehydrate bool, queryParams map[string]interface{})
-user := client.CreateUser(data string, queryParams map[string]interface{})
+user := client.GetUser(userID string, fullDehydrate bool, queryParams ...string)
+user := client.CreateUser(data string, queryParams ...string)
 ```
 
 ## User
 
 ```go
-data := user.Update(data string, bodyParams map[string]interface{})
+user := user.Update(data string, bodyParams ...string)
 ```
 
 ### Authentication
 
 ```go
-data := user.Auth(data string)
+ak := user.Auth(data string)
 ```
 
 ### Documents
 
 ```go
-data := user.AddNewDocuments(data string)
-data := user.UpdateExistingDocument(data string)
-data := user.DeleteExistingDocument(data string)
+user := user.AddNewDocuments(data string)
+user := user.UpdateExistingDocument(data string)
+user := user.DeleteExistingDocument(data string)
 ```
 
 ### Nodes
 
 ```go
-data := user.GetNodes(queryParams ...map[string]interface{})
-data := user.CreateDepositeNode(data string)
+user := user.GetNodes(queryParams ...string)
+user := user.CreateDepositeNode(data string)
 ```
