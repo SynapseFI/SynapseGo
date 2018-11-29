@@ -16,6 +16,15 @@ type (
 
 /********** METHODS **********/
 
+func (c *Client) newRequest(headers interface{}) *Request {
+	return &Request{
+		fingerprint: c.Fingerprint,
+		gateway:     c.Gateway,
+		ipAddress:   c.IP,
+		headers:     headers,
+	}
+}
+
 // NewClient creates a client object
 func NewClient(clientID, clientSecret, fingerprint, ipAddress string, devMode ...bool) *Client {
 	if len(devMode) > 0 && devMode[0] == true {

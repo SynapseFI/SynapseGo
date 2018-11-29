@@ -30,6 +30,15 @@ type (
 
 /********** CLIENT METHODS **********/
 
+func (u *User) newRequest(headers interface{}) *Request {
+	return &Request{
+		fingerprint: u.clientFingerprint,
+		gateway:     u.clientGateway,
+		ipAddress:   u.clientIP,
+		headers:     headers,
+	}
+}
+
 // GetUsers returns a list of users
 func (c *Client) GetUsers(queryParams ...string) *Users {
 	var users Users
