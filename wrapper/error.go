@@ -1,5 +1,10 @@
 package wrapper
 
+import (
+	"encoding/json"
+	"fmt"
+)
+
 /********** GLOBAL VARIABLES **********/
 
 /********** TYPES **********/
@@ -7,7 +12,6 @@ package wrapper
 type (
 	// ResponseError represents an error returned by the SynapseFI API
 	ResponseError struct {
-		Error     error
 		ErrorCode string      `json:"errorCode"`
 		HTTPCode  string      `json:"httpCode"`
 		Message   string      `json:"message"`
@@ -151,18 +155,26 @@ func handleAPIError(errorCode, message string) error {
 	return apiErrors[errorCode]
 }
 
-func handleHTTPError(data []byte) error {
-	d := read(data)
-	errCode := d["error_code"].(string)
-	// httpCode := d["http_code"].(string)
-	msg := d["error"].(map[string]interface{})["en"].(string)
+func handleHTTPError(d []byte) error {
+	data := read(d)
+	errCode := data["error_code"].(string)
+	httpCode := data["http_code"].(string)
+	msg := data["error"].(map[string]interface{})["en"].(string)
+
+	res := &ResponseError{
+		ErrorCode: errCode,
+		HTTPCode:  httpCode,
+		Message:   msg,
+		Response:  data,
+	}
+
+	md, err := json.MarshalIndent(&res, "", "  ")
+
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(string(md))
 
 	return handleAPIError(errCode, msg)
-
-	// return &ResponseError{
-	// 	ErrorCode: errCode,
-	// 	HTTPCode:  httpCode,
-	// 	Message:   msg,
-	// 	Response:  d,
-	// }
 }
