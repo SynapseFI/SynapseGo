@@ -17,8 +17,8 @@ type (
 /********** METHODS **********/
 
 // NewClient creates a client object
-func NewClient(clientID, clientSecret, fingerprint, ipAddress string, devMode bool) *Client {
-	if devMode == true {
+func NewClient(clientID, clientSecret, fingerprint, ipAddress string, devMode ...bool) *Client {
+	if len(devMode) > 0 && devMode[0] == true {
 		developerMode = true
 	}
 
