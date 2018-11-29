@@ -3,14 +3,31 @@ package wrapper
 /********** GLOBAL VARIABLES **********/
 const authURL = _url + "/oauth"
 
+/********** TYPES **********/
+
+type (
+	// Auth represents an oauth key
+	Auth struct {
+		Key string `json:"oauth_key"`
+	}
+)
+
 // Auth returns an oauth key and sets it to the user object
-func (u *User) Auth(data string) map[string]interface{} {
+func (u *User) Auth(data string) (*Auth, *Error) {
+	var auth Auth
+
 	url := authURL + "/" + u.UserID
 
 	h := u.getHeaderInfo("")
-	r := request(POST, url, h, nil, data)
+	req := u.newRequest(h)
 
-	u.AuthKey = read(r)["oauth_key"].(string)
+	_, err := req.Post(url, data, "", &auth)
 
-	return response(r, "oauth_key")
+	if err != nil {
+		return nil, err
+	}
+
+	u.AuthKey = auth.Key
+
+	return &auth, nil
 }
