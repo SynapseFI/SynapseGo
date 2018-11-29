@@ -41,7 +41,11 @@ func handleHTTPError(data []byte) *Error {
 }
 
 func handleStackTrace(message string) (int, error) {
-	cause := errors.New(message)
-	err := errors.WithStack(cause)
-	return fmt.Printf("%+v", err)
+	if developerMode == true {
+		cause := errors.New(message)
+		err := errors.WithStack(cause)
+		return fmt.Printf("%+v", err)
+	}
+
+	return 0, nil
 }
