@@ -19,7 +19,8 @@ type (
 /********** METHODS **********/
 
 // GetPublicKey returns a public key as a token representing client credentials
-func (c *Client) GetPublicKey(scope ...string) (*PublicKey, *Error) {
+func (c *Client) GetPublicKey(scope ...string) *PublicKey {
+	var publicKey PublicKey
 	var urlParams = publicKeyURL
 
 	for i := 0; i < len(scope); i++ {
@@ -31,12 +32,11 @@ func (c *Client) GetPublicKey(scope ...string) (*PublicKey, *Error) {
 	h := c.getHeaderInfo("")
 	req := c.newRequest(h)
 
-	var pk PublicKey
-	_, err := req.Get(urlParams, "", &pk)
+	_, err := req.Get(urlParams, "", &publicKey)
 
 	if err != nil {
-		return nil, err
+		panic(err)
 	}
 
-	return &pk, nil
+	return &publicKey
 }

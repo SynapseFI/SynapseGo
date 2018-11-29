@@ -31,7 +31,7 @@ type (
 /********** CLIENT METHODS **********/
 
 // GetUsers returns a list of users
-func (c *Client) GetUsers(queryParams ...string) (*Users, *Error) {
+func (c *Client) GetUsers(queryParams ...string) *Users {
 	var users Users
 
 	h := c.getHeaderInfo("")
@@ -40,14 +40,14 @@ func (c *Client) GetUsers(queryParams ...string) (*Users, *Error) {
 	_, err := req.Get(usersURL, "", &users)
 
 	if err != nil {
-		return nil, err
+		panic(err)
 	}
 
-	return &users, nil
+	return &users
 }
 
 // GetUser returns a single user
-func (c *Client) GetUser(UserID string, fullDehydrate bool, queryParams ...string) (*User, *Error) {
+func (c *Client) GetUser(UserID string, fullDehydrate bool, queryParams ...string) *User {
 	var user User
 
 	url := usersURL + "/" + UserID
@@ -62,17 +62,17 @@ func (c *Client) GetUser(UserID string, fullDehydrate bool, queryParams ...strin
 	body, err := req.Get(url, "", &user)
 
 	if err != nil {
-		return nil, err
+		panic(err)
 	}
 
 	user.FullDehydrate = fullDehydrate
 	user.Response = read(body)
 
-	return &user, nil
+	return &user
 }
 
 // CreateUser creates a single user and returns the new user data
-func (c *Client) CreateUser(data string, queryParams ...string) (*User, *Error) {
+func (c *Client) CreateUser(data string, queryParams ...string) *User {
 	var user User
 
 	h := c.getHeaderInfo("")
@@ -81,18 +81,18 @@ func (c *Client) CreateUser(data string, queryParams ...string) (*User, *Error) 
 	body, err := req.Post(usersURL, data, "", &user)
 
 	if err != nil {
-		return nil, err
+		panic(err)
 	}
 
 	user.Response = read(body)
 
-	return &user, nil
+	return &user
 }
 
 /********** USER METHODS **********/
 
 // Update updates a single user and returns the updated user information
-func (u *User) Update(data string, queryParams ...string) (*User, *Error) {
+func (u *User) Update(data string, queryParams ...string) *User {
 	var user User
 
 	url := usersURL + "/" + u.UserID
@@ -103,16 +103,16 @@ func (u *User) Update(data string, queryParams ...string) (*User, *Error) {
 	body, err := req.Patch(url, data, "", &user)
 
 	if err != nil {
-		return nil, err
+		panic(err)
 	}
 
 	user.Response = read(body)
 
-	return &user, nil
+	return &user
 }
 
 // AddNewDocuments adds new documents to a user
-func (u *User) AddNewDocuments(data string) (*User, *Error) {
+func (u *User) AddNewDocuments(data string) *User {
 	var user User
 
 	url := usersURL + "/" + u.UserID
@@ -123,16 +123,16 @@ func (u *User) AddNewDocuments(data string) (*User, *Error) {
 	body, err := req.Patch(url, data, "", &user)
 
 	if err != nil {
-		return nil, err
+		panic(err)
 	}
 
 	user.Response = read(body)
 
-	return &user, nil
+	return &user
 }
 
 // UpdateExistingDocument updates existing user documents
-func (u *User) UpdateExistingDocument(data string) (*User, *Error) {
+func (u *User) UpdateExistingDocument(data string) *User {
 	var user User
 
 	url := usersURL + "/" + u.UserID
@@ -143,16 +143,16 @@ func (u *User) UpdateExistingDocument(data string) (*User, *Error) {
 	body, err := req.Patch(url, data, "", &user)
 
 	if err != nil {
-		return nil, err
+		panic(err)
 	}
 
 	user.Response = read(body)
 
-	return &user, nil
+	return &user
 }
 
 // DeleteExistingDocument updates existing user documents
-func (u *User) DeleteExistingDocument(data string) (*User, *Error) {
+func (u *User) DeleteExistingDocument(data string) *User {
 	var user User
 
 	url := usersURL + "/" + u.UserID
@@ -163,16 +163,16 @@ func (u *User) DeleteExistingDocument(data string) (*User, *Error) {
 	body, err := req.Patch(url, data, "", &user)
 
 	if err != nil {
-		return nil, err
+		panic(err)
 	}
 
 	user.Response = read(body)
 
-	return &user, nil
+	return &user
 }
 
 // GetNodes returns all of the nodes associated with a user
-func (u *User) GetNodes(queryParams ...string) (*Nodes, *Error) {
+func (u *User) GetNodes(queryParams ...string) *Nodes {
 	var nodes Nodes
 
 	url := usersURL + "/" + u.UserID + "/nodes"
@@ -183,14 +183,14 @@ func (u *User) GetNodes(queryParams ...string) (*Nodes, *Error) {
 	_, err := req.Get(url, "", &nodes)
 
 	if err != nil {
-		return nil, err
+		panic(err)
 	}
 
-	return &nodes, nil
+	return &nodes
 }
 
 // CreateDepositAccount creates an deposit account
-func (u *User) CreateDepositAccount(data string) (*Nodes, *Error) {
+func (u *User) CreateDepositAccount(data string) *Nodes {
 	var nodes Nodes
 
 	url := usersURL + "/" + u.UserID + "/nodes"
@@ -198,11 +198,7 @@ func (u *User) CreateDepositAccount(data string) (*Nodes, *Error) {
 	h := u.getHeaderInfo("no gateway")
 	req := u.newRequest(h)
 
-	_, err := req.Post(url, data, "", &nodes)
+	req.Post(url, data, "", &nodes)
 
-	if err != nil {
-		return nil, err
-	}
-
-	return &nodes, nil
+	return &nodes
 }

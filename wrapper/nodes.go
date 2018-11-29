@@ -27,7 +27,7 @@ type (
 /********** METHODS **********/
 
 // GetAllNodes returns all of the nodes
-func (c *Client) GetAllNodes(queryParams ...string) (*Nodes, *Error) {
+func (c *Client) GetAllNodes(queryParams ...string) *Nodes {
 	var nodes Nodes
 
 	h := c.getHeaderInfo("")
@@ -36,8 +36,8 @@ func (c *Client) GetAllNodes(queryParams ...string) (*Nodes, *Error) {
 	_, err := req.Get(nodesURL, queryParams[0], &nodes)
 
 	if err != nil {
-		return nil, err
+		panic(err)
 	}
 
-	return &nodes, nil
+	return &nodes
 }
