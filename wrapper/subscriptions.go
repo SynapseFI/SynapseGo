@@ -1,7 +1,6 @@
 package wrapper
 
 /********** GLOBAL VARIABLES **********/
-const subscriptionsURL = _url + "/subscriptions"
 
 /********** TYPES **********/
 

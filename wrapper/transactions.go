@@ -1,7 +1,6 @@
 package wrapper
 
 /********** GLOBAL VARIABLES **********/
-const transactionsURL = _url + "/trans"
 
 /********** TYPES **********/
 

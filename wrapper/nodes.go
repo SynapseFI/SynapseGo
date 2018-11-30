@@ -1,7 +1,6 @@
 package wrapper
 
 /********** GLOBAL VARIABLES **********/
-const nodesURL = _url + "/nodes"
 
 /********** TYPES **********/
 
