@@ -7,29 +7,29 @@ import (
 /********** GLOBAL VARIABLES **********/
 const version = "v3.2"
 
-// const baseUrl = "https://api.synapsefi.com/" + version
-const baseURL = "https://uat-api.synapsefi.com/" + version
+// const baseUrl = "https://api.synapsefi.com" + version
+const baseURL = "https://uat-api.synapsefi.com" + version
 
 var goreq = gorequest.New()
 var request *Request
 
 var path = map[string]string{
-	"auth":          "/oauth",
-	"client":        "/client",
-	"institutions":  "/institutions",
-	"nodes":         "/nodes",
-	"subscriptions": "/subscriptions",
-	"transactions":  "/trans",
-	"users":         "/users",
+	"auth":          "oauth",
+	"client":        "client",
+	"institutions":  "institutions",
+	"nodes":         "nodes",
+	"subscriptions": "subscriptions",
+	"transactions":  "trans",
+	"users":         "users",
 }
 
-var authURL = baseURL + path["auth"]
-var clientURL = baseURL + path["client"]
-var institutionsURL = baseURL + path["institutions"]
-var nodesURL = baseURL + path["nodes"]
-var subscriptionsURL = baseURL + path["subscriptions"]
-var transactionsURL = baseURL + path["transactions"]
-var usersURL = baseURL + path["users"]
+var authURL = buildURL(baseURL, path["auth"])
+var clientURL = buildURL(baseURL, path["client"])
+var institutionsURL = buildURL(baseURL, path["institutions"])
+var nodesURL = buildURL(baseURL, path["nodes"])
+var subscriptionsURL = buildURL(baseURL, path["subscriptions"])
+var transactionsURL = buildURL(baseURL, path["transactions"])
+var usersURL = buildURL(baseURL, path["users"])
 
 /********** TYPES **********/
 
@@ -41,6 +41,16 @@ type (
 )
 
 /********** METHODS **********/
+
+func buildURL(basePath string, uri ...string) string {
+	url := basePath
+
+	for i := range uri {
+		url += "/" + uri[i]
+	}
+
+	return url
+}
 
 func newRequest(clientID, clientSecret, fingerprint, ipAddress string) *Request {
 	return &Request{

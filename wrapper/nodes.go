@@ -32,7 +32,7 @@ type (
 func (n *Node) ShipDebitCard(data string) *Node {
 	var node Node
 
-	url := usersURL + "/" + n.UserID + "/nodes/" + n.NodeID + "?ship=YES"
+	url := buildURL(usersURL, n.UserID, path["nodes"], n.NodeID) + "?ship=YES"
 
 	_, err := request.Patch(url, data, "", &node)
 
@@ -47,7 +47,7 @@ func (n *Node) ShipDebitCard(data string) *Node {
 func (n *Node) ResetDebitCard() *Node {
 	var node Node
 
-	url := usersURL + "/" + n.UserID + "/nodes/" + n.NodeID + "?reset=YES"
+	url := buildURL(usersURL, n.UserID, path["nodes"], n.NodeID) + "?reset=YES"
 
 	_, err := request.Patch(url, "", "", &node)
 
@@ -63,7 +63,8 @@ func (n *Node) ResetDebitCard() *Node {
 // DummyTransactions triggers external dummy transactions on deposit or card accounts
 func (n *Node) DummyTransactions(credit bool) map[string]interface{} {
 	var response map[string]interface{}
-	url := usersURL + "/" + n.UserID + "/nodes/" + n.NodeID + "/dummy-tran"
+
+	url := buildURL(usersURL, n.UserID, path["nodes"], n.NodeID) + "/dummy-tran"
 
 	if credit == true {
 		url += "?is_credit=YES"
@@ -84,7 +85,7 @@ func (n *Node) DummyTransactions(credit bool) map[string]interface{} {
 func (n *Node) GetTransaction(transactionID string) *Transaction {
 	var transaction Transaction
 
-	url := usersURL + "/" + n.UserID + "/nodes/" + n.NodeID + "/trans/" + transactionID
+	url := buildURL(usersURL, n.UserID, path["nodes"], n.NodeID, path["trans"], transactionID)
 
 	_, err := request.Get(url, "", &transaction)
 
@@ -99,7 +100,7 @@ func (n *Node) GetTransaction(transactionID string) *Transaction {
 func (n *Node) CreateTransaction(transactionID, data string) *Transaction {
 	var transaction Transaction
 
-	url := usersURL + "/" + n.UserID + "/nodes/" + n.NodeID + "/trans/" + transactionID
+	url := buildURL(usersURL, n.UserID, path["nodes"], n.NodeID, path["trans"], transactionID)
 
 	_, err := request.Post(url, data, "", &transaction)
 

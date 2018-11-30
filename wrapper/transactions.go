@@ -30,7 +30,7 @@ type (
 func (t *Transaction) CommentOnStatus(data string) *Transaction {
 	var transaction Transaction
 
-	url := usersURL + "/" + t.node.UserID + "/nodes/" + t.node.NodeID + "/trans/" + t.TransactionID
+	url := buildURL(usersURL, t.node.UserID, path["nodes"], t.node.NodeID, path["transactions"], t.TransactionID)
 
 	_, err := request.Post(url, data, "", &transaction)
 
@@ -45,7 +45,7 @@ func (t *Transaction) CommentOnStatus(data string) *Transaction {
 func (t *Transaction) CancelTransaction(data string) *Transaction {
 	var transaction Transaction
 
-	url := usersURL + "/" + t.node.UserID + "/nodes/" + t.node.NodeID + "/trans/" + t.TransactionID
+	url := buildURL(usersURL, t.node.UserID, path["nodes"], t.node.NodeID, path["transactions"], t.TransactionID)
 
 	_, err := request.Delete(url, &transaction)
 
