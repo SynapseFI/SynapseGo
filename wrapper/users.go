@@ -20,7 +20,6 @@ type (
 	// User represents a single user object
 	User struct {
 		AuthKey       string `json:"oauth_key"`
-		client        *Client
 		FullDehydrate bool
 		UserID        string `json:"_id"`
 		RefreshToken  string `json:"refresh_token"`
@@ -47,9 +46,7 @@ func (u *User) Auth(data string) *Auth {
 
 	url := authURL + "/" + u.UserID
 
-	req := u.newRequest()
-
-	_, err := req.Post(url, data, "", &auth)
+	_, err := request.Post(url, data, "", &auth)
 
 	if err != nil {
 		panic(err)
@@ -68,9 +65,7 @@ func (u *User) GetNodes(queryParams ...string) *Nodes {
 
 	url := usersURL + "/" + u.UserID + "/nodes"
 
-	req := u.newRequest()
-
-	_, err := req.Get(url, "", &nodes)
+	_, err := request.Get(url, "", &nodes)
 
 	if err != nil {
 		panic(err)
@@ -85,9 +80,7 @@ func (u *User) CreateDepositAccount(data string) *Nodes {
 
 	url := usersURL + "/" + u.UserID + "/nodes"
 
-	req := u.newRequest()
-
-	_, err := req.Post(url, data, "", &nodes)
+	_, err := request.Post(url, data, "", &nodes)
 
 	if err != nil {
 		panic(err)
@@ -98,23 +91,13 @@ func (u *User) CreateDepositAccount(data string) *Nodes {
 
 /********** USER **********/
 
-func (u *User) newRequest() *Request {
-	return &Request{
-		fingerprint: u.AuthKey + u.client.Fingerprint,
-		gateway:     u.client.Gateway,
-		ipAddress:   u.client.IP,
-	}
-}
-
 // Update updates a single user and returns the updated user information
 func (u *User) Update(data string, queryParams ...string) *User {
 	var user User
 
 	url := usersURL + "/" + u.UserID
 
-	req := u.newRequest()
-
-	body, err := req.Patch(url, data, "", &user)
+	body, err := request.Patch(url, data, "", &user)
 
 	if err != nil {
 		panic(err)
@@ -131,9 +114,7 @@ func (u *User) AddNewDocuments(data string) *User {
 
 	url := usersURL + "/" + u.UserID
 
-	req := u.newRequest()
-
-	body, err := req.Patch(url, data, "", &user)
+	body, err := request.Patch(url, data, "", &user)
 
 	if err != nil {
 		panic(err)
@@ -150,9 +131,7 @@ func (u *User) UpdateExistingDocument(data string) *User {
 
 	url := usersURL + "/" + u.UserID
 
-	req := u.newRequest()
-
-	body, err := req.Patch(url, data, "", &user)
+	body, err := request.Patch(url, data, "", &user)
 
 	if err != nil {
 		panic(err)
@@ -169,9 +148,7 @@ func (u *User) DeleteExistingDocument(data string) *User {
 
 	url := usersURL + "/" + u.UserID
 
-	req := u.newRequest()
-
-	body, err := req.Patch(url, data, "", &user)
+	body, err := request.Patch(url, data, "", &user)
 
 	if err != nil {
 		panic(err)

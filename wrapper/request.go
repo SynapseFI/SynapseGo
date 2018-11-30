@@ -5,12 +5,13 @@ import (
 )
 
 /********** GLOBAL VARIABLES **********/
-const version = "v3.1"
+const version = "v3.2"
 
 // const _url = "https://api.synapsefi.com/" + version
 const _url = "https://uat-api.synapsefi.com/" + version
 
 var goreq = gorequest.New()
+var request *Request
 
 /********** TYPES **********/
 
@@ -22,6 +23,16 @@ type (
 )
 
 /********** METHODS **********/
+
+func newRequest(clientID, clientSecret, fingerprint, ipAddress string) *Request {
+	return &Request{
+		fingerprint: "|" + fingerprint,
+		gateway:     clientID + "|" + clientSecret,
+		ipAddress:   ipAddress,
+	}
+}
+
+/********** REQUEST **********/
 
 // Get performs a GET request
 func (req *Request) Get(url, params string, result interface{}) ([]byte, error) {
