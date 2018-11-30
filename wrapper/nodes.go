@@ -29,23 +29,13 @@ type (
 
 /********** NODE **********/
 
-func (n *Node) newRequest() *Request {
-	return &Request{
-		fingerprint: n.user.AuthKey + n.user.client.Fingerprint,
-		gateway:     n.user.client.Gateway,
-		ipAddress:   n.user.client.IP,
-	}
-}
-
 // ShipDebitCard ships a physical debit card out to the user
 func (n *Node) ShipDebitCard(data string) *Node {
 	var node Node
 
 	url := usersURL + "/" + n.UserID + "/nodes/" + n.NodeID + "?ship=YES"
 
-	req := n.newRequest()
-
-	_, err := req.Patch(url, data, "", &node)
+	_, err := request.Patch(url, data, "", &node)
 
 	if err != nil {
 		panic(err)
@@ -60,9 +50,7 @@ func (n *Node) ResetDebitCard() *Node {
 
 	url := usersURL + "/" + n.UserID + "/nodes/" + n.NodeID + "?reset=YES"
 
-	req := n.newRequest()
-
-	_, err := req.Patch(url, "", "", &node)
+	_, err := request.Patch(url, "", "", &node)
 
 	if err != nil {
 		panic(err)
@@ -82,9 +70,7 @@ func (n *Node) DummyTransactions(credit bool) map[string]interface{} {
 		url += "?is_credit=YES"
 	}
 
-	req := n.newRequest()
-
-	_, err := req.Get(url, "", response)
+	_, err := request.Get(url, "", response)
 
 	if err != nil {
 		panic(err)
@@ -101,9 +87,7 @@ func (n *Node) GetTransaction(transactionID string) *Transaction {
 
 	url := usersURL + "/" + n.UserID + "/nodes/" + n.NodeID + "/trans/" + transactionID
 
-	req := n.newRequest()
-
-	_, err := req.Get(url, "", &transaction)
+	_, err := request.Get(url, "", &transaction)
 
 	if err != nil {
 		panic(err)
@@ -118,9 +102,7 @@ func (n *Node) CreateTransaction(transactionID, data string) *Transaction {
 
 	url := usersURL + "/" + n.UserID + "/nodes/" + n.NodeID + "/trans/" + transactionID
 
-	req := n.newRequest()
-
-	_, err := req.Post(url, data, "", &transaction)
+	_, err := request.Post(url, data, "", &transaction)
 
 	if err != nil {
 		panic(err)

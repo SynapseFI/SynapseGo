@@ -27,23 +27,13 @@ type (
 
 /********** TRANSACTION **********/
 
-func (t *Transaction) newRequest() *Request {
-	return &Request{
-		fingerprint: t.node.user.AuthKey + t.node.user.client.Fingerprint,
-		gateway:     t.node.user.client.Gateway,
-		ipAddress:   t.node.user.client.IP,
-	}
-}
-
 // CommentOnStatus adds comment to the transaction status
 func (t *Transaction) CommentOnStatus(data string) *Transaction {
 	var transaction Transaction
 
 	url := usersURL + "/" + t.node.UserID + "/nodes/" + t.node.NodeID + "/trans/" + t.TransactionID
 
-	req := t.newRequest()
-
-	_, err := req.Post(url, data, "", &transaction)
+	_, err := request.Post(url, data, "", &transaction)
 
 	if err != nil {
 		panic(err)
@@ -58,9 +48,7 @@ func (t *Transaction) CancelTransaction(data string) *Transaction {
 
 	url := usersURL + "/" + t.node.UserID + "/nodes/" + t.node.NodeID + "/trans/" + t.TransactionID
 
-	req := t.newRequest()
-
-	_, err := req.Delete(url, &transaction)
+	_, err := request.Delete(url, &transaction)
 
 	if err != nil {
 		panic(err)

@@ -223,11 +223,19 @@ func handleAPIError(errorCode, httpCode, message string, data map[string]interfa
 
 func handleHTTPError(d []byte) error {
 	data := read(d)
+
 	errCode := data["error_code"].(string)
 	httpCode := data["http_code"].(string)
 	msg := data["error"].(map[string]interface{})["en"].(string)
 
-	return handleAPIError(errCode, httpCode, msg, data)
+	apiErr := handleAPIError(errCode, httpCode, msg, data)
+
+	switch apiErr.(type) {
+	case *IncorrectUserCredentials:
+
+	}
+
+	return apiErr
 }
 
 // HELPER METHODS

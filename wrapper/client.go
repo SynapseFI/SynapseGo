@@ -39,19 +39,14 @@ func NewClient(clientID, clientSecret, ipAddress, fingerprint string, devMode ..
 		developerMode = true
 	}
 
+	request = newRequest(clientID, clientSecret, fingerprint, ipAddress)
+
 	return &Client{
 		Fingerprint: "|" + fingerprint,
 		Gateway:     clientID + "|" + clientSecret,
 		IP:          ipAddress,
 	}
-}
 
-func (c *Client) newRequest() *Request {
-	return &Request{
-		fingerprint: c.Fingerprint,
-		gateway:     c.Gateway,
-		ipAddress:   c.IP,
-	}
 }
 
 /********** NODE **********/
@@ -60,9 +55,7 @@ func (c *Client) newRequest() *Request {
 func (c *Client) GetAllNodes(queryParams ...string) *Nodes {
 	var nodes Nodes
 
-	req := c.newRequest()
-
-	_, err := req.Get(nodesURL, queryParams[0], &nodes)
+	_, err := request.Get(nodesURL, queryParams[0], &nodes)
 
 	if err != nil {
 		panic(err)
@@ -77,9 +70,7 @@ func (c *Client) GetAllNodes(queryParams ...string) *Nodes {
 func (c *Client) GetInstitutions() *Institutions {
 	var institutions Institutions
 
-	req := c.newRequest()
-
-	req.Get(institutionsURL, "", &institutions)
+	request.Get(institutionsURL, "", &institutions)
 
 	return &institutions
 }
@@ -95,9 +86,7 @@ func (c *Client) GetPublicKey(scope ...string) *PublicKey {
 
 	urlParams = strings.TrimSuffix(urlParams, ",")
 
-	req := c.newRequest()
-
-	_, err := req.Get(urlParams, "", &publicKey)
+	_, err := request.Get(urlParams, "", &publicKey)
 
 	if err != nil {
 		panic(err)
@@ -112,9 +101,7 @@ func (c *Client) GetPublicKey(scope ...string) *PublicKey {
 func (c *Client) GetSubscriptions(queryParams ...string) *Subscriptions {
 	var subscriptions Subscriptions
 
-	req := c.newRequest()
-
-	_, err := req.Get(subscriptionsURL, "", &subscriptions)
+	_, err := request.Get(subscriptionsURL, "", &subscriptions)
 
 	if err != nil {
 		panic(err)
@@ -129,9 +116,7 @@ func (c *Client) GetSubscription(subID string, queryParams ...string) *Subscript
 
 	url := subscriptionsURL + "/" + subID
 
-	req := c.newRequest()
-
-	body, err := req.Get(url, "", &subscription)
+	body, err := request.Get(url, "", &subscription)
 
 	if err != nil {
 		panic(err)
@@ -146,9 +131,7 @@ func (c *Client) GetSubscription(subID string, queryParams ...string) *Subscript
 func (c *Client) CreateSubscription(data string, queryParams ...string) *Subscription {
 	var subscription Subscription
 
-	req := c.newRequest()
-
-	body, err := req.Post(subscriptionsURL, data, "", &subscription)
+	body, err := request.Post(subscriptionsURL, data, "", &subscription)
 
 	if err != nil {
 		panic(err)
@@ -163,9 +146,7 @@ func (c *Client) CreateSubscription(data string, queryParams ...string) *Subscri
 func (c *Client) UpdateSubscription(subID string, data string, queryParams ...string) *Subscription {
 	var subscription Subscription
 
-	req := c.newRequest()
-
-	body, err := req.Patch(subscriptionsURL, data, "", &subscription)
+	body, err := request.Patch(subscriptionsURL, data, "", &subscription)
 
 	if err != nil {
 		panic(err)
@@ -182,9 +163,7 @@ func (c *Client) UpdateSubscription(subID string, data string, queryParams ...st
 func (c *Client) GetClientTransactions(queryParams ...string) *Transactions {
 	var transactions Transactions
 
-	req := c.newRequest()
-
-	_, err := req.Get(transactionsURL, queryParams[0], &transactions)
+	_, err := request.Get(transactionsURL, queryParams[0], &transactions)
 
 	if err != nil {
 		panic(err)
@@ -199,9 +178,7 @@ func (c *Client) GetClientTransactions(queryParams ...string) *Transactions {
 func (c *Client) GetUsers(queryParams ...string) *Users {
 	var users Users
 
-	req := c.newRequest()
-
-	_, err := req.Get(usersURL, "", &users)
+	_, err := request.Get(usersURL, "", &users)
 
 	if err != nil {
 		panic(err)
@@ -220,15 +197,12 @@ func (c *Client) GetUser(UserID string, fullDehydrate bool, queryParams ...strin
 		url += "?full_dehydrate=yes"
 	}
 
-	req := c.newRequest()
-
-	body, err := req.Get(url, "", &user)
+	body, err := request.Get(url, "", &user)
 
 	if err != nil {
 		panic(err)
 	}
 
-	user.client = c
 	user.FullDehydrate = fullDehydrate
 	user.Response = read(body)
 
@@ -239,9 +213,7 @@ func (c *Client) GetUser(UserID string, fullDehydrate bool, queryParams ...strin
 func (c *Client) CreateUser(data string, queryParams ...string) *User {
 	var user User
 
-	req := c.newRequest()
-
-	body, err := req.Post(usersURL, data, "", &user)
+	body, err := request.Post(usersURL, data, "", &user)
 
 	if err != nil {
 		panic(err)
