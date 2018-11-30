@@ -111,10 +111,10 @@ func (c *Client) GetSubscriptions(queryParams ...string) *Subscriptions {
 }
 
 // GetSubscription returns a single subscription
-func (c *Client) GetSubscription(subID string, queryParams ...string) *Subscription {
+func (c *Client) GetSubscription(subscriptionID string, queryParams ...string) *Subscription {
 	var subscription Subscription
 
-	url := subscriptionsURL + "/" + subID
+	url := buildURL(subscriptionsURL, subscriptionID)
 
 	body, err := request.Get(url, "", &subscription)
 
@@ -191,7 +191,7 @@ func (c *Client) GetUsers(queryParams ...string) *Users {
 func (c *Client) GetUser(UserID string, fullDehydrate bool, queryParams ...string) *User {
 	var user User
 
-	url := usersURL + "/" + UserID
+	url := buildURL(usersURL, UserID)
 
 	if fullDehydrate != true {
 		url += "?full_dehydrate=yes"

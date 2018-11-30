@@ -42,7 +42,7 @@ type (
 func (u *User) Auth(data string) *Auth {
 	var auth Auth
 
-	url := authURL + "/" + u.UserID
+	url := buildURL(authURL, u.UserID)
 
 	_, err := request.Post(url, data, "", &auth)
 
@@ -61,7 +61,7 @@ func (u *User) Auth(data string) *Auth {
 func (u *User) GetNodes(queryParams ...string) *Nodes {
 	var nodes Nodes
 
-	url := usersURL + "/" + u.UserID + "/nodes"
+	url := buildURL(usersURL, u.UserID, path["nodes"])
 
 	_, err := request.Get(url, "", &nodes)
 
@@ -76,7 +76,7 @@ func (u *User) GetNodes(queryParams ...string) *Nodes {
 func (u *User) CreateDepositAccount(data string) *Nodes {
 	var nodes Nodes
 
-	url := usersURL + "/" + u.UserID + "/nodes"
+	url := buildURL(usersURL, u.UserID, path["nodes"])
 
 	_, err := request.Post(url, data, "", &nodes)
 
@@ -93,7 +93,7 @@ func (u *User) CreateDepositAccount(data string) *Nodes {
 func (u *User) Update(data string, queryParams ...string) *User {
 	var user User
 
-	url := usersURL + "/" + u.UserID
+	url := buildURL(usersURL, u.UserID)
 
 	body, err := request.Patch(url, data, "", &user)
 
@@ -110,7 +110,7 @@ func (u *User) Update(data string, queryParams ...string) *User {
 func (u *User) AddNewDocuments(data string) *User {
 	var user User
 
-	url := usersURL + "/" + u.UserID
+	url := buildURL(usersURL, u.UserID)
 
 	body, err := request.Patch(url, data, "", &user)
 
@@ -127,7 +127,7 @@ func (u *User) AddNewDocuments(data string) *User {
 func (u *User) UpdateExistingDocument(data string) *User {
 	var user User
 
-	url := usersURL + "/" + u.UserID
+	url := buildURL(usersURL, u.UserID)
 
 	body, err := request.Patch(url, data, "", &user)
 
@@ -144,7 +144,7 @@ func (u *User) UpdateExistingDocument(data string) *User {
 func (u *User) DeleteExistingDocument(data string) *User {
 	var user User
 
-	url := usersURL + "/" + u.UserID
+	url := buildURL(usersURL, u.UserID)
 
 	body, err := request.Patch(url, data, "", &user)
 
