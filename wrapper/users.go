@@ -170,33 +170,3 @@ func (u *User) DeleteExistingDocument(data string) *User {
 
 	return &user
 }
-
-// GetNodes returns all of the nodes associated with a user
-func (u *User) GetNodes(queryParams ...string) *Nodes {
-	var nodes Nodes
-
-	url := usersURL + "/" + u.UserID + "/nodes"
-
-	req := u.newRequest()
-
-	_, err := req.Get(url, "", &nodes)
-
-	if err != nil {
-		panic(err)
-	}
-
-	return &nodes
-}
-
-// CreateDepositAccount creates an deposit account
-func (u *User) CreateDepositAccount(data string) *Nodes {
-	var nodes Nodes
-
-	url := usersURL + "/" + u.UserID + "/nodes"
-
-	req := u.newRequest()
-
-	req.Post(url, data, "", &nodes)
-
-	return &nodes
-}
