@@ -7,8 +7,8 @@ import (
 /********** GLOBAL VARIABLES **********/
 const version = "v3.2"
 
-// const baseUrl = "https://api.synapsefi.com" + version
-const baseURL = "https://uat-api.synapsefi.com" + version
+// const baseUrl = "https://api.synapsefi.com/" + version
+const baseURL = "https://uat-api.synapsefi.com/" + version
 
 var goreq = gorequest.New()
 var request *Request
@@ -81,7 +81,6 @@ func (req *Request) Get(url, params string, result interface{}) ([]byte, error) 
 
 // Post performs a POST request
 func (req *Request) Post(url, data, params string, result interface{}) ([]byte, error) {
-
 	res, body, errs := goreq.
 		Post(url).
 		Set("x-sp-gateway", req.gateway).
