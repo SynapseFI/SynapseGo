@@ -28,13 +28,13 @@ func (u *User) getHeaderInfo(setting string) map[string]interface{} {
 
 	switch setting {
 	case "no gateway":
-		info["x-sp-user-ip"] = u.clientIP
-		info["x-sp-user"] = u.AuthKey + "|" + u.clientFingerprint
+		info["x-sp-user-ip"] = u.client.IP
+		info["x-sp-user"] = u.AuthKey + "|" + u.client.Fingerprint
 
 	default:
-		info["x-sp-gateway"] = u.clientGateway
-		info["x-sp-user-ip"] = u.clientIP
-		info["x-sp-user"] = u.AuthKey + "|" + u.clientFingerprint
+		info["x-sp-gateway"] = u.client.Gateway
+		info["x-sp-user-ip"] = u.client.IP
+		info["x-sp-user"] = u.AuthKey + "|" + u.client.Fingerprint
 	}
 
 	return info

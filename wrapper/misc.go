@@ -17,8 +17,7 @@ type (
 func (c *Client) GetInstitutions() *Institutions {
 	var institutions Institutions
 
-	h := c.getHeaderInfo("")
-	req := c.newRequest(h)
+	req := c.newRequest()
 
 	req.Get(institutionsURL, "", &institutions)
 

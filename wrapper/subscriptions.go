@@ -29,8 +29,7 @@ type (
 func (c *Client) GetSubscriptions(queryParams ...string) *Subscriptions {
 	var subscriptions Subscriptions
 
-	h := c.getHeaderInfo("")
-	req := c.newRequest(h)
+	req := c.newRequest()
 
 	_, err := req.Get(subscriptionsURL, "", &subscriptions)
 
@@ -47,8 +46,7 @@ func (c *Client) GetSubscription(subID string, queryParams ...string) *Subscript
 
 	url := subscriptionsURL + "/" + subID
 
-	h := c.getHeaderInfo("")
-	req := c.newRequest(h)
+	req := c.newRequest()
 
 	body, err := req.Get(url, "", &subscription)
 
@@ -65,8 +63,7 @@ func (c *Client) GetSubscription(subID string, queryParams ...string) *Subscript
 func (c *Client) CreateSubscription(data string, queryParams ...string) *Subscription {
 	var subscription Subscription
 
-	h := c.getHeaderInfo("")
-	req := c.newRequest(h)
+	req := c.newRequest()
 
 	body, err := req.Post(subscriptionsURL, data, "", &subscription)
 
@@ -83,8 +80,7 @@ func (c *Client) CreateSubscription(data string, queryParams ...string) *Subscri
 func (c *Client) UpdateSubscription(subID string, data string, queryParams ...string) *Subscription {
 	var subscription Subscription
 
-	h := c.getHeaderInfo("")
-	req := c.newRequest(h)
+	req := c.newRequest()
 
 	body, err := req.Patch(subscriptionsURL, data, "", &subscription)
 
