@@ -1,11 +1,22 @@
 package wrapper
 
 /*********** GLOBAL VARIABLES ***********/
+const authURL = _url + "/oauth"
 const usersURL = _url + "/users"
 
 /********** TYPES **********/
 
 type (
+	// Auth represents an oauth key
+	Auth struct {
+		AuthKey string `json:"oauth_key"`
+	}
+
+	// Refresh represents a refresh token
+	Refresh struct {
+		Token string `json:"refresh_token"`
+	}
+
 	// User represents a single user object
 	User struct {
 		AuthKey       string `json:"oauth_key"`
