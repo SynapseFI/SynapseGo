@@ -7,11 +7,29 @@ import (
 /********** GLOBAL VARIABLES **********/
 const version = "v3.2"
 
-// const _url = "https://api.synapsefi.com/" + version
-const _url = "https://uat-api.synapsefi.com/" + version
+// const baseUrl = "https://api.synapsefi.com/" + version
+const baseURL = "https://uat-api.synapsefi.com/" + version
 
 var goreq = gorequest.New()
 var request *Request
+
+var path = map[string]string{
+	"auth":          "/oauth",
+	"client":        "/client",
+	"institutions":  "/institutions",
+	"nodes":         "/nodes",
+	"subscriptions": "/subscriptions",
+	"transactions":  "/trans",
+	"users":         "/users",
+}
+
+var authURL = baseURL + path["auth"]
+var clientURL = baseURL + path["client"]
+var institutionsURL = baseURL + path["institutions"]
+var nodesURL = baseURL + path["nodes"]
+var subscriptionsURL = baseURL + path["subscriptions"]
+var transactionsURL = baseURL + path["transactions"]
+var usersURL = baseURL + path["users"]
 
 /********** TYPES **********/
 

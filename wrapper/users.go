@@ -1,8 +1,6 @@
 package wrapper
 
 /*********** GLOBAL VARIABLES ***********/
-const authURL = _url + "/oauth"
-const usersURL = _url + "/users"
 
 /********** TYPES **********/
 

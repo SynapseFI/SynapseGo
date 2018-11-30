@@ -1,12 +1,11 @@
 package wrapper
 
-import "strings"
+import (
+	"strings"
+)
 
 /********** GLOBAL VARIABLES **********/
 var developerMode = false
-
-const institutionsURL = _url + "/institutions"
-const publicKeyURL = _url + "/client?issue_public_key=YES&amp;scope="
 
 /********** TYPES **********/
 
@@ -78,15 +77,16 @@ func (c *Client) GetInstitutions() *Institutions {
 // GetPublicKey returns a public key as a token representing client credentials
 func (c *Client) GetPublicKey(scope ...string) *PublicKey {
 	var publicKey PublicKey
-	var urlParams = publicKeyURL
+
+	url := clientURL + "?issue_public_key=YES&amp;scope="
 
 	for i := 0; i < len(scope); i++ {
-		urlParams += scope[i] + ","
+		url += scope[i] + ","
 	}
 
-	urlParams = strings.TrimSuffix(urlParams, ",")
+	url = strings.TrimSuffix(url, ",")
 
-	_, err := request.Get(urlParams, "", &publicKey)
+	_, err := request.Get(url, "", &publicKey)
 
 	if err != nil {
 		panic(err)
