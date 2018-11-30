@@ -3,7 +3,7 @@ package wrapper
 /*********** GLOBAL VARIABLES ***********/
 const usersURL = _url + "/users"
 
-/********** TYPE **********/
+/********** TYPES **********/
 
 type (
 	// User represents a single user object
@@ -26,7 +26,66 @@ type (
 	}
 )
 
-/********** CLIENT METHODS **********/
+/********** METHODS **********/
+
+/********** AUTHENTICATION **********/
+
+// Auth returns an oauth key and sets it to the user object
+func (u *User) Auth(data string) *Auth {
+	var auth Auth
+
+	url := authURL + "/" + u.UserID
+
+	req := u.newRequest()
+
+	_, err := req.Post(url, data, "", &auth)
+
+	if err != nil {
+		panic(err)
+	}
+
+	u.AuthKey = auth.AuthKey
+
+	return &auth
+}
+
+/********** NODE **********/
+
+// GetNodes returns all of the nodes associated with a user
+func (u *User) GetNodes(queryParams ...string) *Nodes {
+	var nodes Nodes
+
+	url := usersURL + "/" + u.UserID + "/nodes"
+
+	req := u.newRequest()
+
+	_, err := req.Get(url, "", &nodes)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return &nodes
+}
+
+// CreateDepositAccount creates an deposit account
+func (u *User) CreateDepositAccount(data string) *Nodes {
+	var nodes Nodes
+
+	url := usersURL + "/" + u.UserID + "/nodes"
+
+	req := u.newRequest()
+
+	_, err := req.Post(url, data, "", &nodes)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return &nodes
+}
+
+/********** USER **********/
 
 func (u *User) newRequest() *Request {
 	return &Request{
@@ -35,65 +94,6 @@ func (u *User) newRequest() *Request {
 		ipAddress:   u.client.IP,
 	}
 }
-
-// GetUsers returns a list of users
-func (c *Client) GetUsers(queryParams ...string) *Users {
-	var users Users
-
-	req := c.newRequest()
-
-	_, err := req.Get(usersURL, "", &users)
-
-	if err != nil {
-		panic(err)
-	}
-
-	return &users
-}
-
-// GetUser returns a single user
-func (c *Client) GetUser(UserID string, fullDehydrate bool, queryParams ...string) *User {
-	var user User
-
-	url := usersURL + "/" + UserID
-
-	if fullDehydrate != true {
-		url += "?full_dehydrate=yes"
-	}
-
-	req := c.newRequest()
-
-	body, err := req.Get(url, "", &user)
-
-	if err != nil {
-		panic(err)
-	}
-
-	user.client = c
-	user.FullDehydrate = fullDehydrate
-	user.Response = read(body)
-
-	return &user
-}
-
-// CreateUser creates a single user and returns the new user data
-func (c *Client) CreateUser(data string, queryParams ...string) *User {
-	var user User
-
-	req := c.newRequest()
-
-	body, err := req.Post(usersURL, data, "", &user)
-
-	if err != nil {
-		panic(err)
-	}
-
-	user.Response = read(body)
-
-	return &user
-}
-
-/********** USER METHODS **********/
 
 // Update updates a single user and returns the updated user information
 func (u *User) Update(data string, queryParams ...string) *User {

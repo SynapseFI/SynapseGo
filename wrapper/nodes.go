@@ -26,65 +26,15 @@ type (
 )
 
 /********** METHODS **********/
+
+/********** NODE **********/
+
 func (n *Node) newRequest() *Request {
 	return &Request{
 		fingerprint: n.user.AuthKey + n.user.client.Fingerprint,
 		gateway:     n.user.client.Gateway,
 		ipAddress:   n.user.client.IP,
 	}
-}
-
-/********** CLIENT METHODS **********/
-
-// GetAllNodes returns all of the nodes
-func (c *Client) GetAllNodes(queryParams ...string) *Nodes {
-	var nodes Nodes
-
-	req := c.newRequest()
-
-	_, err := req.Get(nodesURL, queryParams[0], &nodes)
-
-	if err != nil {
-		panic(err)
-	}
-
-	return &nodes
-}
-
-/********** USER METHODS **********/
-
-// GetNodes returns all of the nodes associated with a user
-func (u *User) GetNodes(queryParams ...string) *Nodes {
-	var nodes Nodes
-
-	url := usersURL + "/" + u.UserID + "/nodes"
-
-	req := u.newRequest()
-
-	_, err := req.Get(url, "", &nodes)
-
-	if err != nil {
-		panic(err)
-	}
-
-	return &nodes
-}
-
-// CreateDepositAccount creates an deposit account
-func (u *User) CreateDepositAccount(data string) *Nodes {
-	var nodes Nodes
-
-	url := usersURL + "/" + u.UserID + "/nodes"
-
-	req := u.newRequest()
-
-	_, err := req.Post(url, data, "", &nodes)
-
-	if err != nil {
-		panic(err)
-	}
-
-	return &nodes
 }
 
 // ShipDebitCard ships a physical debit card out to the user
@@ -121,7 +71,7 @@ func (n *Node) ResetDebitCard() *Node {
 	return &node
 }
 
-/********** TRANSACTION METHODS **********/
+/********** OTHER **********/
 
 // DummyTransactions triggers external dummy transactions on deposit or card accounts
 func (n *Node) DummyTransactions(credit bool) map[string]interface{} {
@@ -141,4 +91,40 @@ func (n *Node) DummyTransactions(credit bool) map[string]interface{} {
 	}
 
 	return response
+}
+
+/********** TRANSACTION **********/
+
+// GetTransaction returns a specific transaction associated with a node
+func (n *Node) GetTransaction(transactionID string) *Transaction {
+	var transaction Transaction
+
+	url := usersURL + "/" + n.UserID + "/nodes/" + n.NodeID + "/trans/" + transactionID
+
+	req := n.newRequest()
+
+	_, err := req.Get(url, "", &transaction)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return &transaction
+}
+
+// CreateTransaction creates a transaction for the specified node
+func (n *Node) CreateTransaction(transactionID, data string) *Transaction {
+	var transaction Transaction
+
+	url := usersURL + "/" + n.UserID + "/nodes/" + n.NodeID + "/trans/" + transactionID
+
+	req := n.newRequest()
+
+	_, err := req.Post(url, data, "", &transaction)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return &transaction
 }

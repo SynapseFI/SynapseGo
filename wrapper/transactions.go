@@ -24,6 +24,7 @@ type (
 )
 
 /********** METHODS **********/
+
 func (t *Transaction) newRequest() *Request {
 	return &Request{
 		fingerprint: t.node.user.AuthKey + t.node.user.client.Fingerprint,
@@ -32,22 +33,7 @@ func (t *Transaction) newRequest() *Request {
 	}
 }
 
-/********** CLIENT METHODS **********/
-
-// GetClientTransactions returns all client transactions
-func (c *Client) GetClientTransactions(queryParams ...string) *Transactions {
-	var transactions Transactions
-
-	req := c.newRequest()
-
-	_, err := req.Get(transactionsURL, queryParams[0], &transactions)
-
-	if err != nil {
-		panic(err)
-	}
-
-	return &transactions
-}
+/********** TRANSACTION **********/
 
 // CommentOnStatus adds comment to the transaction status
 func (t *Transaction) CommentOnStatus(data string) *Transaction {
@@ -75,42 +61,6 @@ func (t *Transaction) CancelTransaction(data string) *Transaction {
 	req := t.newRequest()
 
 	_, err := req.Delete(url, &transaction)
-
-	if err != nil {
-		panic(err)
-	}
-
-	return &transaction
-}
-
-/********** NODE METHODS **********/
-
-// GetTransaction returns a specific transaction associated with a node
-func (n *Node) GetTransaction(transactionID string) *Transaction {
-	var transaction Transaction
-
-	url := usersURL + "/" + n.UserID + "/nodes/" + n.NodeID + "/trans/" + transactionID
-
-	req := n.newRequest()
-
-	_, err := req.Get(url, "", &transaction)
-
-	if err != nil {
-		panic(err)
-	}
-
-	return &transaction
-}
-
-// CreateTransaction creates a transaction for the specified node
-func (n *Node) CreateTransaction(transactionID, data string) *Transaction {
-	var transaction Transaction
-
-	url := usersURL + "/" + n.UserID + "/nodes/" + n.NodeID + "/trans/" + transactionID
-
-	req := n.newRequest()
-
-	_, err := req.Post(url, data, "", &transaction)
 
 	if err != nil {
 		panic(err)
