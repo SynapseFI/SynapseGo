@@ -8,7 +8,12 @@ const authURL = _url + "/oauth"
 type (
 	// Auth represents an oauth key
 	Auth struct {
-		Key string `json:"oauth_key"`
+		AuthKey string `json:"oauth_key"`
+	}
+
+	// Refresh represents a refresh token
+	Refresh struct {
+		Token string `json:"refresh_token"`
 	}
 )
 
@@ -18,8 +23,7 @@ func (u *User) Auth(data string) *Auth {
 
 	url := authURL + "/" + u.UserID
 
-	h := u.getHeaderInfo("")
-	req := u.newRequest(h)
+	req := u.newRequest()
 
 	_, err := req.Post(url, data, "", &auth)
 
@@ -27,7 +31,7 @@ func (u *User) Auth(data string) *Auth {
 		panic(err)
 	}
 
-	u.AuthKey = auth.Key
+	u.AuthKey = auth.AuthKey
 
 	return &auth
 }

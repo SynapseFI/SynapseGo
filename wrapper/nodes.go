@@ -11,6 +11,7 @@ type (
 		NodeID        string `json:"_id"`
 		UserID        string `json:"user_id"`
 		FullDehydrate bool
+		user          *User
 		Response      interface{}
 	}
 
@@ -24,14 +25,13 @@ type (
 	}
 )
 
-/********** METHODS **********/
+/********** CLIENT METHODS **********/
 
 // GetAllNodes returns all of the nodes
 func (c *Client) GetAllNodes(queryParams ...string) *Nodes {
 	var nodes Nodes
 
-	h := c.getHeaderInfo("")
-	req := c.newRequest(h)
+	req := c.newRequest()
 
 	_, err := req.Get(nodesURL, queryParams[0], &nodes)
 

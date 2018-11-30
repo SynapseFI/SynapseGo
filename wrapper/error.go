@@ -201,10 +201,8 @@ func (e *ServiceUnavailable) Error() string {
 func handleAPIError(errorCode, httpCode, message string, data map[string]interface{}) error {
 
 	apiErrors := map[string]error{
-		"": nil,
-		"10": &ActionPending{
-			errorCode, httpCode, message, data,
-		},
+		"":    nil,
+		"10":  &ActionPending{errorCode, httpCode, message, data},
 		"100": &IncorrectClientCredentials{errorCode, httpCode, message, data},
 		"110": &IncorrectUserCredentials{errorCode, httpCode, message, data},
 		"120": &UnauthorizedFingerprint{errorCode, httpCode, message, data},

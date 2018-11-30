@@ -29,8 +29,7 @@ func (c *Client) GetPublicKey(scope ...string) *PublicKey {
 
 	urlParams = strings.TrimSuffix(urlParams, ",")
 
-	h := c.getHeaderInfo("")
-	req := c.newRequest(h)
+	req := c.newRequest()
 
 	_, err := req.Get(urlParams, "", &publicKey)
 

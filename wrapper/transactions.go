@@ -22,14 +22,13 @@ type (
 	}
 )
 
-/********** METHODS **********/
+/********** CLIENT METHODS **********/
 
 // GetClientTransactions returns all client transactions
 func (c *Client) GetClientTransactions(queryParams ...string) *Transactions {
 	var transactions Transactions
 
-	h := c.getHeaderInfo("")
-	req := c.newRequest(h)
+	req := c.newRequest()
 
 	_, err := req.Get(transactionsURL, queryParams[0], &transactions)
 

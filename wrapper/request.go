@@ -18,7 +18,6 @@ type (
 	// Request represents the http request client
 	Request struct {
 		fingerprint, gateway, ipAddress, authKey string
-		headers                                  interface{}
 	}
 )
 
@@ -43,6 +42,7 @@ func (req *Request) Get(url, params string, result interface{}) ([]byte, error) 
 
 // Post performs a POST request
 func (req *Request) Post(url, data, params string, result interface{}) ([]byte, error) {
+
 	res, body, errs := goreq.
 		Post(url).
 		Set("x-sp-gateway", req.gateway).

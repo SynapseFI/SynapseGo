@@ -8,14 +8,12 @@ const usersURL = _url + "/users"
 type (
 	// User represents a single user object
 	User struct {
-		AuthKey           string `json:"oauth_key"`
-		clientGateway     string
-		clientIP          string
-		clientFingerprint string
-		FullDehydrate     bool
-		UserID            string `json:"_id"`
-		RefreshToken      string `json:"refresh_token"`
-		Response          interface{}
+		AuthKey       string `json:"oauth_key"`
+		client        *Client
+		FullDehydrate bool
+		UserID        string `json:"_id"`
+		RefreshToken  string `json:"refresh_token"`
+		Response      interface{}
 	}
 
 	// Users represents a collection of user objects
@@ -30,12 +28,11 @@ type (
 
 /********** CLIENT METHODS **********/
 
-func (u *User) newRequest(headers interface{}) *Request {
+func (u *User) newRequest() *Request {
 	return &Request{
-		fingerprint: u.clientFingerprint,
-		gateway:     u.clientGateway,
-		ipAddress:   u.clientIP,
-		headers:     headers,
+		fingerprint: u.AuthKey + u.client.Fingerprint,
+		gateway:     u.client.Gateway,
+		ipAddress:   u.client.IP,
 	}
 }
 
@@ -43,8 +40,7 @@ func (u *User) newRequest(headers interface{}) *Request {
 func (c *Client) GetUsers(queryParams ...string) *Users {
 	var users Users
 
-	h := c.getHeaderInfo("")
-	req := c.newRequest(h)
+	req := c.newRequest()
 
 	_, err := req.Get(usersURL, "", &users)
 
@@ -65,8 +61,7 @@ func (c *Client) GetUser(UserID string, fullDehydrate bool, queryParams ...strin
 		url += "?full_dehydrate=yes"
 	}
 
-	h := c.getHeaderInfo("")
-	req := c.newRequest(h)
+	req := c.newRequest()
 
 	body, err := req.Get(url, "", &user)
 
@@ -74,6 +69,7 @@ func (c *Client) GetUser(UserID string, fullDehydrate bool, queryParams ...strin
 		panic(err)
 	}
 
+	user.client = c
 	user.FullDehydrate = fullDehydrate
 	user.Response = read(body)
 
@@ -84,8 +80,7 @@ func (c *Client) GetUser(UserID string, fullDehydrate bool, queryParams ...strin
 func (c *Client) CreateUser(data string, queryParams ...string) *User {
 	var user User
 
-	h := c.getHeaderInfo("")
-	req := c.newRequest(h)
+	req := c.newRequest()
 
 	body, err := req.Post(usersURL, data, "", &user)
 
@@ -106,8 +101,7 @@ func (u *User) Update(data string, queryParams ...string) *User {
 
 	url := usersURL + "/" + u.UserID
 
-	h := u.getHeaderInfo("")
-	req := u.newRequest(h)
+	req := u.newRequest()
 
 	body, err := req.Patch(url, data, "", &user)
 
@@ -126,8 +120,7 @@ func (u *User) AddNewDocuments(data string) *User {
 
 	url := usersURL + "/" + u.UserID
 
-	h := u.getHeaderInfo("")
-	req := u.newRequest(h)
+	req := u.newRequest()
 
 	body, err := req.Patch(url, data, "", &user)
 
@@ -146,8 +139,7 @@ func (u *User) UpdateExistingDocument(data string) *User {
 
 	url := usersURL + "/" + u.UserID
 
-	h := u.getHeaderInfo("")
-	req := u.newRequest(h)
+	req := u.newRequest()
 
 	body, err := req.Patch(url, data, "", &user)
 
@@ -166,8 +158,7 @@ func (u *User) DeleteExistingDocument(data string) *User {
 
 	url := usersURL + "/" + u.UserID
 
-	h := u.getHeaderInfo("")
-	req := u.newRequest(h)
+	req := u.newRequest()
 
 	body, err := req.Patch(url, data, "", &user)
 
@@ -186,8 +177,7 @@ func (u *User) GetNodes(queryParams ...string) *Nodes {
 
 	url := usersURL + "/" + u.UserID + "/nodes"
 
-	h := u.getHeaderInfo("no gateway")
-	req := u.newRequest(h)
+	req := u.newRequest()
 
 	_, err := req.Get(url, "", &nodes)
 
@@ -204,8 +194,7 @@ func (u *User) CreateDepositAccount(data string) *Nodes {
 
 	url := usersURL + "/" + u.UserID + "/nodes"
 
-	h := u.getHeaderInfo("no gateway")
-	req := u.newRequest(h)
+	req := u.newRequest()
 
 	req.Post(url, data, "", &nodes)
 
