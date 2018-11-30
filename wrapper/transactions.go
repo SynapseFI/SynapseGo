@@ -8,7 +8,8 @@ const transactionsURL = _url + "/trans"
 type (
 	// Transaction represents a single transaction object
 	Transaction struct {
-		TransactionID string
+		TransactionID string `json:"_id"`
+		node          *Node
 		Response      interface{}
 	}
 
@@ -21,6 +22,15 @@ type (
 		Transactions     []Transaction `json:"trans"`
 	}
 )
+
+/********** METHODS **********/
+func (t *Transaction) newRequest() *Request {
+	return &Request{
+		fingerprint: t.node.user.AuthKey + t.node.user.client.Fingerprint,
+		gateway:     t.node.user.client.Gateway,
+		ipAddress:   t.node.user.client.IP,
+	}
+}
 
 /********** CLIENT METHODS **********/
 
@@ -37,4 +47,74 @@ func (c *Client) GetClientTransactions(queryParams ...string) *Transactions {
 	}
 
 	return &transactions
+}
+
+// CommentOnStatus adds comment to the transaction status
+func (t *Transaction) CommentOnStatus(data string) *Transaction {
+	var transaction Transaction
+
+	url := usersURL + "/" + t.node.UserID + "/nodes/" + t.node.NodeID + "/trans/" + t.TransactionID
+
+	req := t.newRequest()
+
+	_, err := req.Post(url, data, "", &transaction)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return &transaction
+}
+
+// CancelTransaction cancels a transaction
+func (t *Transaction) CancelTransaction(data string) *Transaction {
+	var transaction Transaction
+
+	url := usersURL + "/" + t.node.UserID + "/nodes/" + t.node.NodeID + "/trans/" + t.TransactionID
+
+	req := t.newRequest()
+
+	_, err := req.Delete(url, &transaction)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return &transaction
+}
+
+/********** NODE METHODS **********/
+
+// GetTransaction returns a specific transaction associated with a node
+func (n *Node) GetTransaction(transactionID string) *Transaction {
+	var transaction Transaction
+
+	url := usersURL + "/" + n.UserID + "/nodes/" + n.NodeID + "/trans/" + transactionID
+
+	req := n.newRequest()
+
+	_, err := req.Get(url, "", &transaction)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return &transaction
+}
+
+// CreateTransaction creates a transaction for the specified node
+func (n *Node) CreateTransaction(transactionID, data string) *Transaction {
+	var transaction Transaction
+
+	url := usersURL + "/" + n.UserID + "/nodes/" + n.NodeID + "/trans/" + transactionID
+
+	req := n.newRequest()
+
+	_, err := req.Post(url, data, "", &transaction)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return &transaction
 }

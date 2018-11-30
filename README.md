@@ -90,7 +90,7 @@ user := client.CreateUser(data string, queryParams ...string)
 ## User
 
 ```go
-user := user.Update(data string, bodyParams ...string)
+user := user.Update(data string)
 ```
 
 ### Authentication
@@ -112,4 +112,23 @@ user := user.DeleteExistingDocument(data string)
 ```go
 user := user.GetNodes(queryParams ...string)
 user := user.CreateDepositeNode(data string)
+```
+
+## Node
+
+```go
+node := node.ShipDebitCard(data string)
+node := node.ResetDebitCard()
+
+res:= node.DummyTransactions(credit bool)
+
+tran := node.GetTransaction(transactionID string)
+tran := node.CreateTranscation(transactionID data string)
+```
+
+## Transactions
+
+```go
+tran := tran.CommentOnStatus(data string)
+tran := tran.CancelTransaction(data string)
 ```
