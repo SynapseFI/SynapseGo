@@ -5,6 +5,7 @@ import "strings"
 /********** GLOBAL VARIABLES **********/
 var developerMode = false
 
+const institutionsURL = _url + "/institutions"
 const publicKeyURL = _url + "/client?issue_public_key=YES&amp;scope="
 
 /********** TYPES **********/
@@ -15,6 +16,11 @@ type (
 		Fingerprint string
 		Gateway     string
 		IP          string
+	}
+
+	// Institutions represents a list of Synapse institutions
+	Institutions struct {
+		Banks interface{} `json:"banks"`
 	}
 
 	// PublicKey represents the structure of a public key object
@@ -65,7 +71,18 @@ func (c *Client) GetAllNodes(queryParams ...string) *Nodes {
 	return &nodes
 }
 
-/********** PUBLIC KEY **********/
+/********** OTHER **********/
+
+// GetInstitutions returns all of the nodes associated with a user
+func (c *Client) GetInstitutions() *Institutions {
+	var institutions Institutions
+
+	req := c.newRequest()
+
+	req.Get(institutionsURL, "", &institutions)
+
+	return &institutions
+}
 
 // GetPublicKey returns a public key as a token representing client credentials
 func (c *Client) GetPublicKey(scope ...string) *PublicKey {

@@ -25,6 +25,8 @@ type (
 
 /********** METHODS **********/
 
+/********** TRANSACTION **********/
+
 func (t *Transaction) newRequest() *Request {
 	return &Request{
 		fingerprint: t.node.user.AuthKey + t.node.user.client.Fingerprint,
@@ -32,8 +34,6 @@ func (t *Transaction) newRequest() *Request {
 		ipAddress:   t.node.user.client.IP,
 	}
 }
-
-/********** TRANSACTION **********/
 
 // CommentOnStatus adds comment to the transaction status
 func (t *Transaction) CommentOnStatus(data string) *Transaction {
