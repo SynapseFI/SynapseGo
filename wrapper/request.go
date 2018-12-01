@@ -5,7 +5,7 @@ import (
 )
 
 /********** GLOBAL VARIABLES **********/
-const version = "v3.2"
+const version = "v3.1"
 
 // const baseUrl = "https://api.synapsefi.com/" + version
 const baseURL = "https://uat-api.synapsefi.com/" + version
