@@ -16,11 +16,11 @@ See main.go for each method in use
 
 *queryParams* and *scope* are optional parameters
 
-## Client (developer)
+## Client
 
 ```go
 // credentials used to set headers for each method request
-var client = wrapper.Client(
+var client = wrapper.New(
 "clientID":     "CLIENT_ID",
 "clientSecret": "CLIENT_SECRET",
 "ipAddress":    "IP_ADDRESS",
@@ -31,7 +31,7 @@ var client = wrapper.Client(
 To enable logging (development mode):
 
 ```go
-var client = wrapper.Client(
+var client = wrapper.New(
 "clientID":     "CLIENT_ID",
 "clientSecret": "CLIENT_SECRET",
 "ipAddress":    "IP_ADDRESS",
@@ -40,95 +40,108 @@ var client = wrapper.Client(
 )
 ```
 
-### Misc
-
-#### Institutions
+#### Get Institutions
 
 ```go
 data := client.GetInstitutions()
 ```
 
-### Nodes
+#### Get Nodes
 
 ```go
 data := client.GetNodes(queryParams ...string)
 ```
 
-### Subscriptions
+#### Get Public Key
+
+```go
+key := client.GetPublicKey(scope ...string)
+```
+
+#### Get Subscriptions
 
 ```go
 data := client.GetSubscriptions(queryParams ...string)
-data := client.GetSubscription(subID string, queryParams ...string)
-data := client.CreateSubscription(data string, queryParams ...string)
-data := client.UpdateSubscription(subID string, queryParams ...string)
 ```
 
-### Transactions
+#### Get Subscription
 
 ```go
-data := client.GetClientTransactions(queryParams ...string)
+subscription := client.GetSubscription(subscriptionID string, queryParams ...string)
 ```
 
-### User Interface
-
-#### Issue Public Key
+#### Create Subscription
 
 ```go
-data := client.GetPublicKey(scope ...string)
+subscription := client.CreateSubscription(data string, queryParams ...string)
 ```
 
-### Users
+#### Update Subscription
+
+```go
+subscription := client.UpdateSubscription(subscriptionID string, queryParams ...string)
+```
+
+#### Get Transactions
+
+```go
+data := client.GetTransactions(queryParams ...string)
+```
+
+#### Get Users
 
 ```go
 data := client.GetUsers(queryParams ...string)
+```
 
-// instantiate User object
+#### Get User
+
+```go
 user := client.GetUser(userID string, fullDehydrate bool, queryParams ...string)
-user := client.CreateUser(data string, queryParams ...string)
+```
+
+#### Create User
+
+```go
+user := client.CreateUser(userID string, queryParams ...string)
 ```
 
 ## User
 
+#### Authentication
+
 ```go
-user := user.Update(data string)
+authKey := user.Auth(data string)
 ```
 
-### Authentication
+#### Get Nodes
 
 ```go
-ak := user.Auth(data string)
+data := user.GetNodes(queryParams ...string)
 ```
 
-### Documents
+#### Create Deposit Account
 
 ```go
-user := user.AddNewDocuments(data string)
-user := user.UpdateExistingDocument(data string)
-user := user.DeleteExistingDocument(data string)
+node := user.CreateDepositAccount(data string)
 ```
 
-### Nodes
+#### Update User
 
 ```go
-user := user.GetNodes(queryParams ...string)
-user := user.CreateDepositeNode(data string)
+user := user.Update(data string, queryParams ...string)
 ```
 
-## Node
+## Transaction
+
+#### Comment On Status
 
 ```go
-node := node.ShipDebitCard(data string)
-node := node.ResetDebitCard()
-
-res:= node.DummyTransactions(credit bool)
-
-tran := node.GetTransaction(transactionID string)
-tran := node.CreateTranscation(transactionID data string)
+transaction := transaction.CommentOnStatus(data string)
 ```
 
-## Transactions
+#### Cancel Transaction
 
 ```go
-tran := tran.CommentOnStatus(data string)
-tran := tran.CancelTransaction(data string)
+transaction := transaction.CancelTransaction(data string)
 ```
