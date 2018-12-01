@@ -32,8 +32,8 @@ type (
 
 /********** CLIENT **********/
 
-// NewClient creates a client object
-func NewClient(clientID, clientSecret, ipAddress, fingerprint string, devMode ...bool) *Client {
+// New creates a client object
+func New(clientID, clientSecret, ipAddress, fingerprint string, devMode ...bool) *Client {
 	if len(devMode) > 0 && devMode[0] == true {
 		developerMode = true
 	}
@@ -51,7 +51,7 @@ func NewClient(clientID, clientSecret, ipAddress, fingerprint string, devMode ..
 /********** NODE **********/
 
 // GetAllNodes returns all of the nodes
-func (c *Client) GetAllNodes(queryParams ...string) *Nodes {
+func (c *Client) GetNodes(queryParams ...string) *Nodes {
 	var nodes Nodes
 
 	_, err := request.Get(nodesURL, queryParams[0], &nodes)
@@ -143,10 +143,12 @@ func (c *Client) CreateSubscription(data string, queryParams ...string) *Subscri
 }
 
 // UpdateSubscription updates an existing subscription
-func (c *Client) UpdateSubscription(subID string, data string, queryParams ...string) *Subscription {
+func (c *Client) UpdateSubscription(subscriptionID string, data string, queryParams ...string) *Subscription {
 	var subscription Subscription
 
-	body, err := request.Patch(subscriptionsURL, data, "", &subscription)
+	url := buildURL(subscriptionsURL, subscriptionID)
+
+	body, err := request.Patch(url, data, "", &subscription)
 
 	if err != nil {
 		panic(err)
@@ -159,8 +161,8 @@ func (c *Client) UpdateSubscription(subID string, data string, queryParams ...st
 
 /********** TRANSACTION **********/
 
-// GetClientTransactions returns all client transactions
-func (c *Client) GetClientTransactions(queryParams ...string) *Transactions {
+// GetTransactions returns all client transactions
+func (c *Client) GetTransactions(queryParams ...string) *Transactions {
 	var transactions Transactions
 
 	_, err := request.Get(transactionsURL, queryParams[0], &transactions)
