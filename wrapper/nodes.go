@@ -17,10 +17,11 @@ type (
 	// Nodes represents a list of node objects
 	Nodes struct {
 		Limit     int64  `json:"limit"`
+		MFA       MFA    `json:"mfa"`
 		NodeCount int64  `json:"node_count"`
+		Nodes     []Node `json:"nodes"`
 		Page      int64  `json:"page"`
 		PageCount int64  `json:"page_count"`
-		Nodes     []Node `json:"nodes"`
 	}
 )
 
@@ -28,41 +29,11 @@ type (
 
 /********** NODE **********/
 
-// ShipDebitCard ships a physical debit card out to the user
-func (n *Node) ShipDebitCard(data string) *Node {
-	var node Node
-
-	url := buildURL(usersURL, n.UserID, path["nodes"], n.NodeID) + "?ship=YES"
-
-	_, err := request.Patch(url, data, "", &node)
-
-	if err != nil {
-		panic(err)
-	}
-
-	return &node
-}
-
-// ResetDebitCard resets the debit card number, card cvv, and expiration date
-func (n *Node) ResetDebitCard() *Node {
-	var node Node
-
-	url := buildURL(usersURL, n.UserID, path["nodes"], n.NodeID) + "?reset=YES"
-
-	_, err := request.Patch(url, "", "", &node)
-
-	if err != nil {
-		panic(err)
-	}
-
-	return &node
-}
-
 /********** OTHER **********/
 
 // DummyTransactions triggers external dummy transactions on deposit or card accounts
-func (n *Node) DummyTransactions(credit bool) map[string]interface{} {
-	var response map[string]interface{}
+func (n *Node) DummyTransactions(credit bool) *Response {
+	var response Response
 
 	url := buildURL(usersURL, n.UserID, path["nodes"], n.NodeID) + "/dummy-tran"
 
@@ -76,7 +47,37 @@ func (n *Node) DummyTransactions(credit bool) map[string]interface{} {
 		panic(err)
 	}
 
-	return response
+	return &response
+}
+
+// ResetDebitCard resets the debit card number, card cvv, and expiration date
+func (n *Node) ResetDebitCard() *Response {
+	var response Response
+
+	url := buildURL(usersURL, n.UserID, path["nodes"], n.NodeID) + "?reset=YES"
+
+	_, err := request.Patch(url, "", "", &response)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return &response
+}
+
+// ShipDebitCard ships a physical debit card out to the user
+func (n *Node) ShipDebitCard(data string) *Response {
+	var response Response
+
+	url := buildURL(usersURL, n.UserID, path["nodes"], n.NodeID) + "?ship=YES"
+
+	_, err := request.Patch(url, data, "", &response)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return &response
 }
 
 /********** TRANSACTION **********/
