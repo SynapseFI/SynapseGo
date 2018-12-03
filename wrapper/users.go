@@ -10,6 +10,13 @@ type (
 		AuthKey string `json:"oauth_key"`
 	}
 
+	// MFA represents multi-factor authentication response
+	MFA struct {
+		AccessToken string `json:"access_token"`
+		Message     string `json:"message"`
+		Type        string `json:"type"`
+	}
+
 	// Refresh represents a refresh token
 	Refresh struct {
 		Token string `json:"refresh_token"`
@@ -72,13 +79,17 @@ func (u *User) GetNodes(queryParams ...string) *Nodes {
 	return &nodes
 }
 
-// CreateDepositAccount creates an deposit account
-func (u *User) CreateDepositAccount(data string) *Nodes {
+// CreateNode creates a node depending on the type of node specified
+func (u *User) CreateNode(data string) *Nodes {
 	var nodes Nodes
 
 	url := buildURL(usersURL, u.UserID, path["nodes"])
 
 	_, err := request.Post(url, data, "", &nodes)
+
+	if _, ok := err.(*ActionPending); ok {
+
+	}
 
 	if err != nil {
 		panic(err)

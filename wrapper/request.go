@@ -4,6 +4,11 @@ import (
 	"github.com/parnurzeal/gorequest"
 )
 
+type (
+	// Response is the generic form of all responses from the API
+	Response map[string]interface{}
+)
+
 /********** GLOBAL VARIABLES **********/
 const version = "v3.1"
 
@@ -72,7 +77,7 @@ func (req *Request) Get(url, params string, result interface{}) ([]byte, error) 
 		Query(params).
 		EndStruct(result)
 
-	if res.StatusCode != 200 || len(errs) > 0 {
+	if res.StatusCode != 200 && res.StatusCode != 202 || len(errs) > 0 {
 		return nil, handleHTTPError(body)
 	}
 
@@ -90,7 +95,7 @@ func (req *Request) Post(url, data, params string, result interface{}) ([]byte, 
 		Send(data).
 		EndStruct(result)
 
-	if res.StatusCode != 200 || len(errs) > 0 {
+	if res.StatusCode != 200 && res.StatusCode != 202 || len(errs) > 0 {
 		return nil, handleHTTPError(body)
 	}
 
@@ -108,7 +113,7 @@ func (req *Request) Patch(url, data, params string, result interface{}) ([]byte,
 		Send(data).
 		EndStruct(result)
 
-	if res.StatusCode != 200 || len(errs) > 0 {
+	if res.StatusCode != 200 && res.StatusCode != 202 || len(errs) > 0 {
 		return nil, handleHTTPError(body)
 	}
 
@@ -124,7 +129,7 @@ func (req *Request) Delete(url string, result interface{}) ([]byte, error) {
 		Set("x-sp-user", req.fingerprint).
 		EndStruct(result)
 
-	if res.StatusCode != 200 || len(errs) > 0 {
+	if res.StatusCode != 200 && res.StatusCode != 202 || len(errs) > 0 {
 		return nil, handleHTTPError(body)
 	}
 

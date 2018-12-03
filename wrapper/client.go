@@ -75,8 +75,8 @@ func (c *Client) GetInstitutions() *Institutions {
 }
 
 // GetPublicKey returns a public key as a token representing client credentials
-func (c *Client) GetPublicKey(scope ...string) *PublicKey {
-	var publicKey PublicKey
+func (c *Client) GetPublicKey(scope ...string) *Response {
+	var response Response
 
 	url := clientURL + "?issue_public_key=YES&amp;scope="
 
@@ -86,13 +86,13 @@ func (c *Client) GetPublicKey(scope ...string) *PublicKey {
 
 	url = strings.TrimSuffix(url, ",")
 
-	_, err := request.Get(url, "", &publicKey)
+	_, err := request.Get(url, "", &response)
 
 	if err != nil {
 		panic(err)
 	}
 
-	return &publicKey
+	return &response
 }
 
 /********** SUBSCRIPTION **********/
