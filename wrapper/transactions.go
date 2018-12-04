@@ -8,7 +8,6 @@ type (
 	// Transaction represents a single transaction object
 	Transaction struct {
 		TransactionID string `json:"_id"`
-		node          *Node
 		Response      interface{}
 	}
 
