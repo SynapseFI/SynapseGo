@@ -45,17 +45,19 @@ type (
 
 /********** AUTHENTICATION **********/
 
-// Auth returns an oauth key and sets it to the user object
-func (u *User) Auth(body ...string) *Auth {
-	var data string
-	if len(body) > 0 {
-		data = body[0]
+// Answer2FA supplies the API with a 2FA device from the list of available devices
+func (u *User) Answer2FA(data string) *Response {
+	var response Response
+
+	url := buildURL(authURL, u.UserID)
+
+	_, err := request.Post(url, data, "", &response)
+
+	if err != nil {
+		panic(err)
 	}
 
-	auth := request.authenticate(u.UserID, u.RefreshToken, data)
-	request.authKey = auth.Key
-
-	return auth
+	return &response
 }
 
 // AnswerMFA submits an answer to a MFA question from bank login attempt
@@ -71,6 +73,34 @@ func (u *User) AnswerMFA(data string) *Nodes {
 	}
 
 	return &nodes
+}
+
+// Auth returns an oauth key and sets it to the user object
+func (u *User) Auth(data ...string) *Auth {
+	var body string
+	if len(data) > 0 {
+		body = data[0]
+	}
+
+	auth := request.authenticate(u.UserID, u.RefreshToken, body)
+	request.authKey = auth.Key
+
+	return auth
+}
+
+// VerifyPIN verifies the PIN sent to 2FA device
+func (u *User) VerifyPIN(data string) *Response {
+	var response Response
+
+	url := buildURL(authURL, u.UserID)
+
+	_, err := request.Post(url, data, "", &response)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return &response
 }
 
 /********** NODE **********/
@@ -382,11 +412,13 @@ func (u *User) CreateTransaction(nodeID, transactionID, data string) *Transactio
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID, path["trans"], transactionID)
 
-	_, err := request.Post(url, data, "", &transaction)
+	body, err := request.Post(url, data, "", &transaction)
 
 	if err != nil {
 		panic(err)
 	}
+
+	transaction.Response = read(body)
 
 	return &transaction
 }
