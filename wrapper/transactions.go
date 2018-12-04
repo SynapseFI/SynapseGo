@@ -21,37 +21,3 @@ type (
 		Transactions     []Transaction `json:"trans"`
 	}
 )
-
-/********** METHODS **********/
-
-/********** TRANSACTION **********/
-
-// CommentOnStatus adds comment to the transaction status
-func (t *Transaction) CommentOnStatus(data string) *Transaction {
-	var transaction Transaction
-
-	url := buildURL(usersURL, t.node.UserID, path["nodes"], t.node.NodeID, path["transactions"], t.TransactionID)
-
-	_, err := request.Post(url, data, "", &transaction)
-
-	if err != nil {
-		panic(err)
-	}
-
-	return &transaction
-}
-
-// CancelTransaction cancels a transaction
-func (t *Transaction) CancelTransaction(data string) *Transaction {
-	var transaction Transaction
-
-	url := buildURL(usersURL, t.node.UserID, path["nodes"], t.node.NodeID, path["transactions"], t.TransactionID)
-
-	_, err := request.Delete(url, &transaction)
-
-	if err != nil {
-		panic(err)
-	}
-
-	return &transaction
-}
