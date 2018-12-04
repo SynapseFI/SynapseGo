@@ -23,6 +23,8 @@ var path = map[string]string{
 	"client":        "client",
 	"institutions":  "institutions",
 	"nodes":         "nodes",
+	"statements":    "statements",
+	"subnets":       "subnets",
 	"subscriptions": "subscriptions",
 	"transactions":  "trans",
 	"users":         "users",

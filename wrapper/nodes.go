@@ -10,7 +10,6 @@ type (
 		NodeID        string `json:"_id"`
 		UserID        string `json:"user_id"`
 		FullDehydrate bool
-		user          *User
 		Response      interface{}
 	}
 
