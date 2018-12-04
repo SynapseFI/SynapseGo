@@ -136,13 +136,62 @@ func (u *User) DeleteNode(nodeID string) *Response {
 	return &response
 }
 
+// DummyTransactions triggers external dummy transactions on deposit or card accounts
+func (u *User) DummyTransactions(nodeID string, credit bool) *Response {
+	var response Response
+
+	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID) + "/dummy-tran"
+
+	if credit == true {
+		url += "?is_credit=YES"
+	}
+
+	_, err := request.Get(url, "", &response)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return &response
+}
+
+// ResetDebitCard resets the debit card number, card cvv, and expiration date
+func (u *User) ResetDebitCard(nodeID string) *Response {
+	var response Response
+
+	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID) + "?reset=YES"
+
+	_, err := request.Patch(url, "", "", &response)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return &response
+}
+
+// ShipDebitCard ships a physical debit card out to the user
+func (u *User) ShipDebitCard(nodeID, data string) *Response {
+	var response Response
+
+	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID) + "?ship=YES"
+
+	_, err := request.Patch(url, data, "", &response)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return &response
+}
+
 /********** TRANSACTION **********/
 
 // GetTransaction returns a specific transaction associated with a node
-func (n *Node) GetTransaction(transactionID string) *Transaction {
+func (u *User) GetTransaction(nodeID, transactionID string) *Transaction {
 	var transaction Transaction
 
-	url := buildURL(usersURL, n.UserID, path["nodes"], n.NodeID, path["trans"], transactionID)
+	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID, path["trans"], transactionID)
 
 	_, err := request.Get(url, "", &transaction)
 
@@ -154,12 +203,42 @@ func (n *Node) GetTransaction(transactionID string) *Transaction {
 }
 
 // CreateTransaction creates a transaction for the specified node
-func (n *Node) CreateTransaction(transactionID, data string) *Transaction {
+func (u *User) CreateTransaction(nodeID, transactionID, data string) *Transaction {
 	var transaction Transaction
 
-	url := buildURL(usersURL, n.UserID, path["nodes"], n.NodeID, path["trans"], transactionID)
+	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID, path["trans"], transactionID)
 
 	_, err := request.Post(url, data, "", &transaction)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return &transaction
+}
+
+// CommentOnTransactionStatus adds comment to the transaction status
+func (u *User) CommentOnTransactionStatus(nodeID, transactionID, data string) *Transaction {
+	var transaction Transaction
+
+	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID, path["transactions"], transactionID)
+
+	_, err := request.Post(url, data, "", &transaction)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return &transaction
+}
+
+// CancelTransaction cancels a transaction
+func (u *User) CancelTransaction(nodeID, transactionID, data string) *Transaction {
+	var transaction Transaction
+
+	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID, path["transactions"], transactionID)
+
+	_, err := request.Delete(url, &transaction)
 
 	if err != nil {
 		panic(err)
