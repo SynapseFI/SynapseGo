@@ -38,7 +38,11 @@ func New(clientID, clientSecret, ipAddress, fingerprint string, devMode ...bool)
 		developerMode = true
 	}
 
-	request = newRequest(clientID, clientSecret, fingerprint, ipAddress)
+	err := request.updateRequest(clientID, clientSecret, fingerprint, ipAddress)
+
+	if err != nil {
+		panic(err)
+	}
 
 	return &Client{
 		Fingerprint: "|" + fingerprint,
@@ -50,7 +54,7 @@ func New(clientID, clientSecret, ipAddress, fingerprint string, devMode ...bool)
 
 /********** NODE **********/
 
-// GetAllNodes returns all of the nodes
+// GetNodes returns all of the nodes
 func (c *Client) GetNodes(queryParams ...string) *Nodes {
 	var nodes Nodes
 

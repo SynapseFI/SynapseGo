@@ -228,14 +228,7 @@ func handleHTTPError(d []byte) error {
 	httpCode := data["http_code"].(string)
 	msg := data["error"].(map[string]interface{})["en"].(string)
 
-	apiErr := handleAPIError(errCode, httpCode, msg, data)
-
-	switch apiErr.(type) {
-	case *IncorrectUserCredentials:
-
-	}
-
-	return apiErr
+	return handleAPIError(errCode, httpCode, msg, data)
 }
 
 // HELPER METHODS
