@@ -41,11 +41,42 @@ var usersURL = buildURL(baseURL, path["users"])
 type (
 	// Request represents the http request client
 	Request struct {
-		fingerprint, gateway, ipAddress, authKey string
+		authKey, clientID, clientSecret, fingerprint, gateway, ipAddress string
 	}
 )
 
 /********** METHODS **********/
+
+func (req *Request) authenticate(userID, refreshToken string, bodyData ...string) *Auth {
+	var auth Auth
+	var data string
+
+	url := buildURL(authURL, userID)
+
+	if len(bodyData) > 0 {
+		data = bodyData[0]
+	}
+
+	rt := `{"refresh_token":"` + refreshToken + `"}`
+	// try and retrieve an oauth token
+	_, err := req.Post(url, rt, data, &auth)
+
+	// if retrieval fails, check if it was because of an invalid refresh token
+	if _, ok := err.(*IncorrectValues); ok {
+		var refresh Refresh
+		url := buildURL(usersURL, userID)
+		// try and get a new refresh token
+		_, err := req.Get(url, "", &refresh)
+
+		if err != nil {
+			panic(err)
+		}
+
+		return req.authenticate(userID, refresh.Token)
+	}
+
+	return &auth
+}
 
 func buildURL(basePath string, uri ...string) string {
 	url := basePath
@@ -57,35 +88,65 @@ func buildURL(basePath string, uri ...string) string {
 	return url
 }
 
-func newRequest(clientID, clientSecret, fingerprint, ipAddress string) *Request {
-	return &Request{
-		fingerprint: "|" + fingerprint,
-		gateway:     clientID + "|" + clientSecret,
-		ipAddress:   ipAddress,
+func (req *Request) updateRequest(clientID, clientSecret, fingerprint, ipAddress string, authKey ...string) *Request {
+	var aKey string
+
+	if len(authKey) > 0 {
+		aKey = authKey[0]
 	}
+
+	request = &Request{
+		authKey:      aKey,
+		clientID:     clientID,
+		clientSecret: clientSecret,
+		fingerprint:  aKey + "|" + fingerprint,
+		gateway:      clientID + "|" + clientSecret,
+		ipAddress:    ipAddress,
+	}
+
+	return request
 }
 
 /********** REQUEST **********/
 
 // Get performs a GET request
-func (req *Request) Get(url, params string, result interface{}) ([]byte, error) {
+func (req *Request) Get(url, params string, result interface{}, userData ...*User) ([]byte, error) {
+	req = req.updateRequest(req.clientID, req.clientSecret, req.fingerprint, req.ipAddress, req.authKey)
+
 	res, body, errs := goreq.
 		Get(url).
 		Set("x-sp-gateway", req.gateway).
 		Set("x-sp-user-ip", req.ipAddress).
 		Set("x-sp-user", req.fingerprint).
 		Query(params).
-		EndStruct(result)
+		EndStruct(&result)
 
-	if res.StatusCode != 200 && res.StatusCode != 202 || len(errs) > 0 {
-		return nil, handleHTTPError(body)
+	if len(errs) > 0 {
+		panic(errs)
+	}
+
+	if res.StatusCode != 200 && res.StatusCode != 202 {
+		err := handleHTTPError(body)
+
+		// check if err is of type IncorrectUserCredentials
+		if _, ok := err.(*IncorrectUserCredentials); ok {
+			user := userData[0]
+			auth := req.authenticate(user.UserID, user.RefreshToken)
+			req.updateRequest(req.clientID, req.clientSecret, req.fingerprint, req.ipAddress, auth.Key)
+
+			return req.Get(url, params, &result)
+		}
+
+		return nil, err
 	}
 
 	return body, nil
 }
 
 // Post performs a POST request
-func (req *Request) Post(url, data, params string, result interface{}) ([]byte, error) {
+func (req *Request) Post(url, data, params string, result interface{}, userData ...*User) ([]byte, error) {
+	req = req.updateRequest(req.clientID, req.clientSecret, req.fingerprint, req.ipAddress, req.authKey)
+
 	res, body, errs := goreq.
 		Post(url).
 		Set("x-sp-gateway", req.gateway).
@@ -93,17 +154,34 @@ func (req *Request) Post(url, data, params string, result interface{}) ([]byte, 
 		Set("x-sp-user", req.fingerprint).
 		Query(params).
 		Send(data).
-		EndStruct(result)
+		EndStruct(&result)
 
-	if res.StatusCode != 200 && res.StatusCode != 202 || len(errs) > 0 {
-		return nil, handleHTTPError(body)
+	if len(errs) > 0 {
+		panic(errs)
+	}
+
+	if res.StatusCode != 200 && res.StatusCode != 202 {
+		err := handleHTTPError(body)
+
+		// check if err is of type IncorrectUserCredentials
+		if _, ok := err.(*IncorrectUserCredentials); ok {
+			user := userData[0]
+			auth := req.authenticate(user.UserID, user.RefreshToken)
+			req.updateRequest(req.clientID, req.clientSecret, req.fingerprint, req.ipAddress, auth.Key)
+
+			return req.Post(url, data, params, &result)
+		}
+
+		return nil, err
 	}
 
 	return body, nil
 }
 
 // Patch performs a PATCH request
-func (req *Request) Patch(url, data, params string, result interface{}) ([]byte, error) {
+func (req *Request) Patch(url, data, params string, result interface{}, userData ...*User) ([]byte, error) {
+	req = req.updateRequest(req.clientID, req.clientSecret, req.fingerprint, req.ipAddress, req.authKey)
+
 	res, body, errs := goreq.
 		Patch(url).
 		Set("x-sp-gateway", req.gateway).
@@ -111,26 +189,56 @@ func (req *Request) Patch(url, data, params string, result interface{}) ([]byte,
 		Set("x-sp-user", req.fingerprint).
 		Query(params).
 		Send(data).
-		EndStruct(result)
+		EndStruct(&result)
 
-	if res.StatusCode != 200 && res.StatusCode != 202 || len(errs) > 0 {
-		return nil, handleHTTPError(body)
+	if len(errs) > 0 {
+		panic(errs)
+	}
+
+	if res.StatusCode != 200 && res.StatusCode != 202 {
+		err := handleHTTPError(body)
+
+		// check if err is of type IncorrectUserCredentials
+		if _, ok := err.(*IncorrectUserCredentials); ok {
+			user := userData[0]
+			auth := req.authenticate(user.UserID, user.RefreshToken)
+			req.updateRequest(req.clientID, req.clientSecret, req.fingerprint, req.ipAddress, auth.Key)
+
+			return req.Patch(url, data, params, &result)
+		}
+
+		return nil, err
 	}
 
 	return body, nil
 }
 
 // Delete performs a DELETE request
-func (req *Request) Delete(url string, result interface{}) ([]byte, error) {
+func (req *Request) Delete(url string, result interface{}, userData ...*User) ([]byte, error) {
+	req = req.updateRequest(req.clientID, req.clientSecret, req.fingerprint, req.ipAddress, req.authKey)
+
 	res, body, errs := goreq.
 		Delete(url).
 		Set("x-sp-gateway", req.gateway).
 		Set("x-sp-user-ip", req.ipAddress).
 		Set("x-sp-user", req.fingerprint).
-		EndStruct(result)
+		EndStruct(&result)
 
-	if res.StatusCode != 200 && res.StatusCode != 202 || len(errs) > 0 {
-		return nil, handleHTTPError(body)
+	if len(errs) > 0 {
+		panic(errs)
+	}
+
+	if res.StatusCode != 200 && res.StatusCode != 202 {
+		err := handleHTTPError(body)
+
+		// check if err is of type IncorrectUserCredentials
+		if _, ok := err.(*IncorrectUserCredentials); ok {
+			user := userData[0]
+			auth := req.authenticate(user.UserID, user.RefreshToken)
+			req.updateRequest(req.clientID, req.clientSecret, req.fingerprint, req.ipAddress, auth.Key)
+
+			return req.Delete(url, &result)
+		}
 	}
 
 	return body, nil

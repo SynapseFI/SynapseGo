@@ -7,7 +7,7 @@ package wrapper
 type (
 	// Auth represents an oauth key
 	Auth struct {
-		AuthKey string `json:"oauth_key"`
+		Key string `json:"oauth_key"`
 	}
 
 	// MFA represents multi-factor authentication response
@@ -46,20 +46,16 @@ type (
 /********** AUTHENTICATION **********/
 
 // Auth returns an oauth key and sets it to the user object
-func (u *User) Auth(data string) *Auth {
-	var auth Auth
-
-	url := buildURL(authURL, u.UserID)
-
-	_, err := request.Post(url, data, "", &auth)
-
-	if err != nil {
-		panic(err)
+func (u *User) Auth(body ...string) *Auth {
+	var data string
+	if len(body) > 0 {
+		data = body[0]
 	}
 
-	u.AuthKey = auth.AuthKey
+	auth := request.authenticate(u.UserID, u.RefreshToken, data)
+	request.authKey = auth.Key
 
-	return &auth
+	return auth
 }
 
 /********** NODE **********/
@@ -70,13 +66,28 @@ func (u *User) GetNodes(queryParams ...string) *Nodes {
 
 	url := buildURL(usersURL, u.UserID, path["nodes"])
 
-	_, err := request.Get(url, "", &nodes)
+	_, err := request.Get(url, "", &nodes, u)
 
 	if err != nil {
 		panic(err)
 	}
 
 	return &nodes
+}
+
+// GetNode returns a single node object
+func (u *User) GetNode(nodeID string, queryParams ...string) *Node {
+	var node Node
+
+	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID)
+
+	_, err := request.Get(url, "", &node)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return &node
 }
 
 // CreateNode creates a node depending on the type of node specified
@@ -85,11 +96,7 @@ func (u *User) CreateNode(data string) *Nodes {
 
 	url := buildURL(usersURL, u.UserID, path["nodes"])
 
-	_, err := request.Post(url, data, "", &nodes)
-
-	if _, ok := err.(*ActionPending); ok {
-
-	}
+	_, err := request.Post(url, data, "", &nodes, u)
 
 	if err != nil {
 		panic(err)
@@ -98,21 +105,82 @@ func (u *User) CreateNode(data string) *Nodes {
 	return &nodes
 }
 
-/********** USER **********/
+// UpdateNode updates a node
+func (u *User) UpdateNode(nodeID, data string) *Node {
+	var node Node
 
-// Update updates a single user and returns the updated user information
-func (u *User) Update(data string, queryParams ...string) *User {
-	var user User
+	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID)
 
-	url := buildURL(usersURL, u.UserID)
+	_, err := request.Patch(url, data, "", &node)
 
-	body, err := request.Patch(url, data, "", &user)
+	if err != nil {
+		panic(err)
+
+	}
+
+	return &node
+}
+
+// DeleteNode deletes a node
+func (u *User) DeleteNode(nodeID string) *Response {
+	var response Response
+
+	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID)
+
+	_, err := request.Delete(url, &response)
 
 	if err != nil {
 		panic(err)
 	}
 
-	user.Response = read(body)
+	return &response
+}
 
-	return &user
+/********** TRANSACTION **********/
+
+// GetTransaction returns a specific transaction associated with a node
+func (n *Node) GetTransaction(transactionID string) *Transaction {
+	var transaction Transaction
+
+	url := buildURL(usersURL, n.UserID, path["nodes"], n.NodeID, path["trans"], transactionID)
+
+	_, err := request.Get(url, "", &transaction)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return &transaction
+}
+
+// CreateTransaction creates a transaction for the specified node
+func (n *Node) CreateTransaction(transactionID, data string) *Transaction {
+	var transaction Transaction
+
+	url := buildURL(usersURL, n.UserID, path["nodes"], n.NodeID, path["trans"], transactionID)
+
+	_, err := request.Post(url, data, "", &transaction)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return &transaction
+}
+
+/********** USER **********/
+
+// Update updates a single user and returns the updated user information
+func (u *User) Update(data string, queryParams ...string) *User {
+	url := buildURL(usersURL, u.UserID)
+
+	body, err := request.Patch(url, data, "", u, u)
+
+	if err != nil {
+		panic(err)
+	}
+
+	u.Response = read(body)
+
+	return u
 }

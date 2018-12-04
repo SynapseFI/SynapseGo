@@ -41,7 +41,7 @@ func (n *Node) DummyTransactions(credit bool) *Response {
 		url += "?is_credit=YES"
 	}
 
-	_, err := request.Get(url, "", response)
+	_, err := request.Get(url, "", &response)
 
 	if err != nil {
 		panic(err)
@@ -81,33 +81,3 @@ func (n *Node) ShipDebitCard(data string) *Response {
 }
 
 /********** TRANSACTION **********/
-
-// GetTransaction returns a specific transaction associated with a node
-func (n *Node) GetTransaction(transactionID string) *Transaction {
-	var transaction Transaction
-
-	url := buildURL(usersURL, n.UserID, path["nodes"], n.NodeID, path["trans"], transactionID)
-
-	_, err := request.Get(url, "", &transaction)
-
-	if err != nil {
-		panic(err)
-	}
-
-	return &transaction
-}
-
-// CreateTransaction creates a transaction for the specified node
-func (n *Node) CreateTransaction(transactionID, data string) *Transaction {
-	var transaction Transaction
-
-	url := buildURL(usersURL, n.UserID, path["nodes"], n.NodeID, path["trans"], transactionID)
-
-	_, err := request.Post(url, data, "", &transaction)
-
-	if err != nil {
-		panic(err)
-	}
-
-	return &transaction
-}
