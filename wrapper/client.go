@@ -24,7 +24,7 @@ type (
 
 	// PublicKey represents the structure of a public key object
 	PublicKey struct {
-		Response interface{} `json:"public_key_obj"`
+		Response map[string]interface{} `json:"public_key_obj"`
 	}
 )
 
@@ -75,8 +75,8 @@ func (c *Client) GetInstitutions() (*Institutions, error) {
 }
 
 // GetPublicKey returns a public key as a token representing client credentials
-func (c *Client) GetPublicKey(scope ...string) (*Response, error) {
-	var response Response
+func (c *Client) GetPublicKey(scope ...string) (*PublicKey, error) {
+	var publicKey PublicKey
 
 	url := clientURL + "?issue_public_key=YES&amp;scope="
 
@@ -86,9 +86,9 @@ func (c *Client) GetPublicKey(scope ...string) (*Response, error) {
 
 	url = strings.TrimSuffix(url, ",")
 
-	_, err := request.Get(url, nil, &response)
+	_, err := request.Get(url, nil, &publicKey)
 
-	return &response, err
+	return &publicKey, err
 }
 
 /********** SUBSCRIPTION **********/
@@ -120,10 +120,6 @@ func (c *Client) CreateSubscription(data string, queryParams ...string) (*Subscr
 	var subscription Subscription
 
 	body, err := request.Post(subscriptionsURL, data, queryParams, &subscription)
-
-	if err != nil {
-		panic(err)
-	}
 
 	subscription.Response = read(body)
 

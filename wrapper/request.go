@@ -4,7 +4,14 @@ import (
 	"github.com/parnurzeal/gorequest"
 )
 
+/********** TYPES **********/
+
 type (
+	// Request represents the http request client
+	Request struct {
+		authKey, clientID, clientSecret, fingerprint, gateway, ipAddress string
+	}
+
 	// Response is the generic form of all responses from the API
 	Response map[string]interface{}
 )
@@ -38,15 +45,6 @@ var subscriptionsURL = buildURL(baseURL, path["subscriptions"])
 var transactionsURL = buildURL(baseURL, path["transactions"])
 var usersURL = buildURL(baseURL, path["users"])
 
-/********** TYPES **********/
-
-type (
-	// Request represents the http request client
-	Request struct {
-		authKey, clientID, clientSecret, fingerprint, gateway, ipAddress string
-	}
-)
-
 /********** METHODS **********/
 
 func buildURL(basePath string, uri ...string) string {
@@ -59,7 +57,7 @@ func buildURL(basePath string, uri ...string) string {
 	return url
 }
 
-func (req *Request) updateRequest(clientID, clientSecret, fingerprint, ipAddress string, authKey ...string) *Request {
+func (req *Request) updateRequest(clientID, clientSecret, fingerprint, ipAddress string, authKey ...string) error {
 	var aKey string
 
 	if len(authKey) > 0 {
@@ -75,14 +73,18 @@ func (req *Request) updateRequest(clientID, clientSecret, fingerprint, ipAddress
 		ipAddress:    ipAddress,
 	}
 
-	return request
+	return nil
 }
 
 /********** REQUEST **********/
 
 // Get performs a GET request
 func (req *Request) Get(url string, queryParams []string, result interface{}) ([]byte, error) {
-	req = req.updateRequest(req.clientID, req.clientSecret, req.fingerprint, req.ipAddress, req.authKey)
+	err := req.updateRequest(req.clientID, req.clientSecret, req.fingerprint, req.ipAddress, req.authKey)
+
+	if err != nil {
+		panic(err)
+	}
 
 	var params string
 	if len(queryParams) > 0 {
@@ -102,14 +104,7 @@ func (req *Request) Get(url string, queryParams []string, result interface{}) ([
 	}
 
 	if res.StatusCode != 200 && res.StatusCode != 202 {
-		err := handleHTTPError(body)
-
-		// check if err is of type IncorrectUserCredentials
-		if _, ok := err.(*IncorrectUserCredentials); ok {
-
-		}
-
-		return nil, err
+		return nil, handleHTTPError(body)
 	}
 
 	return body, nil
@@ -117,7 +112,11 @@ func (req *Request) Get(url string, queryParams []string, result interface{}) ([
 
 // Post performs a POST request
 func (req *Request) Post(url, data string, queryParams []string, result interface{}) ([]byte, error) {
-	req = req.updateRequest(req.clientID, req.clientSecret, req.fingerprint, req.ipAddress, req.authKey)
+	err := req.updateRequest(req.clientID, req.clientSecret, req.fingerprint, req.ipAddress, req.authKey)
+
+	if err != nil {
+		panic(err)
+	}
 
 	var params string
 	if len(queryParams) > 0 {
@@ -153,7 +152,11 @@ func (req *Request) Post(url, data string, queryParams []string, result interfac
 
 // Patch performs a PATCH request
 func (req *Request) Patch(url, data string, queryParams []string, result interface{}) ([]byte, error) {
-	req = req.updateRequest(req.clientID, req.clientSecret, req.fingerprint, req.ipAddress, req.authKey)
+	err := req.updateRequest(req.clientID, req.clientSecret, req.fingerprint, req.ipAddress, req.authKey)
+
+	if err != nil {
+		panic(err)
+	}
 
 	var params string
 	if len(queryParams) > 0 {
@@ -189,7 +192,11 @@ func (req *Request) Patch(url, data string, queryParams []string, result interfa
 
 // Delete performs a DELETE request
 func (req *Request) Delete(url string, result interface{}) ([]byte, error) {
-	req = req.updateRequest(req.clientID, req.clientSecret, req.fingerprint, req.ipAddress, req.authKey)
+	err := req.updateRequest(req.clientID, req.clientSecret, req.fingerprint, req.ipAddress, req.authKey)
+
+	if err != nil {
+		panic(err)
+	}
 
 	res, body, errs := goreq.
 		Delete(url).

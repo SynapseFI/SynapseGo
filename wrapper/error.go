@@ -143,59 +143,59 @@ type (
 /********** METHODS **********/
 
 func (e *ActionPending) Error() string {
-	return formatErrorMessage(e.ErrorCode, e.Message)
+	return formatErrorMessage(e.HTTPCode, e.ErrorCode, e.Message)
 }
 
 func (e *IncorrectClientCredentials) Error() string {
-	return formatErrorMessage(e.ErrorCode, e.Message)
+	return formatErrorMessage(e.HTTPCode, e.ErrorCode, e.Message)
 }
 
 func (e *IncorrectUserCredentials) Error() string {
-	return formatErrorMessage(e.ErrorCode, e.Message)
+	return formatErrorMessage(e.HTTPCode, e.ErrorCode, e.Message)
 }
 
 func (e *UnauthorizedFingerprint) Error() string {
-	return formatErrorMessage(e.ErrorCode, e.Message)
+	return formatErrorMessage(e.HTTPCode, e.ErrorCode, e.Message)
 }
 
 func (e *PayloadError) Error() string {
-	return formatErrorMessage(e.ErrorCode, e.Message)
+	return formatErrorMessage(e.HTTPCode, e.ErrorCode, e.Message)
 }
 
 func (e *UnauthorizedAction) Error() string {
-	return formatErrorMessage(e.ErrorCode, e.Message)
+	return formatErrorMessage(e.HTTPCode, e.ErrorCode, e.Message)
 }
 
 func (e *IncorrectValues) Error() string {
-	return formatErrorMessage(e.ErrorCode, e.Message)
+	return formatErrorMessage(e.HTTPCode, e.ErrorCode, e.Message)
 }
 
 func (e *ObjectNotFound) Error() string {
-	return formatErrorMessage(e.ErrorCode, e.Message)
+	return formatErrorMessage(e.HTTPCode, e.ErrorCode, e.Message)
 }
 
 func (e *ActionNotAllowed) Error() string {
-	return formatErrorMessage(e.ErrorCode, e.Message)
+	return formatErrorMessage(e.HTTPCode, e.ErrorCode, e.Message)
 }
 
 func (e *TooManyRequests) Error() string {
-	return formatErrorMessage(e.ErrorCode, e.Message)
+	return formatErrorMessage(e.HTTPCode, e.ErrorCode, e.Message)
 }
 
 func (e *IdempotencyConflict) Error() string {
-	return formatErrorMessage(e.ErrorCode, e.Message)
+	return formatErrorMessage(e.HTTPCode, e.ErrorCode, e.Message)
 }
 
 func (e *RequestFailed) Error() string {
-	return formatErrorMessage(e.ErrorCode, e.Message)
+	return formatErrorMessage(e.HTTPCode, e.ErrorCode, e.Message)
 }
 
 func (e *ServerError) Error() string {
-	return formatErrorMessage(e.ErrorCode, e.Message)
+	return formatErrorMessage(e.HTTPCode, e.ErrorCode, e.Message)
 }
 
 func (e *ServiceUnavailable) Error() string {
-	return formatErrorMessage(e.ErrorCode, e.Message)
+	return formatErrorMessage(e.HTTPCode, e.ErrorCode, e.Message)
 }
 
 func handleAPIError(errorCode, httpCode, message string, data map[string]interface{}) error {
@@ -233,6 +233,6 @@ func handleHTTPError(d []byte) error {
 
 // HELPER METHODS
 
-func formatErrorMessage(code, msg string) string {
-	return "ERROR_CODE " + code + "\n" + msg
+func formatErrorMessage(httpCode, errorCode, msg string) string {
+	return "HTTP_CODE " + httpCode + " ERROR_CODE " + errorCode + "\n" + msg
 }
