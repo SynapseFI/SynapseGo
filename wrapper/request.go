@@ -112,7 +112,7 @@ func (req *Request) updateRequest(clientID, clientSecret, fingerprint, ipAddress
 /********** REQUEST **********/
 
 // Get performs a GET request
-func (req *Request) Get(url, params string, result interface{}, userData ...*User) ([]byte, error) {
+func (req *Request) Get(url, params string, result interface{}) ([]byte, error) {
 	req = req.updateRequest(req.clientID, req.clientSecret, req.fingerprint, req.ipAddress, req.authKey)
 
 	res, body, errs := goreq.
@@ -132,11 +132,7 @@ func (req *Request) Get(url, params string, result interface{}, userData ...*Use
 
 		// check if err is of type IncorrectUserCredentials
 		if _, ok := err.(*IncorrectUserCredentials); ok {
-			user := userData[0]
-			auth := req.authenticate(user.UserID, user.RefreshToken)
-			req.updateRequest(req.clientID, req.clientSecret, req.fingerprint, req.ipAddress, auth.Key)
 
-			return req.Get(url, params, &result)
 		}
 
 		return nil, err
@@ -146,7 +142,7 @@ func (req *Request) Get(url, params string, result interface{}, userData ...*Use
 }
 
 // Post performs a POST request
-func (req *Request) Post(url, data, params string, result interface{}, userData ...*User) ([]byte, error) {
+func (req *Request) Post(url, data, params string, result interface{}) ([]byte, error) {
 	req = req.updateRequest(req.clientID, req.clientSecret, req.fingerprint, req.ipAddress, req.authKey)
 
 	res, body, errs := goreq.
@@ -167,11 +163,7 @@ func (req *Request) Post(url, data, params string, result interface{}, userData 
 
 		// check if err is of type IncorrectUserCredentials
 		if _, ok := err.(*IncorrectUserCredentials); ok {
-			user := userData[0]
-			auth := req.authenticate(user.UserID, user.RefreshToken)
-			req.updateRequest(req.clientID, req.clientSecret, req.fingerprint, req.ipAddress, auth.Key)
 
-			return req.Post(url, data, params, &result)
 		}
 
 		return nil, err
@@ -181,7 +173,7 @@ func (req *Request) Post(url, data, params string, result interface{}, userData 
 }
 
 // Patch performs a PATCH request
-func (req *Request) Patch(url, data, params string, result interface{}, userData ...*User) ([]byte, error) {
+func (req *Request) Patch(url, data, params string, result interface{}) ([]byte, error) {
 	req = req.updateRequest(req.clientID, req.clientSecret, req.fingerprint, req.ipAddress, req.authKey)
 
 	res, body, errs := goreq.
@@ -202,11 +194,7 @@ func (req *Request) Patch(url, data, params string, result interface{}, userData
 
 		// check if err is of type IncorrectUserCredentials
 		if _, ok := err.(*IncorrectUserCredentials); ok {
-			user := userData[0]
-			auth := req.authenticate(user.UserID, user.RefreshToken)
-			req.updateRequest(req.clientID, req.clientSecret, req.fingerprint, req.ipAddress, auth.Key)
 
-			return req.Patch(url, data, params, &result)
 		}
 
 		return nil, err
@@ -216,7 +204,7 @@ func (req *Request) Patch(url, data, params string, result interface{}, userData
 }
 
 // Delete performs a DELETE request
-func (req *Request) Delete(url string, result interface{}, userData ...*User) ([]byte, error) {
+func (req *Request) Delete(url string, result interface{}) ([]byte, error) {
 	req = req.updateRequest(req.clientID, req.clientSecret, req.fingerprint, req.ipAddress, req.authKey)
 
 	res, body, errs := goreq.
@@ -235,11 +223,7 @@ func (req *Request) Delete(url string, result interface{}, userData ...*User) ([
 
 		// check if err is of type IncorrectUserCredentials
 		if _, ok := err.(*IncorrectUserCredentials); ok {
-			user := userData[0]
-			auth := req.authenticate(user.UserID, user.RefreshToken)
-			req.updateRequest(req.clientID, req.clientSecret, req.fingerprint, req.ipAddress, auth.Key)
 
-			return req.Delete(url, &result)
 		}
 	}
 

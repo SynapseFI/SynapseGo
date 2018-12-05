@@ -83,7 +83,7 @@ func (u *User) CreateNode(data string) *Nodes {
 
 	url := buildURL(usersURL, u.UserID, path["nodes"])
 
-	_, err := request.Post(url, data, "", &nodes, u)
+	_, err := request.Post(url, data, "", &nodes)
 
 	if err != nil {
 		panic(err)
@@ -143,7 +143,7 @@ func (u *User) GetNodes(queryParams ...string) *Nodes {
 
 	url := buildURL(usersURL, u.UserID, path["nodes"])
 
-	_, err := request.Get(url, "", &nodes, u)
+	_, err := request.Get(url, "", &nodes)
 
 	if err != nil {
 		panic(err)
@@ -450,15 +450,17 @@ func (u *User) CreateUBO(data string) *User {
 
 // Update updates a single user and returns the updated user information
 func (u *User) Update(data string, queryParams ...string) *User {
+	var user User
+
 	url := buildURL(usersURL, u.UserID)
 
-	body, err := request.Patch(url, data, "", u, u)
+	body, err := request.Patch(url, data, "", &user)
 
 	if err != nil {
 		panic(err)
 	}
 
-	u.Response = read(body)
+	user.Response = read(body)
 
-	return u
+	return &user
 }
