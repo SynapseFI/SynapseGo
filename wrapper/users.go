@@ -43,7 +43,7 @@ type (
 
 /********** METHODS **********/
 
-func (u *User) request(method, url, data string, queryParams []string, result interface{}) []byte {
+func (u *User) request(method, url, data string, queryParams []string, result interface{}) ([]byte, error) {
 	var body []byte
 	var err error
 
@@ -63,38 +63,49 @@ func (u *User) request(method, url, data string, queryParams []string, result in
 
 	switch err.(type) {
 	case *IncorrectUserCredentials:
+		var b map[string]interface{}
+
 		rt := `{ "refresh_token": "` + u.RefreshToken + `" }`
-		u.AuthKey = u.Authenticate(rt)["oauth_key"].(string)
+		b, err = u.Authenticate(rt)
+		u.AuthKey = b["oauth_key"].(string)
+
+		if err != nil {
+			return nil, err
+		}
+
 		return u.request(method, url, data, queryParams, result)
 
 	case *IncorrectValues:
+		var b map[string]interface{}
 		var user *User
+
 		u.request("GET", usersURL, "", nil, &user)
 		u.RefreshToken = user.RefreshToken
 		rt := `{ "refresh_token": "` + u.RefreshToken + `" }`
-		u.AuthKey = u.Authenticate(rt)["oauth_key"].(string)
+		b, err = u.Authenticate(rt)
+		u.AuthKey = b["oauth_key"].(string)
+
+		if err != nil {
+			return nil, err
+		}
 
 		return u.request(method, url, data, queryParams, result)
 	}
 
-	return body
+	return body, err
 }
 
 /********** AUTHENTICATION **********/
 
 // Authenticate returns an oauth key and sets it to the user object
-func (u *User) Authenticate(data string) map[string]interface{} {
+func (u *User) Authenticate(data string) (map[string]interface{}, error) {
 	var response map[string]interface{}
 
 	url := buildURL(authURL, u.UserID)
 
 	_, err := request.Post(url, data, nil, &response)
 
-	if err != nil {
-		panic(err)
-	}
-
-	return response
+	return response, err
 }
 
 /********** NODE **********/
@@ -122,25 +133,25 @@ func (u *User) CreateNode(data string) (*Nodes, error) {
 }
 
 // DeleteNode deletes a node
-func (u *User) DeleteNode(nodeID string) (*Response, error) {
+func (u *User) DeleteNode(nodeID string) (Response, error) {
 	var response Response
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID)
 
 	_, err := request.Delete(url, &response)
 
-	return &response, err
+	return response, err
 }
 
 // GetApplePayToken generates tokenized info for Apple Wallet
-func (u *User) GetApplePayToken(nodeID, data string) (*Response, error) {
+func (u *User) GetApplePayToken(nodeID, data string) (Response, error) {
 	var response Response
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID, "applepay")
 
 	_, err := request.Patch(url, data, nil, &response)
 
-	return &response, err
+	return response, err
 }
 
 // GetNode returns a single node object
@@ -177,29 +188,29 @@ func (u *User) ReintiateMicroDeposit(nodeID string) (*Node, error) {
 }
 
 // ResetDebitCard resets the debit card number, card cvv, and expiration date
-func (u *User) ResetDebitCard(nodeID string) (*Response, error) {
+func (u *User) ResetDebitCard(nodeID string) (, error) {
 	var response Response
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID) + "?reset=YES"
 
 	_, err := request.Patch(url, "", nil, &response)
 
-	return &response, err
+	return response, err
 }
 
 // ShipDebitCard ships a physical debit card out to the user
-func (u *User) ShipDebitCard(nodeID, data string) (*Response, error) {
+func (u *User) ShipDebitCard(nodeID, data string) (Response, error) {
 	var response Response
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID) + "?ship=YES"
 
 	_, err := request.Patch(url, data, nil, &response)
 
-	return &response, err
+	return response, err
 }
 
 // TriggerDummyTransactions triggers external dummy transactions on deposit or card accounts
-func (u *User) TriggerDummyTransactions(nodeID string, credit bool) (*Response, error) {
+func (u *User) TriggerDummyTransactions(nodeID string, credit bool) (Response, error) {
 	var response Response
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID) + "/dummy-tran"
@@ -210,7 +221,7 @@ func (u *User) TriggerDummyTransactions(nodeID string, credit bool) (*Response, 
 
 	_, err := request.Get(url, nil, &response)
 
-	return &response, err
+	return response, err
 }
 
 // UpdateNode updates a node
@@ -377,7 +388,7 @@ func (u *User) GetTransactions(nodeID, transactionID string) (*Transactions, err
 /********** USER **********/
 
 // CreateUBO creates and uploads an Ultimate Beneficial Ownership (UBO) and REG GG form as a physical document under the Business’s base document
-func (u *User) CreateUBO(data string) (*User, err) {
+func (u *User) CreateUBO(data string) (*User, error) {
 	var user User
 
 	url := buildURL(usersURL, u.UserID, "ubo")
