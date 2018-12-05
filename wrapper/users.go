@@ -51,7 +51,7 @@ func (u *User) Authenticate(data string) *Response {
 
 	url := buildURL(authURL, u.UserID)
 
-	_, err := request.Post(url, data, "", &response)
+	_, err := request.Post(url, data, nil, &response)
 
 	if err != nil {
 		panic(err)
@@ -68,7 +68,7 @@ func (u *User) AnswerMFA(data string) *Nodes {
 
 	url := buildURL(usersURL, u.UserID, path["nodes"])
 
-	_, err := request.Post(url, data, "", &nodes)
+	_, err := request.Post(url, data, nil, &nodes)
 
 	if err != nil {
 		panic(err)
@@ -83,7 +83,7 @@ func (u *User) CreateNode(data string) *Nodes {
 
 	url := buildURL(usersURL, u.UserID, path["nodes"])
 
-	_, err := request.Post(url, data, "", &nodes)
+	_, err := request.Post(url, data, nil, &nodes)
 
 	if err != nil {
 		panic(err)
@@ -107,13 +107,13 @@ func (u *User) DeleteNode(nodeID string) *Response {
 	return &response
 }
 
-// GenerateApplePayToken generates tokenized info for Apple Wallet
-func (u *User) GenerateApplePayToken(nodeID, data string) *Response {
+// GetApplePayToken generates tokenized info for Apple Wallet
+func (u *User) GetApplePayToken(nodeID, data string) *Response {
 	var response Response
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID, "applepay")
 
-	_, err := request.Patch(url, data, "", &response)
+	_, err := request.Patch(url, data, nil, &response)
 
 	if err != nil {
 		panic(err)
@@ -128,7 +128,7 @@ func (u *User) GetNode(nodeID string, queryParams ...string) *Node {
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID)
 
-	_, err := request.Get(url, "", &node)
+	_, err := request.Get(url, nil, &node)
 
 	if err != nil {
 		panic(err)
@@ -143,7 +143,7 @@ func (u *User) GetNodes(queryParams ...string) *Nodes {
 
 	url := buildURL(usersURL, u.UserID, path["nodes"])
 
-	_, err := request.Get(url, "", &nodes)
+	_, err := request.Get(url, nil, &nodes)
 
 	if err != nil {
 		panic(err)
@@ -158,7 +158,7 @@ func (u *User) ReintiateMicroDeposit(nodeID string) *Node {
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID) + "?resend_micro=YES"
 
-	_, err := request.Patch(url, "", "", &node)
+	_, err := request.Patch(url, "", nil, &node)
 
 	if err != nil {
 		panic(err)
@@ -173,7 +173,7 @@ func (u *User) ResetDebitCard(nodeID string) *Response {
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID) + "?reset=YES"
 
-	_, err := request.Patch(url, "", "", &response)
+	_, err := request.Patch(url, "", nil, &response)
 
 	if err != nil {
 		panic(err)
@@ -188,7 +188,7 @@ func (u *User) ShipDebitCard(nodeID, data string) *Response {
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID) + "?ship=YES"
 
-	_, err := request.Patch(url, data, "", &response)
+	_, err := request.Patch(url, data, nil, &response)
 
 	if err != nil {
 		panic(err)
@@ -207,7 +207,7 @@ func (u *User) TriggerDummyTransactions(nodeID string, credit bool) *Response {
 		url += "?is_credit=YES"
 	}
 
-	_, err := request.Get(url, "", &response)
+	_, err := request.Get(url, nil, &response)
 
 	if err != nil {
 		panic(err)
@@ -222,7 +222,7 @@ func (u *User) UpdateNode(nodeID, data string) *Node {
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID)
 
-	_, err := request.Patch(url, data, "", &node)
+	_, err := request.Patch(url, data, nil, &node)
 
 	if err != nil {
 		panic(err)
@@ -237,7 +237,7 @@ func (u *User) VerifyMicroDeposit(nodeID, data string) *Node {
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID)
 
-	body, err := request.Patch(url, data, "", &node)
+	body, err := request.Patch(url, data, nil, &node)
 
 	if err != nil {
 		panic(err)
@@ -256,7 +256,7 @@ func (u *User) GetNodeStatements(nodeID string, queryParams ...string) *Statemen
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID, path["statements"])
 
-	_, err := request.Get(url, "", &statements)
+	_, err := request.Get(url, nil, &statements)
 
 	if err != nil {
 		panic(err)
@@ -271,7 +271,7 @@ func (u *User) GetStatements(queryParams ...string) *Statements {
 
 	url := buildURL(usersURL, u.UserID, path["statements"])
 
-	_, err := request.Get(url, "", &statements)
+	_, err := request.Get(url, nil, &statements)
 
 	if err != nil {
 		panic(err)
@@ -288,7 +288,7 @@ func (u *User) CreateSubnet(nodeID, data string) *Subnet {
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID, path["subnets"])
 
-	body, err := request.Patch(url, data, "", &subnet)
+	body, err := request.Patch(url, data, nil, &subnet)
 
 	if err != nil {
 		panic(err)
@@ -305,7 +305,7 @@ func (u *User) GetSubnet(nodeID, subnetID string) *Subnet {
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID, path["subnets"], subnetID)
 
-	body, err := request.Get(url, "", &subnet)
+	body, err := request.Get(url, nil, &subnet)
 
 	if err != nil {
 		panic(err)
@@ -322,7 +322,7 @@ func (u *User) GetSubnets(nodeID string) *Subnets {
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID, path["subnets"])
 
-	_, err := request.Get(url, "", &subnets)
+	_, err := request.Get(url, nil, &subnets)
 
 	if err != nil {
 		panic(err)
@@ -354,7 +354,7 @@ func (u *User) CommentOnTransactionStatus(nodeID, transactionID, data string) *T
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID, path["transactions"], transactionID)
 
-	_, err := request.Post(url, data, "", &transaction)
+	_, err := request.Post(url, data, nil, &transaction)
 
 	if err != nil {
 		panic(err)
@@ -369,7 +369,7 @@ func (u *User) CreateTransaction(nodeID, transactionID, data string) *Transactio
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID, path["trans"], transactionID)
 
-	body, err := request.Post(url, data, "", &transaction)
+	body, err := request.Post(url, data, nil, &transaction)
 
 	if err != nil {
 		panic(err)
@@ -390,7 +390,7 @@ func (u *User) DisputeTransaction(nodeID, transactionID string) *Node {
 		"dispute_reason":"CHARGE_BACK"
 	}`)
 
-	_, err := request.Patch(url, data, "", &node)
+	_, err := request.Patch(url, data, nil, &node)
 
 	if err != nil {
 		panic(err)
@@ -405,7 +405,7 @@ func (u *User) GetTransaction(nodeID, transactionID string) *Transaction {
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID, path["trans"], transactionID)
 
-	_, err := request.Get(url, "", &transaction)
+	_, err := request.Get(url, nil, &transaction)
 
 	if err != nil {
 		panic(err)
@@ -420,7 +420,7 @@ func (u *User) GetTransactions(nodeID, transactionID string) *Transactions {
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID, path["trans"])
 
-	_, err := request.Get(url, "", &transactions)
+	_, err := request.Get(url, nil, &transactions)
 
 	if err != nil {
 		panic(err)
@@ -437,7 +437,7 @@ func (u *User) CreateUBO(data string) *User {
 
 	url := buildURL(usersURL, u.UserID, "ubo")
 
-	body, err := request.Patch(url, "", data, &user)
+	body, err := request.Patch(url, data, nil, &user)
 
 	if err != nil {
 		panic(err)
@@ -454,7 +454,7 @@ func (u *User) Update(data string, queryParams ...string) *User {
 
 	url := buildURL(usersURL, u.UserID)
 
-	body, err := request.Patch(url, data, "", &user)
+	body, err := request.Patch(url, data, nil, &user)
 
 	if err != nil {
 		panic(err)

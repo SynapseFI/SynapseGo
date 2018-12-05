@@ -49,37 +49,6 @@ type (
 
 /********** METHODS **********/
 
-func (req *Request) authenticate(userID, refreshToken string, bodyData ...string) *Auth {
-	var auth Auth
-	var data string
-
-	url := buildURL(authURL, userID)
-
-	if len(bodyData) > 0 {
-		data = bodyData[0]
-	}
-
-	rt := `{"refresh_token":"` + refreshToken + `"}`
-	// try and retrieve an oauth token
-	_, err := req.Post(url, rt, data, &auth)
-
-	// if retrieval fails, check if it was because of an invalid refresh token
-	if _, ok := err.(*IncorrectValues); ok {
-		var refresh Refresh
-		url := buildURL(usersURL, userID)
-		// try and get a new refresh token
-		_, err := req.Get(url, "", &refresh)
-
-		if err != nil {
-			panic(err)
-		}
-
-		return req.authenticate(userID, refresh.Token)
-	}
-
-	return &auth
-}
-
 func buildURL(basePath string, uri ...string) string {
 	url := basePath
 
@@ -112,8 +81,13 @@ func (req *Request) updateRequest(clientID, clientSecret, fingerprint, ipAddress
 /********** REQUEST **********/
 
 // Get performs a GET request
-func (req *Request) Get(url, params string, result interface{}) ([]byte, error) {
+func (req *Request) Get(url string, queryParams []string, result interface{}) ([]byte, error) {
 	req = req.updateRequest(req.clientID, req.clientSecret, req.fingerprint, req.ipAddress, req.authKey)
+
+	var params string
+	if len(queryParams) > 0 {
+		params = queryParams[0]
+	}
 
 	res, body, errs := goreq.
 		Get(url).
@@ -142,8 +116,13 @@ func (req *Request) Get(url, params string, result interface{}) ([]byte, error) 
 }
 
 // Post performs a POST request
-func (req *Request) Post(url, data, params string, result interface{}) ([]byte, error) {
+func (req *Request) Post(url, data string, queryParams []string, result interface{}) ([]byte, error) {
 	req = req.updateRequest(req.clientID, req.clientSecret, req.fingerprint, req.ipAddress, req.authKey)
+
+	var params string
+	if len(queryParams) > 0 {
+		params = queryParams[0]
+	}
 
 	res, body, errs := goreq.
 		Post(url).
@@ -173,8 +152,13 @@ func (req *Request) Post(url, data, params string, result interface{}) ([]byte, 
 }
 
 // Patch performs a PATCH request
-func (req *Request) Patch(url, data, params string, result interface{}) ([]byte, error) {
+func (req *Request) Patch(url, data string, queryParams []string, result interface{}) ([]byte, error) {
 	req = req.updateRequest(req.clientID, req.clientSecret, req.fingerprint, req.ipAddress, req.authKey)
+
+	var params string
+	if len(queryParams) > 0 {
+		params = queryParams[0]
+	}
 
 	res, body, errs := goreq.
 		Patch(url).
@@ -225,6 +209,8 @@ func (req *Request) Delete(url string, result interface{}) ([]byte, error) {
 		if _, ok := err.(*IncorrectUserCredentials); ok {
 
 		}
+
+		return nil, err
 	}
 
 	return body, nil
