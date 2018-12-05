@@ -55,31 +55,27 @@ func New(clientID, clientSecret, ipAddress, fingerprint string, devMode ...bool)
 /********** NODE **********/
 
 // GetNodes returns all of the nodes
-func (c *Client) GetNodes(queryParams ...string) *Nodes {
+func (c *Client) GetNodes(queryParams ...string) (*Nodes, error) {
 	var nodes Nodes
 
 	_, err := request.Get(nodesURL, queryParams, &nodes)
 
-	if err != nil {
-		panic(err)
-	}
-
-	return &nodes
+	return &nodes, err
 }
 
 /********** OTHER **********/
 
 // GetInstitutions returns all of the nodes associated with a user
-func (c *Client) GetInstitutions() *Institutions {
+func (c *Client) GetInstitutions() (*Institutions, error) {
 	var institutions Institutions
 
-	request.Get(institutionsURL, nil, &institutions)
+	_, err := request.Get(institutionsURL, nil, &institutions)
 
-	return &institutions
+	return &institutions, err
 }
 
 // GetPublicKey returns a public key as a token representing client credentials
-func (c *Client) GetPublicKey(scope ...string) *Response {
+func (c *Client) GetPublicKey(scope ...string) (*Response, error) {
 	var response Response
 
 	url := clientURL + "?issue_public_key=YES&amp;scope="
@@ -92,47 +88,35 @@ func (c *Client) GetPublicKey(scope ...string) *Response {
 
 	_, err := request.Get(url, nil, &response)
 
-	if err != nil {
-		panic(err)
-	}
-
-	return &response
+	return &response, err
 }
 
 /********** SUBSCRIPTION **********/
 
 // GetSubscriptions returns all of the nodes associated with a user
-func (c *Client) GetSubscriptions(queryParams ...string) *Subscriptions {
+func (c *Client) GetSubscriptions(queryParams ...string) (*Subscriptions, error) {
 	var subscriptions Subscriptions
 
 	_, err := request.Get(subscriptionsURL, queryParams, &subscriptions)
 
-	if err != nil {
-		panic(err)
-	}
-
-	return &subscriptions
+	return &subscriptions, err
 }
 
 // GetSubscription returns a single subscription
-func (c *Client) GetSubscription(subscriptionID string, queryParams ...string) *Subscription {
+func (c *Client) GetSubscription(subscriptionID string, queryParams ...string) (*Subscription, error) {
 	var subscription Subscription
 
 	url := buildURL(subscriptionsURL, subscriptionID)
 
 	body, err := request.Get(url, queryParams, &subscription)
 
-	if err != nil {
-		panic(err)
-	}
-
 	subscription.Response = read(body)
 
-	return &subscription
+	return &subscription, err
 }
 
 // CreateSubscription creates a subscription and returns the subscription data
-func (c *Client) CreateSubscription(data string, queryParams ...string) *Subscription {
+func (c *Client) CreateSubscription(data string, queryParams ...string) (*Subscription, error) {
 	var subscription Subscription
 
 	body, err := request.Post(subscriptionsURL, data, queryParams, &subscription)
@@ -143,58 +127,46 @@ func (c *Client) CreateSubscription(data string, queryParams ...string) *Subscri
 
 	subscription.Response = read(body)
 
-	return &subscription
+	return &subscription, err
 }
 
 // UpdateSubscription updates an existing subscription
-func (c *Client) UpdateSubscription(subscriptionID string, data string, queryParams ...string) *Subscription {
+func (c *Client) UpdateSubscription(subscriptionID string, data string, queryParams ...string) (*Subscription, error) {
 	var subscription Subscription
 
 	url := buildURL(subscriptionsURL, subscriptionID)
 
 	body, err := request.Patch(url, data, queryParams, &subscription)
 
-	if err != nil {
-		panic(err)
-	}
-
 	subscription.Response = read(body)
 
-	return &subscription
+	return &subscription, err
 }
 
 /********** TRANSACTION **********/
 
 // GetTransactions returns all client transactions
-func (c *Client) GetTransactions(queryParams ...string) *Transactions {
+func (c *Client) GetTransactions(queryParams ...string) (*Transactions, error) {
 	var transactions Transactions
 
 	_, err := request.Get(transactionsURL, queryParams, &transactions)
 
-	if err != nil {
-		panic(err)
-	}
-
-	return &transactions
+	return &transactions, err
 }
 
 /********** USER **********/
 
 // GetUsers returns a list of users
-func (c *Client) GetUsers(queryParams ...string) *Users {
+func (c *Client) GetUsers(queryParams ...string) (*Users, error) {
 	var users Users
 
 	_, err := request.Get(usersURL, queryParams, &users)
 
-	if err != nil {
-		panic(err)
-	}
-
-	return &users
+	return &users, err
 }
 
 // GetUser returns a single user
-func (c *Client) GetUser(UserID string, fullDehydrate bool, queryParams ...string) *User {
+func (c *Client) GetUser(UserID string, fullDehydrate bool, queryParams ...string) (*User, error) {
 	var user User
 
 	url := buildURL(usersURL, UserID)
@@ -205,27 +177,19 @@ func (c *Client) GetUser(UserID string, fullDehydrate bool, queryParams ...strin
 
 	body, err := request.Get(url, queryParams, &user)
 
-	if err != nil {
-		panic(err)
-	}
-
 	user.FullDehydrate = fullDehydrate
 	user.Response = read(body)
 
-	return &user
+	return &user, err
 }
 
 // CreateUser creates a single user and returns the new user data
-func (c *Client) CreateUser(data string, queryParams ...string) *User {
+func (c *Client) CreateUser(data string, queryParams ...string) (*User, error) {
 	var user User
 
 	body, err := request.Post(usersURL, data, queryParams, &user)
 
-	if err != nil {
-		panic(err)
-	}
-
 	user.Response = read(body)
 
-	return &user
+	return &user, err
 }

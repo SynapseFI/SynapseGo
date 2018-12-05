@@ -43,11 +43,48 @@ type (
 
 /********** METHODS **********/
 
+func (u *User) request(method, url, data string, queryParams []string, result interface{}) []byte {
+	var body []byte
+	var err error
+
+	switch method {
+	case "GET":
+		body, err = request.Get(url, queryParams, result)
+
+	case "POST":
+		body, err = request.Post(url, data, queryParams, result)
+
+	case "PATCH":
+		body, err = request.Patch(url, data, queryParams, result)
+
+	case "DELETE":
+		body, err = request.Delete(url, result)
+	}
+
+	switch err.(type) {
+	case *IncorrectUserCredentials:
+		rt := `{ "refresh_token": "` + u.RefreshToken + `" }`
+		u.AuthKey = u.Authenticate(rt)["oauth_key"].(string)
+		return u.request(method, url, data, queryParams, result)
+
+	case *IncorrectValues:
+		var user *User
+		u.request("GET", usersURL, "", nil, &user)
+		u.RefreshToken = user.RefreshToken
+		rt := `{ "refresh_token": "` + u.RefreshToken + `" }`
+		u.AuthKey = u.Authenticate(rt)["oauth_key"].(string)
+
+		return u.request(method, url, data, queryParams, result)
+	}
+
+	return body
+}
+
 /********** AUTHENTICATION **********/
 
 // Authenticate returns an oauth key and sets it to the user object
-func (u *User) Authenticate(data string) *Response {
-	var response Response
+func (u *User) Authenticate(data string) map[string]interface{} {
+	var response map[string]interface{}
 
 	url := buildURL(authURL, u.UserID)
 
@@ -57,148 +94,112 @@ func (u *User) Authenticate(data string) *Response {
 		panic(err)
 	}
 
-	return &response
+	return response
 }
 
 /********** NODE **********/
 
 // AnswerMFA submits an answer to a MFA question from bank login attempt
-func (u *User) AnswerMFA(data string) *Nodes {
+func (u *User) AnswerMFA(data string) (*Nodes, error) {
 	var nodes Nodes
 
 	url := buildURL(usersURL, u.UserID, path["nodes"])
 
 	_, err := request.Post(url, data, nil, &nodes)
 
-	if err != nil {
-		panic(err)
-	}
-
-	return &nodes
+	return &nodes, err
 }
 
 // CreateNode creates a node depending on the type of node specified
-func (u *User) CreateNode(data string) *Nodes {
+func (u *User) CreateNode(data string) (*Nodes, error) {
 	var nodes Nodes
 
 	url := buildURL(usersURL, u.UserID, path["nodes"])
 
 	_, err := request.Post(url, data, nil, &nodes)
 
-	if err != nil {
-		panic(err)
-	}
-
-	return &nodes
+	return &nodes, err
 }
 
 // DeleteNode deletes a node
-func (u *User) DeleteNode(nodeID string) *Response {
+func (u *User) DeleteNode(nodeID string) (*Response, error) {
 	var response Response
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID)
 
 	_, err := request.Delete(url, &response)
 
-	if err != nil {
-		panic(err)
-	}
-
-	return &response
+	return &response, err
 }
 
 // GetApplePayToken generates tokenized info for Apple Wallet
-func (u *User) GetApplePayToken(nodeID, data string) *Response {
+func (u *User) GetApplePayToken(nodeID, data string) (*Response, error) {
 	var response Response
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID, "applepay")
 
 	_, err := request.Patch(url, data, nil, &response)
 
-	if err != nil {
-		panic(err)
-	}
-
-	return &response
+	return &response, err
 }
 
 // GetNode returns a single node object
-func (u *User) GetNode(nodeID string, queryParams ...string) *Node {
+func (u *User) GetNode(nodeID string, queryParams ...string) (*Node, error) {
 	var node Node
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID)
 
 	_, err := request.Get(url, nil, &node)
 
-	if err != nil {
-		panic(err)
-	}
-
-	return &node
+	return &node, err
 }
 
 // GetNodes returns all of the nodes associated with a user
-func (u *User) GetNodes(queryParams ...string) *Nodes {
+func (u *User) GetNodes(queryParams ...string) (*Nodes, error) {
 	var nodes Nodes
 
 	url := buildURL(usersURL, u.UserID, path["nodes"])
 
 	_, err := request.Get(url, nil, &nodes)
 
-	if err != nil {
-		panic(err)
-	}
-
-	return &nodes
+	return &nodes, err
 }
 
 // ReintiateMicroDeposit reinitiates micro-deposits for an ACH-US node with AC/RT
-func (u *User) ReintiateMicroDeposit(nodeID string) *Node {
+func (u *User) ReintiateMicroDeposit(nodeID string) (*Node, error) {
 	var node Node
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID) + "?resend_micro=YES"
 
 	_, err := request.Patch(url, "", nil, &node)
 
-	if err != nil {
-		panic(err)
-	}
-
-	return &node
+	return &node, err
 }
 
 // ResetDebitCard resets the debit card number, card cvv, and expiration date
-func (u *User) ResetDebitCard(nodeID string) *Response {
+func (u *User) ResetDebitCard(nodeID string) (*Response, error) {
 	var response Response
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID) + "?reset=YES"
 
 	_, err := request.Patch(url, "", nil, &response)
 
-	if err != nil {
-		panic(err)
-	}
-
-	return &response
+	return &response, err
 }
 
 // ShipDebitCard ships a physical debit card out to the user
-func (u *User) ShipDebitCard(nodeID, data string) *Response {
+func (u *User) ShipDebitCard(nodeID, data string) (*Response, error) {
 	var response Response
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID) + "?ship=YES"
 
 	_, err := request.Patch(url, data, nil, &response)
 
-	if err != nil {
-		panic(err)
-	}
-
-	return &response
+	return &response, err
 }
 
 // TriggerDummyTransactions triggers external dummy transactions on deposit or card accounts
-func (u *User) TriggerDummyTransactions(nodeID string, credit bool) *Response {
+func (u *User) TriggerDummyTransactions(nodeID string, credit bool) (*Response, error) {
 	var response Response
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID) + "/dummy-tran"
@@ -209,179 +210,135 @@ func (u *User) TriggerDummyTransactions(nodeID string, credit bool) *Response {
 
 	_, err := request.Get(url, nil, &response)
 
-	if err != nil {
-		panic(err)
-	}
-
-	return &response
+	return &response, err
 }
 
 // UpdateNode updates a node
-func (u *User) UpdateNode(nodeID, data string) *Node {
+func (u *User) UpdateNode(nodeID, data string) (*Node, error) {
 	var node Node
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID)
 
 	_, err := request.Patch(url, data, nil, &node)
 
-	if err != nil {
-		panic(err)
-	}
-
-	return &node
+	return &node, err
 }
 
 // VerifyMicroDeposit verifies micro-deposit amounts for a node
-func (u *User) VerifyMicroDeposit(nodeID, data string) *Node {
+func (u *User) VerifyMicroDeposit(nodeID, data string) (*Node, error) {
 	var node Node
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID)
 
 	body, err := request.Patch(url, data, nil, &node)
 
-	if err != nil {
-		panic(err)
-	}
-
 	node.Response = read(body)
 
-	return &node
+	return &node, err
 }
 
 /********** STATEMENT **********/
 
 // GetNodeStatements gets all of the node statements
-func (u *User) GetNodeStatements(nodeID string, queryParams ...string) *Statements {
+func (u *User) GetNodeStatements(nodeID string, queryParams ...string) (*Statements, error) {
 	var statements Statements
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID, path["statements"])
 
 	_, err := request.Get(url, nil, &statements)
 
-	if err != nil {
-		panic(err)
-	}
-
-	return &statements
+	return &statements, err
 }
 
 // GetStatements gets all of the user statements
-func (u *User) GetStatements(queryParams ...string) *Statements {
+func (u *User) GetStatements(queryParams ...string) (*Statements, error) {
 	var statements Statements
 
 	url := buildURL(usersURL, u.UserID, path["statements"])
 
 	_, err := request.Get(url, nil, &statements)
 
-	if err != nil {
-		panic(err)
-	}
-
-	return &statements
+	return &statements, err
 }
 
 /********** SUBNET **********/
 
 // CreateSubnet creates a subnet object
-func (u *User) CreateSubnet(nodeID, data string) *Subnet {
+func (u *User) CreateSubnet(nodeID, data string) (*Subnet, error) {
 	var subnet Subnet
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID, path["subnets"])
 
 	body, err := request.Patch(url, data, nil, &subnet)
 
-	if err != nil {
-		panic(err)
-	}
-
 	subnet.Response = read(body)
 
-	return &subnet
+	return &subnet, err
 }
 
 // GetSubnet gets a single subnet object
-func (u *User) GetSubnet(nodeID, subnetID string) *Subnet {
+func (u *User) GetSubnet(nodeID, subnetID string) (*Subnet, error) {
 	var subnet Subnet
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID, path["subnets"], subnetID)
 
 	body, err := request.Get(url, nil, &subnet)
 
-	if err != nil {
-		panic(err)
-	}
-
 	subnet.Response = read(body)
 
-	return &subnet
+	return &subnet, err
 }
 
 // GetSubnets gets a single subnet object
-func (u *User) GetSubnets(nodeID string) *Subnets {
+func (u *User) GetSubnets(nodeID string) (*Subnets, error) {
 	var subnets Subnets
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID, path["subnets"])
 
 	_, err := request.Get(url, nil, &subnets)
 
-	if err != nil {
-		panic(err)
-	}
-
-	return &subnets
+	return &subnets, err
 }
 
 /********** TRANSACTION **********/
 
 // CancelTransaction cancels a transaction
-func (u *User) CancelTransaction(nodeID, transactionID, data string) *Transaction {
+func (u *User) CancelTransaction(nodeID, transactionID, data string) (*Transaction, error) {
 	var transaction Transaction
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID, path["transactions"], transactionID)
 
 	_, err := request.Delete(url, &transaction)
 
-	if err != nil {
-		panic(err)
-	}
-
-	return &transaction
+	return &transaction, err
 }
 
 // CommentOnTransactionStatus adds comment to the transaction status
-func (u *User) CommentOnTransactionStatus(nodeID, transactionID, data string) *Transaction {
+func (u *User) CommentOnTransactionStatus(nodeID, transactionID, data string) (*Transaction, error) {
 	var transaction Transaction
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID, path["transactions"], transactionID)
 
 	_, err := request.Post(url, data, nil, &transaction)
 
-	if err != nil {
-		panic(err)
-	}
-
-	return &transaction
+	return &transaction, err
 }
 
 // CreateTransaction creates a transaction for the specified node
-func (u *User) CreateTransaction(nodeID, transactionID, data string) *Transaction {
+func (u *User) CreateTransaction(nodeID, transactionID, data string) (*Transaction, error) {
 	var transaction Transaction
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID, path["trans"], transactionID)
 
 	body, err := request.Post(url, data, nil, &transaction)
 
-	if err != nil {
-		panic(err)
-	}
-
 	transaction.Response = read(body)
 
-	return &transaction
+	return &transaction, err
 }
 
 // DisputeTransaction disputes a transaction for a user
-func (u *User) DisputeTransaction(nodeID, transactionID string) *Node {
+func (u *User) DisputeTransaction(nodeID, transactionID string) (*Node, error) {
 	var node Node
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID, path["transactions"], transactionID, "dispute")
@@ -392,75 +349,55 @@ func (u *User) DisputeTransaction(nodeID, transactionID string) *Node {
 
 	_, err := request.Patch(url, data, nil, &node)
 
-	if err != nil {
-		panic(err)
-	}
-
-	return &node
+	return &node, err
 }
 
 // GetTransaction returns a specific transaction associated with a node
-func (u *User) GetTransaction(nodeID, transactionID string) *Transaction {
+func (u *User) GetTransaction(nodeID, transactionID string) (*Transaction, error) {
 	var transaction Transaction
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID, path["trans"], transactionID)
 
 	_, err := request.Get(url, nil, &transaction)
 
-	if err != nil {
-		panic(err)
-	}
-
-	return &transaction
+	return &transaction, err
 }
 
 // GetTransactions returns transactions associated with a node
-func (u *User) GetTransactions(nodeID, transactionID string) *Transactions {
+func (u *User) GetTransactions(nodeID, transactionID string) (*Transactions, error) {
 	var transactions Transactions
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID, path["trans"])
 
 	_, err := request.Get(url, nil, &transactions)
 
-	if err != nil {
-		panic(err)
-	}
-
-	return &transactions
+	return &transactions, err
 }
 
 /********** USER **********/
 
 // CreateUBO creates and uploads an Ultimate Beneficial Ownership (UBO) and REG GG form as a physical document under the Business’s base document
-func (u *User) CreateUBO(data string) *User {
+func (u *User) CreateUBO(data string) (*User, err) {
 	var user User
 
 	url := buildURL(usersURL, u.UserID, "ubo")
 
 	body, err := request.Patch(url, data, nil, &user)
 
-	if err != nil {
-		panic(err)
-	}
-
 	user.Response = read(body)
 
-	return &user
+	return &user, err
 }
 
 // Update updates a single user and returns the updated user information
-func (u *User) Update(data string, queryParams ...string) *User {
+func (u *User) Update(data string, queryParams ...string) (*User, error) {
 	var user User
 
 	url := buildURL(usersURL, u.UserID)
 
 	body, err := request.Patch(url, data, nil, &user)
 
-	if err != nil {
-		panic(err)
-	}
-
 	user.Response = read(body)
 
-	return &user
+	return &user, err
 }
