@@ -1,6 +1,8 @@
 package wrapper
 
 import (
+	"fmt"
+
 	"github.com/parnurzeal/gorequest"
 )
 
@@ -9,7 +11,7 @@ import (
 type (
 	// Request represents the http request client
 	Request struct {
-		authKey, clientID, clientSecret, fingerprint, gateway, ipAddress string
+		authKey, clientID, clientSecret, fingerprint, ipAddress string
 	}
 
 	// Response is the generic form of all responses from the API
@@ -68,8 +70,7 @@ func (req *Request) updateRequest(clientID, clientSecret, fingerprint, ipAddress
 		authKey:      aKey,
 		clientID:     clientID,
 		clientSecret: clientSecret,
-		fingerprint:  aKey + "|" + fingerprint,
-		gateway:      clientID + "|" + clientSecret,
+		fingerprint:  fingerprint,
 		ipAddress:    ipAddress,
 	}
 
@@ -86,6 +87,8 @@ func (req *Request) Get(url string, queryParams []string, result interface{}) ([
 		panic(err)
 	}
 
+	fmt.Println(req)
+
 	var params string
 	if len(queryParams) > 0 {
 		params = queryParams[0]
@@ -93,9 +96,9 @@ func (req *Request) Get(url string, queryParams []string, result interface{}) ([
 
 	res, body, errs := goreq.
 		Get(url).
-		Set("x-sp-gateway", req.gateway).
+		Set("x-sp-gateway", req.clientID+"|"+req.clientSecret).
 		Set("x-sp-user-ip", req.ipAddress).
-		Set("x-sp-user", req.fingerprint).
+		Set("x-sp-user", req.authKey+"|"+req.fingerprint).
 		Query(params).
 		EndStruct(&result)
 
@@ -103,7 +106,7 @@ func (req *Request) Get(url string, queryParams []string, result interface{}) ([
 		panic(errs)
 	}
 
-	if res.StatusCode != 200 && res.StatusCode != 202 {
+	if res.StatusCode != 200 {
 		return nil, handleHTTPError(body)
 	}
 
@@ -125,9 +128,9 @@ func (req *Request) Post(url, data string, queryParams []string, result interfac
 
 	res, body, errs := goreq.
 		Post(url).
-		Set("x-sp-gateway", req.gateway).
+		Set("x-sp-gateway", req.clientID+"|"+req.clientSecret).
 		Set("x-sp-user-ip", req.ipAddress).
-		Set("x-sp-user", req.fingerprint).
+		Set("x-sp-user", req.authKey+"|"+req.fingerprint).
 		Query(params).
 		Send(data).
 		EndStruct(&result)
@@ -136,7 +139,7 @@ func (req *Request) Post(url, data string, queryParams []string, result interfac
 		panic(errs)
 	}
 
-	if res.StatusCode != 200 && res.StatusCode != 202 {
+	if res.StatusCode != 200 {
 		err := handleHTTPError(body)
 
 		// check if err is of type IncorrectUserCredentials
@@ -165,9 +168,9 @@ func (req *Request) Patch(url, data string, queryParams []string, result interfa
 
 	res, body, errs := goreq.
 		Patch(url).
-		Set("x-sp-gateway", req.gateway).
+		Set("x-sp-gateway", req.clientID+"|"+req.clientSecret).
 		Set("x-sp-user-ip", req.ipAddress).
-		Set("x-sp-user", req.fingerprint).
+		Set("x-sp-user", req.authKey+"|"+req.fingerprint).
 		Query(params).
 		Send(data).
 		EndStruct(&result)
@@ -200,9 +203,9 @@ func (req *Request) Delete(url string, result interface{}) ([]byte, error) {
 
 	res, body, errs := goreq.
 		Delete(url).
-		Set("x-sp-gateway", req.gateway).
+		Set("x-sp-gateway", req.clientID+"|"+req.clientSecret).
 		Set("x-sp-user-ip", req.ipAddress).
-		Set("x-sp-user", req.fingerprint).
+		Set("x-sp-user", req.authKey+"|"+req.fingerprint).
 		EndStruct(&result)
 
 	if len(errs) > 0 {
