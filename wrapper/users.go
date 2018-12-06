@@ -65,29 +65,35 @@ func (u *User) request(method, url, data string, queryParams []string, result in
 	case *IncorrectUserCredentials:
 		var b map[string]interface{}
 
-		rt := `{ "refresh_token": "` + u.RefreshToken + `" }`
-		b, err = u.Authenticate(rt)
-		u.AuthKey = b["oauth_key"].(string)
+		b, err = u.Authenticate(`{ "refresh_token": "` + u.RefreshToken + `" }`)
 
 		if err != nil {
 			return nil, err
 		}
+
+		u.AuthKey = b["oauth_key"].(string)
+		request.authKey = u.AuthKey
 
 		return u.request(method, url, data, queryParams, result)
 
 	case *IncorrectValues:
 		var b map[string]interface{}
-		var user *User
 
-		u.request("GET", usersURL, "", nil, &user)
-		u.RefreshToken = user.RefreshToken
-		rt := `{ "refresh_token": "` + u.RefreshToken + `" }`
-		b, err = u.Authenticate(rt)
-		u.AuthKey = b["oauth_key"].(string)
+		refresh, err := u.Refresh()
 
 		if err != nil {
 			return nil, err
 		}
+
+		u.RefreshToken = refresh.Token
+		b, err = u.Authenticate(`{ "refresh_token": "` + u.RefreshToken + `" }`)
+
+		if err != nil {
+			return nil, err
+		}
+
+		u.AuthKey = b["oauth_key"].(string)
+		request.authKey = u.AuthKey
 
 		return u.request(method, url, data, queryParams, result)
 	}
@@ -106,6 +112,17 @@ func (u *User) Authenticate(data string) (map[string]interface{}, error) {
 	_, err := request.Post(url, data, nil, &response)
 
 	return response, err
+}
+
+// Refresh performs a GET request and returns the refresh token
+func (u *User) Refresh() (*Refresh, error) {
+	var refresh Refresh
+
+	url := buildURL(usersURL, u.UserID)
+
+	_, err := request.Get(url, nil, &refresh)
+
+	return &refresh, err
 }
 
 /********** NODE **********/
@@ -188,7 +205,7 @@ func (u *User) ReintiateMicroDeposit(nodeID string) (*Node, error) {
 }
 
 // ResetDebitCard resets the debit card number, card cvv, and expiration date
-func (u *User) ResetDebitCard(nodeID string) (, error) {
+func (u *User) ResetDebitCard(nodeID string) (Response, error) {
 	var response Response
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID) + "?reset=YES"
@@ -267,7 +284,7 @@ func (u *User) GetStatements(queryParams ...string) (*Statements, error) {
 
 	url := buildURL(usersURL, u.UserID, path["statements"])
 
-	_, err := request.Get(url, nil, &statements)
+	_, err := u.request("GET", url, "", nil, &statements)
 
 	return &statements, err
 }
