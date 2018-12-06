@@ -1,8 +1,6 @@
 package wrapper
 
 import (
-	"fmt"
-
 	"github.com/parnurzeal/gorequest"
 )
 
@@ -59,36 +57,26 @@ func buildURL(basePath string, uri ...string) string {
 	return url
 }
 
-func (req *Request) updateRequest(clientID, clientSecret, fingerprint, ipAddress string, authKey ...string) error {
+func (req *Request) updateRequest(clientID, clientSecret, fingerprint, ipAddress string, authKey ...string) *Request {
 	var aKey string
 
 	if len(authKey) > 0 {
 		aKey = authKey[0]
 	}
 
-	request = &Request{
+	return &Request{
 		authKey:      aKey,
 		clientID:     clientID,
 		clientSecret: clientSecret,
 		fingerprint:  fingerprint,
 		ipAddress:    ipAddress,
 	}
-
-	return nil
 }
 
 /********** REQUEST **********/
 
 // Get performs a GET request
 func (req *Request) Get(url string, queryParams []string, result interface{}) ([]byte, error) {
-	err := req.updateRequest(req.clientID, req.clientSecret, req.fingerprint, req.ipAddress, req.authKey)
-
-	if err != nil {
-		panic(err)
-	}
-
-	fmt.Println(req)
-
 	var params string
 	if len(queryParams) > 0 {
 		params = queryParams[0]
@@ -115,12 +103,6 @@ func (req *Request) Get(url string, queryParams []string, result interface{}) ([
 
 // Post performs a POST request
 func (req *Request) Post(url, data string, queryParams []string, result interface{}) ([]byte, error) {
-	err := req.updateRequest(req.clientID, req.clientSecret, req.fingerprint, req.ipAddress, req.authKey)
-
-	if err != nil {
-		panic(err)
-	}
-
 	var params string
 	if len(queryParams) > 0 {
 		params = queryParams[0]
@@ -140,14 +122,7 @@ func (req *Request) Post(url, data string, queryParams []string, result interfac
 	}
 
 	if res.StatusCode != 200 {
-		err := handleHTTPError(body)
-
-		// check if err is of type IncorrectUserCredentials
-		if _, ok := err.(*IncorrectUserCredentials); ok {
-
-		}
-
-		return nil, err
+		return nil, handleHTTPError(body)
 	}
 
 	return body, nil
@@ -155,12 +130,6 @@ func (req *Request) Post(url, data string, queryParams []string, result interfac
 
 // Patch performs a PATCH request
 func (req *Request) Patch(url, data string, queryParams []string, result interface{}) ([]byte, error) {
-	err := req.updateRequest(req.clientID, req.clientSecret, req.fingerprint, req.ipAddress, req.authKey)
-
-	if err != nil {
-		panic(err)
-	}
-
 	var params string
 	if len(queryParams) > 0 {
 		params = queryParams[0]
@@ -179,15 +148,8 @@ func (req *Request) Patch(url, data string, queryParams []string, result interfa
 		panic(errs)
 	}
 
-	if res.StatusCode != 200 && res.StatusCode != 202 {
-		err := handleHTTPError(body)
-
-		// check if err is of type IncorrectUserCredentials
-		if _, ok := err.(*IncorrectUserCredentials); ok {
-
-		}
-
-		return nil, err
+	if res.StatusCode != 200 {
+		return nil, handleHTTPError(body)
 	}
 
 	return body, nil
@@ -195,12 +157,6 @@ func (req *Request) Patch(url, data string, queryParams []string, result interfa
 
 // Delete performs a DELETE request
 func (req *Request) Delete(url string, result interface{}) ([]byte, error) {
-	err := req.updateRequest(req.clientID, req.clientSecret, req.fingerprint, req.ipAddress, req.authKey)
-
-	if err != nil {
-		panic(err)
-	}
-
 	res, body, errs := goreq.
 		Delete(url).
 		Set("x-sp-gateway", req.clientID+"|"+req.clientSecret).
@@ -212,15 +168,8 @@ func (req *Request) Delete(url string, result interface{}) ([]byte, error) {
 		panic(errs)
 	}
 
-	if res.StatusCode != 200 && res.StatusCode != 202 {
-		err := handleHTTPError(body)
-
-		// check if err is of type IncorrectUserCredentials
-		if _, ok := err.(*IncorrectUserCredentials); ok {
-
-		}
-
-		return nil, err
+	if res.StatusCode != 200 {
+		return nil, handleHTTPError(body)
 	}
 
 	return body, nil

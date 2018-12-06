@@ -38,18 +38,13 @@ func New(clientID, clientSecret, ipAddress, fingerprint string, devMode ...bool)
 		developerMode = true
 	}
 
-	err := request.updateRequest(clientID, clientSecret, fingerprint, ipAddress)
-
-	if err != nil {
-		panic(err)
-	}
+	request = request.updateRequest(clientID, clientSecret, fingerprint, ipAddress)
 
 	return &Client{
-		Fingerprint: "|" + fingerprint,
+		Fingerprint: fingerprint,
 		Gateway:     clientID + "|" + clientSecret,
 		IP:          ipAddress,
 	}
-
 }
 
 /********** NODE **********/

@@ -47,6 +47,8 @@ func (u *User) request(method, url, data string, queryParams []string, result in
 	var body []byte
 	var err error
 
+	request = request.updateRequest(request.clientID, request.clientSecret, request.fingerprint, request.ipAddress, u.AuthKey)
+
 	switch method {
 	case "GET":
 		body, err = request.Get(url, queryParams, result)
@@ -63,36 +65,29 @@ func (u *User) request(method, url, data string, queryParams []string, result in
 
 	switch err.(type) {
 	case *IncorrectUserCredentials:
-		var b map[string]interface{}
-
-		b, err = u.Authenticate(`{ "refresh_token": "` + u.RefreshToken + `" }`)
+		_, err = u.Authenticate(`{ "refresh_token": "` + u.RefreshToken + `" }`)
 
 		if err != nil {
 			return nil, err
 		}
 
-		u.AuthKey = b["oauth_key"].(string)
 		request.authKey = u.AuthKey
 
 		return u.request(method, url, data, queryParams, result)
 
 	case *IncorrectValues:
-		var b map[string]interface{}
-
-		refresh, err := u.Refresh()
+		_, err := u.GetRefreshToken()
 
 		if err != nil {
 			return nil, err
 		}
 
-		u.RefreshToken = refresh.Token
-		b, err = u.Authenticate(`{ "refresh_token": "` + u.RefreshToken + `" }`)
+		_, err = u.Authenticate(`{ "refresh_token": "` + u.RefreshToken + `" }`)
 
 		if err != nil {
 			return nil, err
 		}
 
-		u.AuthKey = b["oauth_key"].(string)
 		request.authKey = u.AuthKey
 
 		return u.request(method, url, data, queryParams, result)
@@ -109,18 +104,31 @@ func (u *User) Authenticate(data string) (map[string]interface{}, error) {
 
 	url := buildURL(authURL, u.UserID)
 
-	_, err := request.Post(url, data, nil, &response)
+	_, err := u.request("POST", url, data, nil, &response)
+
+	if err != nil {
+		return nil, err
+	}
+
+	u.AuthKey = response["oauth_key"].(string)
+	request.authKey = response["oauth_key"].(string)
 
 	return response, err
 }
 
-// Refresh performs a GET request and returns the refresh token
-func (u *User) Refresh() (*Refresh, error) {
+// GetRefreshToken performs a GET request and returns a new refresh token
+func (u *User) GetRefreshToken() (*Refresh, error) {
 	var refresh Refresh
 
 	url := buildURL(usersURL, u.UserID)
 
-	_, err := request.Get(url, nil, &refresh)
+	_, err := u.request("GET", url, "", nil, &refresh)
+
+	if err != nil {
+		return nil, err
+	}
+
+	u.RefreshToken = refresh.Token
 
 	return &refresh, err
 }
@@ -133,7 +141,7 @@ func (u *User) AnswerMFA(data string) (*Nodes, error) {
 
 	url := buildURL(usersURL, u.UserID, path["nodes"])
 
-	_, err := request.Post(url, data, nil, &nodes)
+	_, err := u.request("POST", url, data, nil, &nodes)
 
 	return &nodes, err
 }
@@ -144,7 +152,7 @@ func (u *User) CreateNode(data string) (*Nodes, error) {
 
 	url := buildURL(usersURL, u.UserID, path["nodes"])
 
-	_, err := request.Post(url, data, nil, &nodes)
+	_, err := u.request("POST", url, data, nil, &nodes)
 
 	return &nodes, err
 }
@@ -155,7 +163,7 @@ func (u *User) DeleteNode(nodeID string) (Response, error) {
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID)
 
-	_, err := request.Delete(url, &response)
+	_, err := u.request("DELETE", url, "", nil, &response)
 
 	return response, err
 }
@@ -166,7 +174,7 @@ func (u *User) GetApplePayToken(nodeID, data string) (Response, error) {
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID, "applepay")
 
-	_, err := request.Patch(url, data, nil, &response)
+	_, err := u.request("PATCH", url, data, nil, &response)
 
 	return response, err
 }
@@ -177,7 +185,7 @@ func (u *User) GetNode(nodeID string, queryParams ...string) (*Node, error) {
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID)
 
-	_, err := request.Get(url, nil, &node)
+	_, err := u.request("GET", url, "", nil, &node)
 
 	return &node, err
 }
@@ -188,7 +196,7 @@ func (u *User) GetNodes(queryParams ...string) (*Nodes, error) {
 
 	url := buildURL(usersURL, u.UserID, path["nodes"])
 
-	_, err := request.Get(url, nil, &nodes)
+	_, err := u.request("GET", url, "", nil, &nodes)
 
 	return &nodes, err
 }
@@ -199,7 +207,7 @@ func (u *User) ReintiateMicroDeposit(nodeID string) (*Node, error) {
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID) + "?resend_micro=YES"
 
-	_, err := request.Patch(url, "", nil, &node)
+	_, err := u.request("PATCH", url, "", nil, &node)
 
 	return &node, err
 }
@@ -210,7 +218,7 @@ func (u *User) ResetDebitCard(nodeID string) (Response, error) {
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID) + "?reset=YES"
 
-	_, err := request.Patch(url, "", nil, &response)
+	_, err := u.request("PATCH", url, "", nil, &response)
 
 	return response, err
 }
@@ -221,7 +229,7 @@ func (u *User) ShipDebitCard(nodeID, data string) (Response, error) {
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID) + "?ship=YES"
 
-	_, err := request.Patch(url, data, nil, &response)
+	_, err := u.request("PATCH", url, data, nil, &response)
 
 	return response, err
 }
@@ -236,7 +244,7 @@ func (u *User) TriggerDummyTransactions(nodeID string, credit bool) (Response, e
 		url += "?is_credit=YES"
 	}
 
-	_, err := request.Get(url, nil, &response)
+	_, err := u.request("GET", url, "", nil, &response)
 
 	return response, err
 }
@@ -247,7 +255,7 @@ func (u *User) UpdateNode(nodeID, data string) (*Node, error) {
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID)
 
-	_, err := request.Patch(url, data, nil, &node)
+	_, err := u.request("PATCH", url, data, nil, &node)
 
 	return &node, err
 }
@@ -258,7 +266,7 @@ func (u *User) VerifyMicroDeposit(nodeID, data string) (*Node, error) {
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID)
 
-	body, err := request.Patch(url, data, nil, &node)
+	body, err := u.request("PATCH", url, data, nil, &node)
 
 	node.Response = read(body)
 
@@ -273,7 +281,7 @@ func (u *User) GetNodeStatements(nodeID string, queryParams ...string) (*Stateme
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID, path["statements"])
 
-	_, err := request.Get(url, nil, &statements)
+	_, err := u.request("GET", url, "", nil, &statements)
 
 	return &statements, err
 }
@@ -297,7 +305,7 @@ func (u *User) CreateSubnet(nodeID, data string) (*Subnet, error) {
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID, path["subnets"])
 
-	body, err := request.Patch(url, data, nil, &subnet)
+	body, err := u.request("PATCH", url, data, nil, &subnet)
 
 	subnet.Response = read(body)
 
@@ -310,7 +318,7 @@ func (u *User) GetSubnet(nodeID, subnetID string) (*Subnet, error) {
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID, path["subnets"], subnetID)
 
-	body, err := request.Get(url, nil, &subnet)
+	body, err := u.request("GET", url, "", nil, &subnet)
 
 	subnet.Response = read(body)
 
@@ -323,7 +331,7 @@ func (u *User) GetSubnets(nodeID string) (*Subnets, error) {
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID, path["subnets"])
 
-	_, err := request.Get(url, nil, &subnets)
+	_, err := u.request("GET", url, "", nil, &subnets)
 
 	return &subnets, err
 }
@@ -336,7 +344,7 @@ func (u *User) CancelTransaction(nodeID, transactionID, data string) (*Transacti
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID, path["transactions"], transactionID)
 
-	_, err := request.Delete(url, &transaction)
+	_, err := u.request("DELETE", url, "", nil, &transaction)
 
 	return &transaction, err
 }
@@ -347,7 +355,7 @@ func (u *User) CommentOnTransactionStatus(nodeID, transactionID, data string) (*
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID, path["transactions"], transactionID)
 
-	_, err := request.Post(url, data, nil, &transaction)
+	_, err := u.request("POST", url, data, nil, &transaction)
 
 	return &transaction, err
 }
@@ -358,7 +366,7 @@ func (u *User) CreateTransaction(nodeID, transactionID, data string) (*Transacti
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID, path["trans"], transactionID)
 
-	body, err := request.Post(url, data, nil, &transaction)
+	body, err := u.request("POST", url, data, nil, &transaction)
 
 	transaction.Response = read(body)
 
@@ -375,7 +383,7 @@ func (u *User) DisputeTransaction(nodeID, transactionID string) (*Node, error) {
 		"dispute_reason":"CHARGE_BACK"
 	}`)
 
-	_, err := request.Patch(url, data, nil, &node)
+	_, err := u.request("PATCH", url, data, nil, &node)
 
 	return &node, err
 }
@@ -386,7 +394,7 @@ func (u *User) GetTransaction(nodeID, transactionID string) (*Transaction, error
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID, path["trans"], transactionID)
 
-	_, err := request.Get(url, nil, &transaction)
+	_, err := u.request("GET", url, "", nil, &transaction)
 
 	return &transaction, err
 }
@@ -397,7 +405,7 @@ func (u *User) GetTransactions(nodeID, transactionID string) (*Transactions, err
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID, path["trans"])
 
-	_, err := request.Get(url, nil, &transactions)
+	_, err := u.request("GET", url, "", nil, &transactions)
 
 	return &transactions, err
 }
@@ -410,7 +418,7 @@ func (u *User) CreateUBO(data string) (*User, error) {
 
 	url := buildURL(usersURL, u.UserID, "ubo")
 
-	body, err := request.Patch(url, data, nil, &user)
+	body, err := u.request("PATCH", url, data, nil, &user)
 
 	user.Response = read(body)
 
@@ -423,7 +431,7 @@ func (u *User) Update(data string, queryParams ...string) (*User, error) {
 
 	url := buildURL(usersURL, u.UserID)
 
-	body, err := request.Patch(url, data, nil, &user)
+	body, err := u.request("PATCH", url, data, nil, &user)
 
 	user.Response = read(body)
 
