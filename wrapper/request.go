@@ -57,14 +57,14 @@ func buildURL(basePath string, uri ...string) string {
 	return url
 }
 
-func (req *Request) updateRequest(clientID, clientSecret, fingerprint, ipAddress string, authKey ...string) *Request {
+func (req *Request) updateRequest(clientID, clientSecret, fingerprint, ipAddress string, authKey ...string) Request {
 	var aKey string
 
 	if len(authKey) > 0 {
 		aKey = authKey[0]
 	}
 
-	return &Request{
+	return Request{
 		authKey:      aKey,
 		clientID:     clientID,
 		clientSecret: clientSecret,
