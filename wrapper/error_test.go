@@ -9,36 +9,42 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func loadFile(t *testing.T, name string) []map[string]interface{} {
+var errorData []map[string]interface{}
+
+func init() {
+	data, err := loadFile("error_responses")
+
+	if err != nil {
+		panic(err)
+	}
+
+	errorData = data
+}
+
+func loadFile(name string) ([]map[string]interface{}, error) {
 	path := filepath.Join("testdata", name+".json") // relative path
 	bytes, err := ioutil.ReadFile(path)
 
 	if err != nil {
-		t.Fatal(err)
+		return nil, err
 	}
 
 	var data []map[string]interface{}
 	e := json.Unmarshal(bytes, &data)
 
-	if e != nil {
-		t.Fatal(e)
-	}
-
-	return data
+	return data, e
 
 }
 
 func Test_HandleHTTPError(t *testing.T) {
-	data := loadFile(t, "error_responses")
+	for i := range errorData {
 
-	for i := range data {
-
-		testErrRes, _ := json.Marshal(data[i])
+		testErrRes, _ := json.Marshal(errorData[i])
 		testErr := handleHTTPError(testErrRes)
 
-		httpCode := data[i]["http_code"].(string)
-		errCode := data[i]["error_code"].(string)
-		msg := data[i]["error"].(map[string]interface{})["en"].(string)
+		httpCode := errorData[i]["http_code"].(string)
+		errCode := errorData[i]["error_code"].(string)
+		msg := errorData[i]["error"].(map[string]interface{})["en"].(string)
 		responseMsg := "HTTP_CODE " + httpCode + " ERROR_CODE " + errCode + "\n" + msg
 
 		// error message should be an error and print error code plus original API message
