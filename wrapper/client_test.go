@@ -56,4 +56,30 @@ func Test_GetNodes(t *testing.T) {
 
 	assert.NoError(err)
 	assert.NotNil(data.Limit)
+	assert.NotNil(data.NodeCount)
+	assert.NotNil(data.Nodes)
+	assert.NotNil(data.Page)
+	assert.NotNil(data.PageCount)
+}
+
+func Test_GetInstitutions(t *testing.T) {
+	assert := assert.New(t)
+	testClient := createTestClient()
+
+	// No parameters
+	data, err := testClient.GetInstitutions()
+
+	assert.NoError(err)
+	assert.NotNil(data.Banks)
+}
+
+func Test_GetPublicKey(t *testing.T) {
+	assert := assert.New(t)
+	testClient := createTestClient()
+
+	// No parameters
+	data, err := testClient.GetPublicKey()
+
+	assert.NoError(err)
+	assert.NotNil(data.Response)
 }
