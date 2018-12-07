@@ -12,9 +12,11 @@ var developerMode = false
 type (
 	// Client represents the credentials used by the developer to instantiate a client
 	Client struct {
-		Fingerprint string
-		Gateway     string
-		IP          string
+		ClientID     string
+		ClientSecret string
+		Fingerprint  string
+		IP           string
+		request      Request
 	}
 
 	// Institutions represents a list of Synapse institutions
@@ -38,12 +40,12 @@ func New(clientID, clientSecret, ipAddress, fingerprint string, devMode ...bool)
 		developerMode = true
 	}
 
-	request = request.updateRequest(clientID, clientSecret, fingerprint, ipAddress)
-
 	return &Client{
-		Fingerprint: fingerprint,
-		Gateway:     clientID + "|" + clientSecret,
-		IP:          ipAddress,
+		ClientID:     clientID,
+		ClientSecret: clientSecret,
+		Fingerprint:  fingerprint,
+		IP:           ipAddress,
+		request:      request.updateRequest(clientID, clientSecret, fingerprint, ipAddress),
 	}
 }
 

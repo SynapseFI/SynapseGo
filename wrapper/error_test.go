@@ -10,7 +10,7 @@ import (
 )
 
 func loadFile(t *testing.T, name string) []map[string]interface{} {
-	path := filepath.Join("testdata", name) // relative path
+	path := filepath.Join("testdata", name+".json") // relative path
 	bytes, err := ioutil.ReadFile(path)
 
 	if err != nil {
@@ -29,16 +29,17 @@ func loadFile(t *testing.T, name string) []map[string]interface{} {
 }
 
 func Test_HandleHTTPError(t *testing.T) {
-	data := loadFile(t, "error_responses.json")
+	data := loadFile(t, "error_responses")
 
 	for i := range data {
 
-		td, _ := json.Marshal(data[i])
-		testErr := handleHTTPError(td)
+		testErrRes, _ := json.Marshal(data[i])
+		testErr := handleHTTPError(testErrRes)
 
+		httpCode := data[i]["http_code"].(string)
 		errCode := data[i]["error_code"].(string)
 		msg := data[i]["error"].(map[string]interface{})["en"].(string)
-		responseMsg := "ERROR_CODE " + errCode + "\n" + msg
+		responseMsg := "HTTP_CODE " + httpCode + " ERROR_CODE " + errCode + "\n" + msg
 
 		// error message should be an error and print error code plus original API message
 		assert.EqualError(t, testErr, responseMsg)
