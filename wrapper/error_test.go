@@ -37,6 +37,8 @@ func loadFile(name string) ([]map[string]interface{}, error) {
 }
 
 func Test_HandleHTTPError(t *testing.T) {
+	assert := assert.New(t)
+
 	for i := range errorData {
 
 		testErrRes, _ := json.Marshal(errorData[i])
@@ -48,6 +50,6 @@ func Test_HandleHTTPError(t *testing.T) {
 		responseMsg := "HTTP_CODE " + httpCode + " ERROR_CODE " + errCode + "\n" + msg
 
 		// error message should be an error and print error code plus original API message
-		assert.EqualError(t, testErr, responseMsg)
+		assert.EqualError(testErr, responseMsg)
 	}
 }
