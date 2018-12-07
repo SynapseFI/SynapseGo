@@ -16,7 +16,6 @@ type (
 	// Nodes represents a list of node objects
 	Nodes struct {
 		Limit     int64  `json:"limit"`
-		MFA       MFA    `json:"mfa"`
 		NodeCount int64  `json:"node_count"`
 		Nodes     []Node `json:"nodes"`
 		Page      int64  `json:"page"`
