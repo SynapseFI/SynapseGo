@@ -6,9 +6,20 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+var clientData []map[string]interface{}
+
+func init() {
+	data, err := loadFile("client_credentials")
+
+	if err != nil {
+		panic(err)
+	}
+
+	clientData = data
+}
+
 func createTestClient(t *testing.T) *Client {
-	data := loadFile(t, "client_credentials")
-	cred := data[0]
+	cred := clientData[0]
 
 	return New(
 		cred["clientID"].(string),
@@ -19,9 +30,7 @@ func createTestClient(t *testing.T) *Client {
 }
 
 func Test_New(t *testing.T) {
-	data := loadFile(t, "client_credentials")
-	cred := data[0]
-
+	cred := clientData[0]
 	testClient := createTestClient(t)
 
 	// Client credentials should match input credentials
