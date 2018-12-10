@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var userClientData []map[string]interface{}
+var userClientData map[string]interface{}
 var testUser *User
 
 /********** METHODS **********/
@@ -22,7 +22,7 @@ func init() {
 }
 
 func createUserTestClient() *Client {
-	cred := userClientData[0]
+	cred := userClientData["clientData"].(map[string]interface{})
 
 	return New(
 		cred["clientID"].(string),

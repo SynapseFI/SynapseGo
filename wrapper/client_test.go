@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var clientData []map[string]interface{}
+var clientData map[string]interface{}
 
 func init() {
 	data, err := loadFile("client_credentials")
@@ -15,17 +15,15 @@ func init() {
 		panic(err)
 	}
 
-	clientData = data
+	clientData = data["clientData"].(map[string]interface{})
 }
 
 func createTestClient() *Client {
-	cred := clientData[0]
-
 	return New(
-		cred["clientID"].(string),
-		cred["clientSecret"].(string),
-		cred["ipAddress"].(string),
-		cred["fingerprint"].(string),
+		clientData["clientID"].(string),
+		clientData["clientSecret"].(string),
+		clientData["ipAddress"].(string),
+		clientData["fingerprint"].(string),
 	)
 }
 
@@ -33,20 +31,13 @@ func createTestClient() *Client {
 
 func Test_New(t *testing.T) {
 	assert := assert.New(t)
-	cred := clientData[0]
 	testClient := createTestClient()
 
 	// Client credentials should match input credentials
-	assert.Equal(testClient.ClientID, cred["clientID"].(string))
-	assert.Equal(testClient.ClientSecret, cred["clientSecret"].(string))
-	assert.Equal(testClient.IP, cred["ipAddress"].(string))
-	assert.Equal(testClient.Fingerprint, cred["fingerprint"].(string))
-
-	// Client request headers should match client credentials
-	assert.Equal(testClient.request.clientID, testClient.ClientID)
-	assert.Equal(testClient.request.clientSecret, testClient.ClientSecret)
-	assert.Equal(testClient.request.ipAddress, testClient.IP)
-	assert.Equal(testClient.request.fingerprint, testClient.Fingerprint)
+	assert.Equal(clientData["clientID"].(string), testClient.ClientID)
+	assert.Equal(clientData["clientSecret"].(string), testClient.ClientSecret)
+	assert.Equal(clientData["ipAddress"].(string), testClient.IP)
+	assert.Equal(clientData["fingerprint"].(string), testClient.Fingerprint)
 }
 
 /********** NODE **********/
