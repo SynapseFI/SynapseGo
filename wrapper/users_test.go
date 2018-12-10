@@ -9,6 +9,8 @@ import (
 var userClientData []map[string]interface{}
 var testUser *User
 
+/********** METHODS **********/
+
 func init() {
 	data, err := loadFile("client_credentials")
 
