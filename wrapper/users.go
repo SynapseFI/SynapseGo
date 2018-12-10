@@ -48,7 +48,7 @@ func (u *User) do(method, url, data string, queryParams []string, result interfa
 	var body []byte
 	var err error
 
-	u.request = u.request.updateRequest(request.clientID, request.clientSecret, request.fingerprint, request.ipAddress, u.AuthKey)
+	u.request = u.request.updateRequest(u.request.clientID, u.request.clientSecret, u.request.fingerprint, u.request.ipAddress, u.AuthKey)
 
 	switch method {
 	case "GET":
@@ -72,7 +72,7 @@ func (u *User) do(method, url, data string, queryParams []string, result interfa
 			return nil, err
 		}
 
-		request.authKey = u.AuthKey
+		u.request.authKey = u.AuthKey
 
 		return u.do(method, url, data, queryParams, result)
 
@@ -89,7 +89,7 @@ func (u *User) do(method, url, data string, queryParams []string, result interfa
 			return nil, err
 		}
 
-		request.authKey = u.AuthKey
+		u.request.authKey = u.AuthKey
 
 		return u.do(method, url, data, queryParams, result)
 	}
@@ -112,7 +112,7 @@ func (u *User) Authenticate(data string) (map[string]interface{}, error) {
 	}
 
 	u.AuthKey = response["oauth_key"].(string)
-	request.authKey = response["oauth_key"].(string)
+	u.request.authKey = response["oauth_key"].(string)
 
 	return response, err
 }
@@ -181,8 +181,8 @@ func (u *User) UpdateNode(nodeID, data string) (*Node, error) {
 }
 
 // DeleteNode deletes a node
-func (u *User) DeleteNode(nodeID string) (Response, error) {
-	var response Response
+func (u *User) DeleteNode(nodeID string) (map[string]interface{}, error) {
+	var response map[string]interface{}
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID)
 

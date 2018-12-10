@@ -45,7 +45,6 @@ func New(clientID, clientSecret, ipAddress, fingerprint string, devMode ...bool)
 		ClientSecret: clientSecret,
 		Fingerprint:  fingerprint,
 		IP:           ipAddress,
-		request:      request.updateRequest(clientID, clientSecret, fingerprint, ipAddress),
 	}
 }
 
