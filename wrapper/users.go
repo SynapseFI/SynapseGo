@@ -434,9 +434,7 @@ func (u *User) CreateUBO(data string) (map[string]interface{}, error) {
 
 	url := buildURL(usersURL, u.UserID, "ubo")
 
-	body, err := u.do("PATCH", url, data, nil, &response)
-
-	user.Response = read(body)
+	_, err := u.do("PATCH", url, data, nil, &response)
 
 	return response, err
 }

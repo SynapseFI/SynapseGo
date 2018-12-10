@@ -170,6 +170,7 @@ func (c *Client) GetUser(UserID string, fullDehydrate bool, queryParams ...strin
 
 	body, err := c.request.Get(url, queryParams, &user)
 
+	user.request = user.request.updateRequest(c.ClientID, c.ClientSecret, c.Fingerprint, c.IP)
 	user.FullDehydrate = fullDehydrate
 	user.Response = read(body)
 
@@ -182,6 +183,7 @@ func (c *Client) CreateUser(data string, queryParams ...string) (*User, error) {
 
 	body, err := c.request.Post(usersURL, data, queryParams, &user)
 
+	user.request = user.request.updateRequest(c.ClientID, c.ClientSecret, c.Fingerprint, c.IP)
 	user.Response = read(body)
 
 	return &user, err
