@@ -1,4 +1,4 @@
-// +build !mock
+// +build mock
 
 package wrapper
 
