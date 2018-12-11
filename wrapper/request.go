@@ -58,7 +58,7 @@ func (req *Request) Get(url string, queryParams []string) ([]byte, error) {
 	}
 
 	if res.StatusCode != 200 {
-		return nil, handleHTTPError(body)
+		return body, handleHTTPError(body)
 	}
 
 	return body, nil
@@ -85,7 +85,7 @@ func (req *Request) Post(url, data string, queryParams []string) ([]byte, error)
 	}
 
 	if res.StatusCode != 200 {
-		return nil, handleHTTPError(body)
+		return body, handleHTTPError(body)
 	}
 
 	return body, nil
@@ -112,7 +112,7 @@ func (req *Request) Patch(url, data string, queryParams []string) ([]byte, error
 	}
 
 	if res.StatusCode != 200 {
-		return nil, handleHTTPError(body)
+		return body, handleHTTPError(body)
 	}
 
 	return body, nil
@@ -132,7 +132,7 @@ func (req *Request) Delete(url string) ([]byte, error) {
 	}
 
 	if res.StatusCode != 200 {
-		return nil, handleHTTPError(body)
+		return body, handleHTTPError(body)
 	}
 
 	return body, nil
