@@ -39,28 +39,28 @@ func (req *Request) updateRequest(clientID, clientSecret, fingerprint, ipAddress
 /********** REQUEST **********/
 
 // Get performs a GET request
-func (req *Request) Get(url string, queryParams []string, result interface{}) ([]byte, error) {
+func (req *Request) Get(url string, queryParams []string) ([]byte, error) {
 	var body []byte
 
 	return body, nil
 }
 
 // Post performs a POST request
-func (req *Request) Post(url, data string, queryParams []string, result interface{}) ([]byte, error) {
+func (req *Request) Post(url, data string, queryParams []string) ([]byte, error) {
 	var body []byte
 
 	return body, nil
 }
 
 // Patch performs a PATCH request
-func (req *Request) Patch(url, data string, queryParams []string, result interface{}) ([]byte, error) {
+func (req *Request) Patch(url, data string, queryParams []string) ([]byte, error) {
 	var body []byte
 
 	return body, nil
 }
 
 // Delete performs a DELETE request
-func (req *Request) Delete(url string, result interface{}) ([]byte, error) {
+func (req *Request) Delete(url string) ([]byte, error) {
 	var body []byte
 
 	return body, nil

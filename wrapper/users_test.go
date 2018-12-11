@@ -59,7 +59,7 @@ func Test_GetRefreshToken(t *testing.T) {
 	data, err := testUser.GetRefreshToken()
 
 	assert.NoError(err)
-	assert.NotNil(data.Token)
+	assert.NotNil(data)
 }
 
 /********** NODE **********/
@@ -72,11 +72,7 @@ func Test_GetUserNodes(t *testing.T) {
 	data, err := testUser.GetNodes()
 
 	assert.NoError(err)
-	assert.NotNil(data.Limit)
-	assert.NotNil(data.NodeCount)
-	assert.NotNil(data.Nodes)
-	assert.NotNil(data.Page)
-	assert.NotNil(data.PageCount)
+	assert.NotNil(data)
 }
 
 func Test_GetNode(t *testing.T) {
@@ -87,10 +83,7 @@ func Test_GetNode(t *testing.T) {
 	data, err := testUser.GetNode("")
 
 	assert.NoError(err)
-	assert.NotNil(data.FullDehydrate)
-	assert.NotNil(data.NodeID)
-	assert.NotNil(data.Response)
-	assert.NotNil(data.UserID)
+	assert.NotNil(data)
 }
 
 func Test_CreateNode(t *testing.T) {
@@ -101,11 +94,7 @@ func Test_CreateNode(t *testing.T) {
 	data, err := testUser.CreateNode("")
 
 	assert.NoError(err)
-	assert.NotNil(data.Limit)
-	assert.NotNil(data.NodeCount)
-	assert.NotNil(data.Nodes)
-	assert.NotNil(data.Page)
-	assert.NotNil(data.PageCount)
+	assert.NotNil(data)
 }
 
 func Test_UpdateNode(t *testing.T) {
@@ -116,10 +105,7 @@ func Test_UpdateNode(t *testing.T) {
 	data, err := testUser.UpdateNode("", "")
 
 	assert.NoError(err)
-	assert.NotNil(data.FullDehydrate)
-	assert.NotNil(data.NodeID)
-	assert.NotNil(data.Response)
-	assert.NotNil(data.UserID)
+	assert.NotNil(data)
 }
 
 // should delete node created in previous test?
@@ -159,10 +145,7 @@ func Test_ReinitiateMicroDeposit(t *testing.T) {
 	data, err := testUser.ReinitiateMicroDeposit("")
 
 	assert.NoError(err)
-	assert.NotNil(data.FullDehydrate)
-	assert.NotNil(data.NodeID)
-	assert.NotNil(data.Response)
-	assert.NotNil(data.UserID)
+	assert.NotNil(data)
 }
 
 func Test_ResetDebitCard(t *testing.T) {
@@ -206,10 +189,7 @@ func Test_VerifyMicroDeposit(t *testing.T) {
 	data, err := testUser.VerifyMicroDeposit("", "")
 
 	assert.NoError(err)
-	assert.NotNil(data.FullDehydrate)
-	assert.NotNil(data.NodeID)
-	assert.NotNil(data.Response)
-	assert.NotNil(data.UserID)
+	assert.NotNil(data)
 }
 
 /********** STATEMENT **********/
@@ -222,11 +202,7 @@ func Test_GetNodeStatements(t *testing.T) {
 	data, err := testUser.GetNodeStatements("")
 
 	assert.NoError(err)
-	assert.NotNil(data.Limit)
-	assert.NotNil(data.Page)
-	assert.NotNil(data.PageCount)
-	assert.NotNil(data.StatementCount)
-	assert.NotNil(data.Statements)
+	assert.NotNil(data)
 }
 
 func Test_GetStatements(t *testing.T) {
@@ -237,11 +213,7 @@ func Test_GetStatements(t *testing.T) {
 	data, err := testUser.GetStatements("")
 
 	assert.NoError(err)
-	assert.NotNil(data.Limit)
-	assert.NotNil(data.Page)
-	assert.NotNil(data.PageCount)
-	assert.NotNil(data.StatementCount)
-	assert.NotNil(data.Statements)
+	assert.NotNil(data)
 }
 
 /********** SUBNET **********/
@@ -254,11 +226,7 @@ func Test_GetSubnets(t *testing.T) {
 	data, err := testUser.GetSubnets("")
 
 	assert.NoError(err)
-	assert.NotNil(data.Limit)
-	assert.NotNil(data.Page)
-	assert.NotNil(data.PageCount)
-	assert.NotNil(data.SubnetCount)
-	assert.NotNil(data.Subnets)
+	assert.NotNil(data)
 }
 
 func Test_GetSubnet(t *testing.T) {
@@ -269,10 +237,7 @@ func Test_GetSubnet(t *testing.T) {
 	data, err := testUser.GetSubnet("", "")
 
 	assert.NoError(err)
-	assert.NotNil(data.NodeID)
-	assert.NotNil(data.Response)
-	assert.NotNil(data.SubnetID)
-	assert.NotNil(data.UserID)
+	assert.NotNil(data)
 }
 
 func Test_CreateSubnet(t *testing.T) {
@@ -283,10 +248,7 @@ func Test_CreateSubnet(t *testing.T) {
 	data, err := testUser.CreateSubnet("", "")
 
 	assert.NoError(err)
-	assert.NotNil(data.NodeID)
-	assert.NotNil(data.Response)
-	assert.NotNil(data.SubnetID)
-	assert.NotNil(data.UserID)
+	assert.NotNil(data)
 }
 
 /********** TRANSACTION **********/
@@ -299,11 +261,7 @@ func Test_GetTransactions(t *testing.T) {
 	data, err := testUser.GetTransactions("", "")
 
 	assert.NoError(err)
-	assert.NotNil(data.Limit)
-	assert.NotNil(data.Page)
-	assert.NotNil(data.PageCount)
-	assert.NotNil(data.TransactionCount)
-	assert.NotNil(data.Transactions)
+	assert.NotNil(data)
 }
 
 func Test_GetTransaction(t *testing.T) {
@@ -314,8 +272,7 @@ func Test_GetTransaction(t *testing.T) {
 	data, err := testUser.GetTransaction("", "")
 
 	assert.NoError(err)
-	assert.NotNil(data.Response)
-	assert.NotNil(data.TransactionID)
+	assert.NotNil(data)
 }
 
 func Test_CreateTransaction(t *testing.T) {
@@ -326,8 +283,7 @@ func Test_CreateTransaction(t *testing.T) {
 	data, err := testUser.CreateTransaction("", "", "")
 
 	assert.NoError(err)
-	assert.NotNil(data.Response)
-	assert.NotNil(data.TransactionID)
+	assert.NotNil(data)
 }
 
 func Test_DeleteTransaction(t *testing.T) {
@@ -338,8 +294,8 @@ func Test_DeleteTransaction(t *testing.T) {
 	data, err := testUser.DeleteTransaction("", "")
 
 	assert.NoError(err)
-	assert.NotNil(data.Response)
-	assert.NotNil(data.TransactionID)
+	assert.NotNil(data)
+
 }
 
 func Test_CommentOnTransactionStatus(t *testing.T) {
@@ -350,8 +306,7 @@ func Test_CommentOnTransactionStatus(t *testing.T) {
 	data, err := testUser.CommentOnTransactionStatus("", "", "")
 
 	assert.NoError(err)
-	assert.NotNil(data.Response)
-	assert.NotNil(data.TransactionID)
+	assert.NotNil(data)
 }
 
 func Test_DisputeTransaction(t *testing.T) {
