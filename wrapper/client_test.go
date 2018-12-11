@@ -59,14 +59,8 @@ func Test_GetNodes(t *testing.T) {
 	// No parameters
 	testRes, err := testClient.GetNodes()
 
-	t.Log(testRes)
-
 	assert.NoError(err)
-	assert.NotNil(testRes.Limit)
-	assert.NotNil(testRes.Page)
-	assert.NotNil(testRes.PageCount)
-	assert.NotNil(testRes.NodeCount)
-	assert.Nil(testRes.Nodes)
+	assert.NotNil(testRes)
 }
 
 /********** OTHER **********/
@@ -76,10 +70,10 @@ func Test_GetInstitutions(t *testing.T) {
 	testClient := createTestClient()
 
 	// No parameters
-	data, err := testClient.GetInstitutions()
+	testRes, err := testClient.GetInstitutions()
 
 	assert.NoError(err)
-	assert.Nil(data.Banks)
+	assert.NotNil(testRes)
 }
 
 func Test_GetPublicKey(t *testing.T) {
@@ -87,10 +81,10 @@ func Test_GetPublicKey(t *testing.T) {
 	testClient := createTestClient()
 
 	// No parameters
-	data, err := testClient.GetPublicKey()
+	testRes, err := testClient.GetPublicKey()
 
 	assert.NoError(err)
-	assert.Nil(data.Response)
+	assert.NotNil(testRes)
 }
 
 /********** SUBSCRIPTION **********/
@@ -100,14 +94,10 @@ func Test_GetSubscriptions(t *testing.T) {
 	testClient := createTestClient()
 
 	// No parameters
-	data, err := testClient.GetSubscriptions()
+	testRes, err := testClient.GetSubscriptions()
 
 	assert.NoError(err)
-	assert.NotNil(data.Limit)
-	assert.NotNil(data.Page)
-	assert.NotNil(data.PageCount)
-	assert.Nil(data.Subscriptions)
-	assert.NotNil(data.SubscriptionsCount)
+	assert.NotNil(testRes)
 }
 
 func Test_GetSubscription(t *testing.T) {
@@ -115,12 +105,10 @@ func Test_GetSubscription(t *testing.T) {
 	testClient := createTestClient()
 
 	// No parameters
-	data, err := testClient.GetSubscription("")
+	testRes, err := testClient.GetSubscription("")
 
 	assert.NoError(err)
-	assert.NotNil(data.Response)
-	assert.NotNil(data.SubscriptionID)
-	assert.NotNil(data.URL)
+	assert.NotNil(testRes)
 }
 
 func Test_CreateSubscription(t *testing.T) {
@@ -128,12 +116,10 @@ func Test_CreateSubscription(t *testing.T) {
 	testClient := createTestClient()
 
 	// No parameters
-	data, err := testClient.CreateSubscription("")
+	testRes, err := testClient.CreateSubscription("")
 
 	assert.NoError(err)
-	assert.NotNil(data.Response)
-	assert.NotNil(data.SubscriptionID)
-	assert.NotNil(data.URL)
+	assert.NotNil(testRes)
 }
 
 func Test_UpdateSubscription(t *testing.T) {
@@ -141,12 +127,10 @@ func Test_UpdateSubscription(t *testing.T) {
 	testClient := createTestClient()
 
 	// No parameters
-	data, err := testClient.CreateSubscription("")
+	testRes, err := testClient.CreateSubscription("")
 
 	assert.NoError(err)
-	assert.NotNil(data.Response)
-	assert.NotNil(data.SubscriptionID)
-	assert.NotNil(data.URL)
+	assert.NotNil(testRes)
 }
 
 /********** USER **********/
@@ -156,14 +140,10 @@ func Test_GetUsers(t *testing.T) {
 	testClient := createTestClient()
 
 	// No parameters
-	data, err := testClient.GetUsers()
+	testRes, err := testClient.GetUsers()
 
 	assert.NoError(err)
-	assert.NotNil(data.Limit)
-	assert.NotNil(data.Page)
-	assert.NotNil(data.PageCount)
-	assert.Nil(data.Users)
-	assert.NotNil(data.UsersCount)
+	assert.NotNil(testRes)
 }
 
 func Test_GetUser(t *testing.T) {
@@ -171,14 +151,8 @@ func Test_GetUser(t *testing.T) {
 	testClient := createTestClient()
 
 	// No parameters
-	data, err := testClient.GetUser("", false)
+	testRes, err := testClient.GetUser("", false)
 
 	assert.NoError(err)
-	assert.NotNil(data.UserID)
-	assert.NotNil(data.AuthKey)
-	assert.NotNil(data.FullDehydrate)
-	assert.NotNil(data.UserID)
-	assert.NotNil(data.RefreshToken)
-	assert.NotNil(data.Response)
-	assert.NotNil(data.request)
+	assert.NotNil(testRes)
 }
