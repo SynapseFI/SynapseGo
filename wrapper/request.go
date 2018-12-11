@@ -39,7 +39,7 @@ func (req *Request) updateRequest(clientID, clientSecret, fingerprint, ipAddress
 /********** REQUEST **********/
 
 // Get performs a GET request
-func (req *Request) Get(url string, queryParams []string, result interface{}) ([]byte, error) {
+func (req *Request) Get(url string, queryParams []string) ([]byte, error) {
 	var params string
 	if len(queryParams) > 0 {
 		params = queryParams[0]
@@ -51,7 +51,7 @@ func (req *Request) Get(url string, queryParams []string, result interface{}) ([
 		Set("x-sp-user-ip", req.ipAddress).
 		Set("x-sp-user", req.authKey+"|"+req.fingerprint).
 		Query(params).
-		EndStruct(&result)
+		EndBytes()
 
 	if len(errs) > 0 {
 		panic(errs)
@@ -65,7 +65,7 @@ func (req *Request) Get(url string, queryParams []string, result interface{}) ([
 }
 
 // Post performs a POST request
-func (req *Request) Post(url, data string, queryParams []string, result interface{}) ([]byte, error) {
+func (req *Request) Post(url, data string, queryParams []string) ([]byte, error) {
 	var params string
 	if len(queryParams) > 0 {
 		params = queryParams[0]
@@ -78,7 +78,7 @@ func (req *Request) Post(url, data string, queryParams []string, result interfac
 		Set("x-sp-user", req.authKey+"|"+req.fingerprint).
 		Query(params).
 		Send(data).
-		EndStruct(&result)
+		EndBytes()
 
 	if len(errs) > 0 {
 		panic(errs)
@@ -92,7 +92,7 @@ func (req *Request) Post(url, data string, queryParams []string, result interfac
 }
 
 // Patch performs a PATCH request
-func (req *Request) Patch(url, data string, queryParams []string, result interface{}) ([]byte, error) {
+func (req *Request) Patch(url, data string, queryParams []string) ([]byte, error) {
 	var params string
 	if len(queryParams) > 0 {
 		params = queryParams[0]
@@ -105,7 +105,7 @@ func (req *Request) Patch(url, data string, queryParams []string, result interfa
 		Set("x-sp-user", req.authKey+"|"+req.fingerprint).
 		Query(params).
 		Send(data).
-		EndStruct(&result)
+		EndBytes()
 
 	if len(errs) > 0 {
 		panic(errs)
@@ -119,13 +119,13 @@ func (req *Request) Patch(url, data string, queryParams []string, result interfa
 }
 
 // Delete performs a DELETE request
-func (req *Request) Delete(url string, result interface{}) ([]byte, error) {
+func (req *Request) Delete(url string) ([]byte, error) {
 	res, body, errs := goreq.
 		Delete(url).
 		Set("x-sp-gateway", req.clientID+"|"+req.clientSecret).
 		Set("x-sp-user-ip", req.ipAddress).
 		Set("x-sp-user", req.authKey+"|"+req.fingerprint).
-		EndStruct(&result)
+		EndBytes()
 
 	if len(errs) > 0 {
 		panic(errs)

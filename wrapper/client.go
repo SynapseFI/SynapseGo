@@ -2,6 +2,8 @@ package wrapper
 
 import (
 	"strings"
+
+	"github.com/mitchellh/mapstructure"
 )
 
 /********** GLOBAL VARIABLES **********/
@@ -32,7 +34,7 @@ type (
 
 /********** METHODS **********/
 
-func (c *Client) do(method, url, data string, queryParams []string, result interface{}) ([]byte, error) {
+func (c *Client) do(method, url, data string, queryParams []string) (map[string]interface{}, error) {
 	var body []byte
 	var err error
 
@@ -40,19 +42,19 @@ func (c *Client) do(method, url, data string, queryParams []string, result inter
 
 	switch method {
 	case "GET":
-		body, err = c.request.Get(url, queryParams, result)
+		body, err = c.request.Get(url, queryParams)
 
 	case "POST":
-		body, err = c.request.Post(url, data, queryParams, result)
+		body, err = c.request.Post(url, data, queryParams)
 
 	case "PATCH":
-		body, err = c.request.Patch(url, data, queryParams, result)
+		body, err = c.request.Patch(url, data, queryParams)
 
 	case "DELETE":
-		body, err = c.request.Delete(url, result)
+		body, err = c.request.Delete(url)
 	}
 
-	return body, err
+	return read(body), err
 }
 
 /********** CLIENT **********/
@@ -74,29 +76,19 @@ func New(clientID, clientSecret, ipAddress, fingerprint string, devMode ...bool)
 /********** NODE **********/
 
 // GetNodes returns all of the nodes
-func (c *Client) GetNodes(queryParams ...string) (*Nodes, error) {
-	var nodes Nodes
-
-	_, err := c.do("GET", nodesURL, "", queryParams, &nodes)
-
-	return &nodes, err
+func (c *Client) GetNodes(queryParams ...string) (map[string]interface{}, error) {
+	return c.do("GET", nodesURL, "", queryParams)
 }
 
 /********** OTHER **********/
 
 // GetInstitutions returns all of the nodes associated with a user
-func (c *Client) GetInstitutions() (*Institutions, error) {
-	var institutions Institutions
-
-	_, err := c.do("GET", institutionsURL, "", nil, &institutions)
-
-	return &institutions, err
+func (c *Client) GetInstitutions() (map[string]interface{}, error) {
+	return c.do("GET", institutionsURL, "", nil)
 }
 
 // GetPublicKey returns a public key as a token representing client credentials
-func (c *Client) GetPublicKey(scope ...string) (*PublicKey, error) {
-	var publicKey PublicKey
-
+func (c *Client) GetPublicKey(scope ...string) (map[string]interface{}, error) {
 	url := clientURL + "?issue_public_key=YES&amp;scope="
 
 	for i := 0; i < len(scope); i++ {
@@ -105,79 +97,47 @@ func (c *Client) GetPublicKey(scope ...string) (*PublicKey, error) {
 
 	url = strings.TrimSuffix(url, ",")
 
-	_, err := c.do("GET", url, "", nil, &publicKey)
-
-	return &publicKey, err
+	return c.do("GET", url, "", nil)
 }
 
 /********** SUBSCRIPTION **********/
 
 // GetSubscriptions returns all of the nodes associated with a user
-func (c *Client) GetSubscriptions(queryParams ...string) (*Subscriptions, error) {
-	var subscriptions Subscriptions
-
-	_, err := c.do("GET", subscriptionsURL, "", queryParams, &subscriptions)
-
-	return &subscriptions, err
+func (c *Client) GetSubscriptions(queryParams ...string) (map[string]interface{}, error) {
+	return c.do("GET", subscriptionsURL, "", queryParams)
 }
 
 // GetSubscription returns a single subscription
-func (c *Client) GetSubscription(subscriptionID string, queryParams ...string) (*Subscription, error) {
-	var subscription Subscription
-
+func (c *Client) GetSubscription(subscriptionID string, queryParams ...string) (map[string]interface{}, error) {
 	url := buildURL(subscriptionsURL, subscriptionID)
 
-	body, err := c.do("GET", url, "", queryParams, &subscription)
-
-	subscription.Response = read(body)
-
-	return &subscription, err
+	return c.do("GET", url, "", queryParams)
 }
 
 // CreateSubscription creates a subscription and returns the subscription data
-func (c *Client) CreateSubscription(data string, queryParams ...string) (*Subscription, error) {
-	var subscription Subscription
-
-	body, err := c.do("POST", subscriptionsURL, data, queryParams, &subscription)
-
-	subscription.Response = read(body)
-
-	return &subscription, err
+func (c *Client) CreateSubscription(data string, queryParams ...string) (map[string]interface{}, error) {
+	return c.do("POST", subscriptionsURL, data, queryParams)
 }
 
 // UpdateSubscription updates an existing subscription
-func (c *Client) UpdateSubscription(subscriptionID string, data string, queryParams ...string) (*Subscription, error) {
-	var subscription Subscription
-
+func (c *Client) UpdateSubscription(subscriptionID string, data string, queryParams ...string) (map[string]interface{}, error) {
 	url := buildURL(subscriptionsURL, subscriptionID)
 
-	body, err := c.do("PATCH", url, data, queryParams, &subscription)
-
-	subscription.Response = read(body)
-
-	return &subscription, err
+	return c.do("PATCH", url, data, queryParams)
 }
 
 /********** TRANSACTION **********/
 
 // GetTransactions returns all client transactions
-func (c *Client) GetTransactions(queryParams ...string) (*Transactions, error) {
-	var transactions Transactions
-
-	_, err := c.do("GET", transactionsURL, "", queryParams, &transactions)
-
-	return &transactions, err
+func (c *Client) GetTransactions(queryParams ...string) (map[string]interface{}, error) {
+	return c.do("GET", transactionsURL, "", queryParams)
 }
 
 /********** USER **********/
 
 // GetUsers returns a list of users
-func (c *Client) GetUsers(queryParams ...string) (*Users, error) {
-	var users Users
-
-	_, err := c.do("GET", usersURL, "", queryParams, &users)
-
-	return &users, err
+func (c *Client) GetUsers(queryParams ...string) (map[string]interface{}, error) {
+	return c.do("GET", usersURL, "", queryParams)
 }
 
 // GetUser returns a single user
@@ -190,11 +150,13 @@ func (c *Client) GetUser(UserID string, fullDehydrate bool, queryParams ...strin
 		url += "?full_dehydrate=yes"
 	}
 
-	body, err := c.do("GET", url, "", queryParams, &user)
+	res, err := c.do("GET", url, "", queryParams)
+
+	mapstructure.Decode(res, &user)
 
 	user.request = user.request.updateRequest(c.ClientID, c.ClientSecret, c.Fingerprint, c.IP)
 	user.FullDehydrate = fullDehydrate
-	user.Response = read(body)
+	user.Response = res
 
 	return &user, err
 }
@@ -203,10 +165,12 @@ func (c *Client) GetUser(UserID string, fullDehydrate bool, queryParams ...strin
 func (c *Client) CreateUser(data string, queryParams ...string) (*User, error) {
 	var user User
 
-	body, err := c.do("POST", usersURL, data, queryParams, &user)
+	res, err := c.do("POST", usersURL, data, queryParams)
+
+	mapstructure.Decode(res, &user)
 
 	user.request = user.request.updateRequest(c.ClientID, c.ClientSecret, c.Fingerprint, c.IP)
-	user.Response = read(body)
+	user.Response = res
 
 	return &user, err
 }
