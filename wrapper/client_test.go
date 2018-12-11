@@ -1,3 +1,5 @@
+// +build mock
+
 package wrapper
 
 import (
@@ -7,6 +9,7 @@ import (
 )
 
 var clientData map[string]interface{}
+var clientMethodsData map[string]interface{}
 
 func init() {
 	data, err := loadFile("client_credentials")
@@ -15,7 +18,14 @@ func init() {
 		panic(err)
 	}
 
+	mData, mErr := loadFile("client_methods")
+
+	if mErr != nil {
+		panic(err)
+	}
+
 	clientData = data["clientData"].(map[string]interface{})
+	clientMethodsData = mData
 }
 
 func createTestClient() *Client {
@@ -47,14 +57,16 @@ func Test_GetNodes(t *testing.T) {
 	testClient := createTestClient()
 
 	// No parameters
-	data, err := testClient.GetNodes()
+	testRes, err := testClient.GetNodes()
+
+	t.Log(testRes)
 
 	assert.NoError(err)
-	assert.NotNil(data.Limit)
-	assert.NotNil(data.Page)
-	assert.NotNil(data.PageCount)
-	assert.NotNil(data.NodeCount)
-	assert.NotNil(data.Nodes)
+	assert.NotNil(testRes.Limit)
+	assert.NotNil(testRes.Page)
+	assert.NotNil(testRes.PageCount)
+	assert.NotNil(testRes.NodeCount)
+	assert.Nil(testRes.Nodes)
 }
 
 /********** OTHER **********/
@@ -67,7 +79,7 @@ func Test_GetInstitutions(t *testing.T) {
 	data, err := testClient.GetInstitutions()
 
 	assert.NoError(err)
-	assert.NotNil(data.Banks)
+	assert.Nil(data.Banks)
 }
 
 func Test_GetPublicKey(t *testing.T) {
@@ -78,7 +90,7 @@ func Test_GetPublicKey(t *testing.T) {
 	data, err := testClient.GetPublicKey()
 
 	assert.NoError(err)
-	assert.NotNil(data.Response)
+	assert.Nil(data.Response)
 }
 
 /********** SUBSCRIPTION **********/
@@ -94,7 +106,7 @@ func Test_GetSubscriptions(t *testing.T) {
 	assert.NotNil(data.Limit)
 	assert.NotNil(data.Page)
 	assert.NotNil(data.PageCount)
-	assert.NotNil(data.Subscriptions)
+	assert.Nil(data.Subscriptions)
 	assert.NotNil(data.SubscriptionsCount)
 }
 
@@ -150,7 +162,7 @@ func Test_GetUsers(t *testing.T) {
 	assert.NotNil(data.Limit)
 	assert.NotNil(data.Page)
 	assert.NotNil(data.PageCount)
-	assert.NotNil(data.Users)
+	assert.Nil(data.Users)
 	assert.NotNil(data.UsersCount)
 }
 
