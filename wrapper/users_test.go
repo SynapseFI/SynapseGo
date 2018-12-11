@@ -7,7 +7,6 @@ import (
 )
 
 var userClientData map[string]interface{}
-var testUser *User
 
 /********** METHODS **********/
 
@@ -21,20 +20,29 @@ func init() {
 	userClientData = data
 }
 
-func createUserTestClient() *Client {
+func createTestUser() *User {
 	cred := userClientData["clientData"].(map[string]interface{})
 
-	return New(
+	testClient := New(
 		cred["clientID"].(string),
 		cred["clientSecret"].(string),
 		cred["ipAddress"].(string),
 		cred["fingerprint"].(string),
 	)
+
+	testUser, err := testClient.GetUser("", false)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return testUser
 }
 
 /********** AUTHENTICATION **********/
 func Test_Authenticate(t *testing.T) {
 	assert := assert.New(t)
+	testUser := createTestUser()
 
 	// No parameters
 	data, err := testUser.Authenticate("")
@@ -45,6 +53,7 @@ func Test_Authenticate(t *testing.T) {
 
 func Test_GetRefreshToken(t *testing.T) {
 	assert := assert.New(t)
+	testUser := createTestUser()
 
 	// No parameters
 	data, err := testUser.GetRefreshToken()
@@ -57,6 +66,7 @@ func Test_GetRefreshToken(t *testing.T) {
 
 func Test_GetUserNodes(t *testing.T) {
 	assert := assert.New(t)
+	testUser := createTestUser()
 
 	// No parameters
 	data, err := testUser.GetNodes()
@@ -71,6 +81,7 @@ func Test_GetUserNodes(t *testing.T) {
 
 func Test_GetNode(t *testing.T) {
 	assert := assert.New(t)
+	testUser := createTestUser()
 
 	// No parameters
 	data, err := testUser.GetNode("")
@@ -84,6 +95,7 @@ func Test_GetNode(t *testing.T) {
 
 func Test_CreateNode(t *testing.T) {
 	assert := assert.New(t)
+	testUser := createTestUser()
 
 	// No parameters
 	data, err := testUser.CreateNode("")
@@ -98,6 +110,7 @@ func Test_CreateNode(t *testing.T) {
 
 func Test_UpdateNode(t *testing.T) {
 	assert := assert.New(t)
+	testUser := createTestUser()
 
 	// No parameters
 	data, err := testUser.UpdateNode("", "")
@@ -112,6 +125,7 @@ func Test_UpdateNode(t *testing.T) {
 // should delete node created in previous test?
 func Test_DeleteNode(t *testing.T) {
 	assert := assert.New(t)
+	testUser := createTestUser()
 
 	// No parameters
 	data, err := testUser.DeleteNode("")
@@ -128,6 +142,7 @@ func Test_AnswerMFA(t *testing.T) {
 
 func Test_GetApplePayToken(t *testing.T) {
 	assert := assert.New(t)
+	testUser := createTestUser()
 
 	// No parameters
 	data, err := testUser.GetApplePayToken("", "")
@@ -138,6 +153,7 @@ func Test_GetApplePayToken(t *testing.T) {
 
 func Test_ReinitiateMicroDeposit(t *testing.T) {
 	assert := assert.New(t)
+	testUser := createTestUser()
 
 	// No parameters
 	data, err := testUser.ReinitiateMicroDeposit("")
@@ -151,6 +167,7 @@ func Test_ReinitiateMicroDeposit(t *testing.T) {
 
 func Test_ResetDebitCard(t *testing.T) {
 	assert := assert.New(t)
+	testUser := createTestUser()
 
 	// No parameters
 	data, err := testUser.ResetDebitCard("")
@@ -161,6 +178,7 @@ func Test_ResetDebitCard(t *testing.T) {
 
 func Test_ShipDebitCard(t *testing.T) {
 	assert := assert.New(t)
+	testUser := createTestUser()
 
 	// No parameters
 	data, err := testUser.ShipDebitCard("", "")
@@ -171,6 +189,7 @@ func Test_ShipDebitCard(t *testing.T) {
 
 func Test_TriggerDummyTransactions(t *testing.T) {
 	assert := assert.New(t)
+	testUser := createTestUser()
 
 	// No parameters
 	data, err := testUser.TriggerDummyTransactions("", false)
@@ -181,6 +200,7 @@ func Test_TriggerDummyTransactions(t *testing.T) {
 
 func Test_VerifyMicroDeposit(t *testing.T) {
 	assert := assert.New(t)
+	testUser := createTestUser()
 
 	// No parameters
 	data, err := testUser.VerifyMicroDeposit("", "")
@@ -196,6 +216,7 @@ func Test_VerifyMicroDeposit(t *testing.T) {
 
 func Test_GetNodeStatements(t *testing.T) {
 	assert := assert.New(t)
+	testUser := createTestUser()
 
 	// No parameters
 	data, err := testUser.GetNodeStatements("")
@@ -210,6 +231,7 @@ func Test_GetNodeStatements(t *testing.T) {
 
 func Test_GetStatements(t *testing.T) {
 	assert := assert.New(t)
+	testUser := createTestUser()
 
 	// No parameters
 	data, err := testUser.GetStatements("")
@@ -226,6 +248,7 @@ func Test_GetStatements(t *testing.T) {
 
 func Test_GetSubnets(t *testing.T) {
 	assert := assert.New(t)
+	testUser := createTestUser()
 
 	// No parameters
 	data, err := testUser.GetSubnets("")
@@ -240,6 +263,7 @@ func Test_GetSubnets(t *testing.T) {
 
 func Test_GetSubnet(t *testing.T) {
 	assert := assert.New(t)
+	testUser := createTestUser()
 
 	// No parameters
 	data, err := testUser.GetSubnet("", "")
@@ -253,6 +277,7 @@ func Test_GetSubnet(t *testing.T) {
 
 func Test_CreateSubnet(t *testing.T) {
 	assert := assert.New(t)
+	testUser := createTestUser()
 
 	// No parameters
 	data, err := testUser.CreateSubnet("", "")
@@ -268,6 +293,7 @@ func Test_CreateSubnet(t *testing.T) {
 
 func Test_GetTransactions(t *testing.T) {
 	assert := assert.New(t)
+	testUser := createTestUser()
 
 	// No parameters
 	data, err := testUser.GetTransactions("", "")
@@ -282,6 +308,7 @@ func Test_GetTransactions(t *testing.T) {
 
 func Test_GetTransaction(t *testing.T) {
 	assert := assert.New(t)
+	testUser := createTestUser()
 
 	// No parameters
 	data, err := testUser.GetTransaction("", "")
@@ -293,6 +320,7 @@ func Test_GetTransaction(t *testing.T) {
 
 func Test_CreateTransaction(t *testing.T) {
 	assert := assert.New(t)
+	testUser := createTestUser()
 
 	// No parameters
 	data, err := testUser.CreateTransaction("", "", "")
@@ -304,6 +332,7 @@ func Test_CreateTransaction(t *testing.T) {
 
 func Test_DeleteTransaction(t *testing.T) {
 	assert := assert.New(t)
+	testUser := createTestUser()
 
 	// No parameters
 	data, err := testUser.DeleteTransaction("", "")
@@ -315,6 +344,7 @@ func Test_DeleteTransaction(t *testing.T) {
 
 func Test_CommentOnTransactionStatus(t *testing.T) {
 	assert := assert.New(t)
+	testUser := createTestUser()
 
 	// No parameters
 	data, err := testUser.CommentOnTransactionStatus("", "", "")
@@ -326,6 +356,7 @@ func Test_CommentOnTransactionStatus(t *testing.T) {
 
 func Test_DisputeTransaction(t *testing.T) {
 	assert := assert.New(t)
+	testUser := createTestUser()
 
 	// No parameters
 	data, err := testUser.DisputeTransaction("", "")
@@ -338,6 +369,7 @@ func Test_DisputeTransaction(t *testing.T) {
 
 func Test_Update(t *testing.T) {
 	assert := assert.New(t)
+	testUser := createTestUser()
 
 	// No parameters
 	data, err := testUser.Update("")
@@ -353,6 +385,7 @@ func Test_Update(t *testing.T) {
 
 func Test_CreateUBO(t *testing.T) {
 	assert := assert.New(t)
+	testUser := createTestUser()
 
 	// No parameters
 	data, err := testUser.CreateUBO("")
