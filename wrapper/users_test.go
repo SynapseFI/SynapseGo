@@ -11,7 +11,7 @@ var userClientData map[string]interface{}
 /********** METHODS **********/
 
 func init() {
-	data, err := loadFile("client_credentials")
+	data, err := readFile("client_credentials")
 
 	if err != nil {
 		panic(err)
@@ -38,6 +38,8 @@ func createTestUser() *User {
 
 	return testUser
 }
+
+/********** TESTS **********/
 
 /********** AUTHENTICATION **********/
 func Test_Authenticate(t *testing.T) {
