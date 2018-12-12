@@ -2,8 +2,6 @@ package wrapper
 
 import (
 	"encoding/json"
-	"io/ioutil"
-	"path/filepath"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -11,8 +9,10 @@ import (
 
 var errorData map[string]interface{}
 
+/********** METHODS **********/
+
 func init() {
-	data, err := loadFile("error_responses")
+	data, err := readFile("error_responses")
 
 	if err != nil {
 		panic(err)
@@ -21,20 +21,7 @@ func init() {
 	errorData = data
 }
 
-func loadFile(name string) (map[string]interface{}, error) {
-	path := filepath.Join("testdata", name+".json") // relative path
-	bytes, err := ioutil.ReadFile(path)
-
-	if err != nil {
-		return nil, err
-	}
-
-	var data map[string]interface{}
-	e := json.Unmarshal(bytes, &data)
-
-	return data, e
-
-}
+/********** TESTS **********/
 
 func Test_HandleHTTPError(t *testing.T) {
 	assert := assert.New(t)

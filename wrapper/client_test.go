@@ -11,14 +11,16 @@ import (
 var clientData map[string]interface{}
 var clientMethodsData map[string]interface{}
 
+/********** METHODS **********/
+
 func init() {
-	data, err := loadFile("client_credentials")
+	data, err := readFile("client_credentials")
 
 	if err != nil {
 		panic(err)
 	}
 
-	mData, mErr := loadFile("client_methods")
+	mData, mErr := readFile("client_methods")
 
 	if mErr != nil {
 		panic(err)
@@ -36,6 +38,8 @@ func createTestClient() *Client {
 		clientData["fingerprint"].(string),
 	)
 }
+
+/********** TESTS **********/
 
 /********** CLIENT **********/
 
