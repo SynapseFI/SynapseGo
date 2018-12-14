@@ -67,15 +67,22 @@ func (req *Request) Get(url string, queryParams []string) ([]byte, error) {
 // Post performs a POST request
 func (req *Request) Post(url, data string, queryParams []string) ([]byte, error) {
 	var params string
-	if len(queryParams) > 0 {
-		params = queryParams[0]
-	}
 
-	res, body, errs := goreq.
+	newRequest := goreq.
 		Post(url).
 		Set("x-sp-gateway", req.clientID+"|"+req.clientSecret).
 		Set("x-sp-user-ip", req.ipAddress).
-		Set("x-sp-user", req.authKey+"|"+req.fingerprint).
+		Set("x-sp-user", req.authKey+"|"+req.fingerprint)
+
+	if len(queryParams) > 0 {
+		params = queryParams[0]
+
+		if len(queryParams) > 1 {
+			newRequest.Set("x-sp-idempotency-key", queryParams[1])
+		}
+	}
+
+	res, body, errs := newRequest.
 		Query(params).
 		Send(data).
 		EndBytes()
