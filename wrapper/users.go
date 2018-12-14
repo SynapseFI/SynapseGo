@@ -128,6 +128,35 @@ func (u *User) GetRefreshToken() (map[string]interface{}, error) {
 	return res, err
 }
 
+// Select2FA sends the 2FA device selection to the system
+func (u *User) Select2FA(device string) (map[string]interface{}, error) {
+	url := buildURL(authURL, u.UserID)
+
+	data := `{ "refresh_token": "` + u.RefreshToken + `", "phone_number": "` + device + `" }`
+
+	res, err := u.do("POST", url, data, nil)
+
+	return res, err
+}
+
+// VerifyPIN sends the requested pin to the system to complete the 2FA process
+func (u *User) VerifyPIN(pin string) (map[string]interface{}, error) {
+	url := buildURL(authURL, u.UserID)
+
+	data := `{ "refresh_token": "` + u.RefreshToken + `", "validation_pin": "` + pin + `" }`
+
+	res, err := u.do("POST", url, data, nil)
+
+	return res, err
+}
+
+// SubmitMFA submits the access token and mfa answer
+func (u *User) SubmitMFA(data string) (map[string]interface{}, error) {
+	url := buildURL(usersURL, u.UserID, path["nodes"])
+
+	return u.do("POST", url, data, nil)
+}
+
 /********** NODE **********/
 
 // GetNodes returns all of the nodes associated with a user
