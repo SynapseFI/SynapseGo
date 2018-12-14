@@ -160,3 +160,16 @@ func Test_GetUser(t *testing.T) {
 	assert.NoError(err)
 	assert.NotNil(testRes)
 }
+
+func Test_CreateUser(t *testing.T) {
+	assert := assert.New(t)
+	testClient := createTestClient()
+
+	// No parameters
+	testUser, err := testClient.CreateUser("")
+
+	t.Log(testUser)
+
+	assert.NoError(err)
+	assert.NotNil(testUser)
+}
