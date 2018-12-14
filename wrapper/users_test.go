@@ -63,6 +63,37 @@ func Test_GetRefreshToken(t *testing.T) {
 	assert.NoError(err)
 	assert.NotNil(data)
 }
+func Test_Select2FA(t *testing.T) {
+	assert := assert.New(t)
+	testUser := createTestUser()
+
+	// No parameters
+	data, err := testUser.Select2FA("")
+
+	assert.NoError(err)
+	assert.NotNil(data)
+}
+func Test_VerifyPIN(t *testing.T) {
+	assert := assert.New(t)
+	testUser := createTestUser()
+
+	// No parameters
+	data, err := testUser.VerifyPIN("")
+
+	assert.NoError(err)
+	assert.NotNil(data)
+}
+
+func Test_SubmitMFA(t *testing.T) {
+	assert := assert.New(t)
+	testUser := createTestUser()
+
+	// No parameters
+	data, err := testUser.SubmitMFA("")
+
+	assert.NoError(err)
+	assert.NotNil(data)
+}
 
 /********** NODE **********/
 
@@ -123,10 +154,6 @@ func Test_DeleteNode(t *testing.T) {
 }
 
 /********** NODE (OTHER) **********/
-
-func Test_AnswerMFA(t *testing.T) {
-	// ...
-}
 
 func Test_GetApplePayToken(t *testing.T) {
 	assert := assert.New(t)
