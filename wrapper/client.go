@@ -1,8 +1,6 @@
 package wrapper
 
 import (
-	"strings"
-
 	"github.com/mitchellh/mapstructure"
 )
 
@@ -110,13 +108,14 @@ func (c *Client) LocateATMs(queryParams ...string) (map[string]interface{}, erro
 
 // GetPublicKey returns a public key as a token representing client credentials
 func (c *Client) GetPublicKey(scope ...string) (map[string]interface{}, error) {
-	url := clientURL + "?issue_public_key=YES&amp;scope="
+	url := clientURL + "?issue_public_key=YES&scope="
+	defaultScope := "OAUTH|POST,USERS|POST,USERS|GET,USER|GET,USER|PATCH,SUBSCRIPTIONS|GET,SUBSCRIPTIONS|POST,SUBSCRIPTION|GET,SUBSCRIPTION|PATCH,CLIENT|REPORTS,CLIENT|CONTROLS"
 
-	for i := 0; i < len(scope); i++ {
-		url += scope[i] + ","
+	if len(scope) > 0 {
+		defaultScope = scope[0]
 	}
 
-	url = strings.TrimSuffix(url, ",")
+	url += defaultScope
 
 	return c.do("GET", url, "", nil)
 }
