@@ -69,6 +69,28 @@ func Test_GetNodes(t *testing.T) {
 
 /********** OTHER **********/
 
+func Test_GetCryptoMarketData(t *testing.T) {
+	assert := assert.New(t)
+	testClient := createTestClient()
+
+	// No parameters
+	testRes, err := testClient.GetCryptoMarketData()
+
+	assert.NoError(err)
+	assert.NotNil(testRes)
+}
+
+func Test_GetCryptoQuotes(t *testing.T) {
+	assert := assert.New(t)
+	testClient := createTestClient()
+
+	// No parameters
+	testRes, err := testClient.GetCryptoQuotes()
+
+	assert.NoError(err)
+	assert.NotNil(testRes)
+}
+
 func Test_GetInstitutions(t *testing.T) {
 	assert := assert.New(t)
 	testClient := createTestClient()

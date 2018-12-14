@@ -82,6 +82,20 @@ func (c *Client) GetNodes(queryParams ...string) (map[string]interface{}, error)
 
 /********** OTHER **********/
 
+// GetCryptoMarketData returns market data for cryptocurrencies
+func (c *Client) GetCryptoMarketData() (map[string]interface{}, error) {
+	url := buildURL(nodesURL, "crypto-market-watch")
+
+	return c.do("GET", url, "", nil)
+}
+
+// GetCryptoQuotes returns all of the quotes for crypto currencies
+func (c *Client) GetCryptoQuotes(queryParams ...string) (map[string]interface{}, error) {
+	url := buildURL(nodesURL, "crypto-quotes")
+
+	return c.do("GET", url, "", queryParams)
+}
+
 // GetInstitutions returns all of the nodes associated with a user
 func (c *Client) GetInstitutions() (map[string]interface{}, error) {
 	return c.do("GET", institutionsURL, "", nil)
