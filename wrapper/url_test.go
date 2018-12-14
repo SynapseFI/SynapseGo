@@ -9,7 +9,7 @@ import (
 /********** TESTS **********/
 
 func Test_BuildURL(t *testing.T) {
-	basePath := "https://aransomsite.com"
+	basePath := "https://randomsite.com"
 	path1 := "test1"
 	path2 := "test2"
 	path3 := "test3"
