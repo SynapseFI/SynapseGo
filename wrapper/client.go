@@ -101,6 +101,13 @@ func (c *Client) GetInstitutions() (map[string]interface{}, error) {
 	return c.do("GET", institutionsURL, "", nil)
 }
 
+// LocateATMs returns a list of nearby ATMs
+func (c *Client) LocateATMs(queryParams ...string) (map[string]interface{}, error) {
+	url := buildURL(nodesURL, "atms")
+
+	return c.do("GET", url, "", queryParams)
+}
+
 // GetPublicKey returns a public key as a token representing client credentials
 func (c *Client) GetPublicKey(scope ...string) (map[string]interface{}, error) {
 	url := clientURL + "?issue_public_key=YES&amp;scope="

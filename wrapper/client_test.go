@@ -102,6 +102,17 @@ func Test_GetInstitutions(t *testing.T) {
 	assert.NotNil(testRes)
 }
 
+func Test_LocateATMs(t *testing.T) {
+	assert := assert.New(t)
+	testClient := createTestClient()
+
+	// No parameters
+	testRes, err := testClient.LocateATMs()
+
+	assert.NoError(err)
+	assert.NotNil(testRes)
+}
+
 func Test_GetPublicKey(t *testing.T) {
 	assert := assert.New(t)
 	testClient := createTestClient()
