@@ -16,15 +16,15 @@ See main.go for each method in use
 
 *queryParams* and *scope* are optional parameters
 
-## Client
+## CLIENT METHODS
 
 ```go
 // credentials used to set headers for each method request
 var client = wrapper.New(
-"clientID":     "CLIENT_ID",
-"clientSecret": "CLIENT_SECRET",
-"ipAddress":    "IP_ADDRESS",
-"userID":       "USER_ID"
+"ClientID":     "CLIENT_ID",
+"ClientSecret": "CLIENT_SECRET",
+"IP":           "IP_ADDRESS",
+"Fingerprint":  "FINGERPRINT"
 )
 ```
 
@@ -32,116 +32,118 @@ To enable logging (development mode):
 
 ```go
 var client = wrapper.New(
-"clientID":     "CLIENT_ID",
-"clientSecret": "CLIENT_SECRET",
-"ipAddress":    "IP_ADDRESS",
-"userID":       "USER_ID",
+"ClientID":     "CLIENT_ID",
+"ClientSecret": "CLIENT_SECRET",
+"IP":           "IP_ADDRESS",
+"Fingerprint":  "FINGERPRINT",
 "devMode":      true
 )
 ```
 
-#### Get Institutions
+#### Node
 
 ```go
-data := client.GetInstitutions()
+data, err := client.GetNodes(queryParams ...string)
 ```
 
-#### Get Nodes
+##### Other
 
 ```go
-data := client.GetNodes(queryParams ...string)
+data, err := client.GetCryptoMarketData()
+data, err := client.GetCryptoQuotes(queryParams ...string)
+data, err := client.GetInstitutions()
+data, err := client.LocateATMs(queryParams ...string)
+data, err := client.GetPublicKey(scope ...string)
 ```
 
-#### Get Public Key
+#### Subscription
 
 ```go
-key := client.GetPublicKey(scope ...string)
+data, err := client.GetSubscriptions(queryParams ...string)
+data, err := client.GetSubscription(subscriptionID string, queryParams ...string)
+data, err := client.CreateSubscription(data string, queryParams ...string)
+data, err := client.UpdateSubscription(subscriptionID string, queryParams ...string)
+
 ```
 
-#### Get Subscriptions
+#### Transaction
 
 ```go
-data := client.GetSubscriptions(queryParams ...string)
+data, err := client.GetTransactions(queryParams ...string)
 ```
 
-#### Get Subscription
+#### User
 
 ```go
-subscription := client.GetSubscription(subscriptionID string, queryParams ...string)
+data, err := client.GetUsers(queryParams ...string)
+user, err := client.GetUser(userID string, fullDehydrate bool, queryParams ...string)
+user, err := client.CreateUser(userID string, queryParams ...string)
 ```
 
-#### Create Subscription
-
-```go
-subscription := client.CreateSubscription(data string, queryParams ...string)
-```
-
-#### Update Subscription
-
-```go
-subscription := client.UpdateSubscription(subscriptionID string, queryParams ...string)
-```
-
-#### Get Transactions
-
-```go
-data := client.GetTransactions(queryParams ...string)
-```
-
-#### Get Users
-
-```go
-data := client.GetUsers(queryParams ...string)
-```
-
-#### Get User
-
-```go
-user := client.GetUser(userID string, fullDehydrate bool, queryParams ...string)
-```
-
-#### Create User
-
-```go
-user := client.CreateUser(userID string, queryParams ...string)
-```
-
-## User
+## USER METHODS
 
 #### Authentication
 
 ```go
-authKey := user.Auth(data string)
+data, err := user.Auth(data string)
+data, err := user.GetRefreshToken()
+data, err := user.Select2FA(device string)
+data, err := user.SubmitMFA(data string)
+data, err := user.VerifyPIN(pin string)
 ```
 
-#### Get Nodes
+#### Node
 
 ```go
-data := user.GetNodes(queryParams ...string)
+data, err := user.GetNodes(queryParams ...string)
+data, err := user.GetNode(nodeID string, queryParams ..string)
+data, err := user.CreateNode(data string)
+data, err := user.UpdateNode(nodeID, data string)
+data, err := user.DeleteNode(nodeID string)
 ```
 
-#### Create Deposit Account
+#### Node (Other)
 
 ```go
-node := user.CreateDepositAccount(data string)
+data, err := user.GetApplePayToken(nodeID, data string)
+data, err := user.ReinitiateMicroDeposit(nodeID, string)
+data, err := user.ResetDebitCard(nodeID string)
+data, err := user.ShipDebitCard(nodeID, data string)
+data, err := user.TriggerDummyTransactions(nodeID string, credit bool)
+data, err := user.VerifyMicroDeposit(nodeID, data string)
 ```
 
-#### Update User
+#### Statement
 
 ```go
-user := user.Update(data string, queryParams ...string)
+data, err := user.GetNodeStatements(nodeID string, queryParams ...string)
+data, err := user.GetStatements(queryParams ...string)
 ```
 
-## Transaction
-
-#### Comment On Status
+#### Subnet
 
 ```go
-transaction := transaction.CommentOnStatus(data string)
+data, err := user.GetSubnets(nodeID string)
+data, err := user.GetSubnet(nodeID, subnetID string)
+data, err := user.CreateSubnet(nodeID, data string)
 ```
 
-#### Cancel Transaction
+### Transaction
 
 ```go
-transaction := transaction.CancelTransaction(data string)
+data, err := user.GetTransactions(nodeID, transactionID string)
+data, err := user.GetTransaction(nodeID, transactionID string)
+data, err := user.CreateTransaction(nodeID, transactionID, data string)
+data, err := user.DeleteTransaction(nodeID, transactionID string)
+data, err := user.CommentOnTransactionStatus(nodeID, transactionID, data string)
+data, err := user.DisputeTransaction(nodeID, transactionID string)
 ```
+
+#### User
+
+```go
+user, err := user.Update(data string, queryParams ...string)
+
+data, err := user.CreateUBO(data string)
+```
+

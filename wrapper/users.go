@@ -7,23 +7,6 @@ import "github.com/mitchellh/mapstructure"
 /********** TYPES **********/
 
 type (
-	// Auth represents an oauth key
-	Auth struct {
-		Key string `json:"oauth_key"`
-	}
-
-	// MFA represents multi-factor authentication response
-	MFA struct {
-		AccessToken string `json:"access_token"`
-		Message     string `json:"message"`
-		Type        string `json:"type"`
-	}
-
-	// Refresh represents a refresh token
-	Refresh struct {
-		Token string `json:"refresh_token"`
-	}
-
 	// User represents a single user object
 	User struct {
 		AuthKey       string
@@ -139,6 +122,13 @@ func (u *User) Select2FA(device string) (map[string]interface{}, error) {
 	return res, err
 }
 
+// SubmitMFA submits the access token and mfa answer
+func (u *User) SubmitMFA(data string) (map[string]interface{}, error) {
+	url := buildURL(usersURL, u.UserID, path["nodes"])
+
+	return u.do("POST", url, data, nil)
+}
+
 // VerifyPIN sends the requested pin to the system to complete the 2FA process
 func (u *User) VerifyPIN(pin string) (map[string]interface{}, error) {
 	url := buildURL(authURL, u.UserID)
@@ -148,13 +138,6 @@ func (u *User) VerifyPIN(pin string) (map[string]interface{}, error) {
 	res, err := u.do("POST", url, data, nil)
 
 	return res, err
-}
-
-// SubmitMFA submits the access token and mfa answer
-func (u *User) SubmitMFA(data string) (map[string]interface{}, error) {
-	url := buildURL(usersURL, u.UserID, path["nodes"])
-
-	return u.do("POST", url, data, nil)
 }
 
 /********** NODE **********/
@@ -199,13 +182,6 @@ func (u *User) DeleteNode(nodeID string) (map[string]interface{}, error) {
 }
 
 /********** NODE (OTHER) **********/
-
-// AnswerMFA submits an answer to a MFA question from bank login attempt
-func (u *User) AnswerMFA(data string) (map[string]interface{}, error) {
-	url := buildURL(usersURL, u.UserID, path["nodes"])
-
-	return u.do("POST", url, data, nil)
-}
 
 // GetApplePayToken generates tokenized info for Apple Wallet
 func (u *User) GetApplePayToken(nodeID, data string) (map[string]interface{}, error) {
