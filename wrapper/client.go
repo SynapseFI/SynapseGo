@@ -18,16 +18,6 @@ type (
 		IP           string
 		request      Request
 	}
-
-	// Institutions represents a list of Synapse institutions
-	Institutions struct {
-		Banks interface{} `json:"banks"`
-	}
-
-	// PublicKey represents the structure of a public key object
-	PublicKey struct {
-		Response map[string]interface{} `json:"public_key_obj"`
-	}
 )
 
 /********** METHODS **********/
