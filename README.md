@@ -165,3 +165,19 @@ user, err := user.Update(data string, queryParams ...string)
 data, err := user.CreateUBO(data string)
 ```
 
+# Tests
+
+To test mock functions (functions that exist as part of the Synapse API):
+
+```bash
+cd wrapper/
+go test -v --tags mock
+```
+
+To test all other functions including (limited) API requests:
+
+```bash
+cd wrapper/
+go test -v
+```
+
