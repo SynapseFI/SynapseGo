@@ -12,8 +12,6 @@ import github.com/synapsefi/synapsefi-go
 
 # Code Examples
 
-See main.go for each method in use
-
 *queryParams* and *scope* are optional parameters
 
 ## CLIENT METHODS
@@ -38,6 +36,26 @@ var client = wrapper.New(
 "Fingerprint":  "FINGERPRINT",
 "devMode":      true
 )
+```
+
+To set an `IDEMPOTENCY_KEY` (for `POST` requests only)
+
+```go
+scopeSettings := `{
+		"scope": [
+			"USERS|POST",
+			"USER|PATCH",
+			"NODES|POST",
+			"NODE|PATCH",
+			"TRANS|POST",
+			"TRAN|PATCH"
+		],
+		"url": "https://requestb.in/zp216zzp"
+  }`
+
+idempotencyKey := `1234567890`
+
+data, err := client.CreateSubscription(scopeSettings, "", idempotencyKey)
 ```
 
 #### Node
