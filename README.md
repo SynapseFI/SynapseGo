@@ -1,7 +1,7 @@
 # SynapseFI-Go
 Simple API wrapper for SynapseFi v3 REST API.
 
-# Installation
+## Installation
 ```bash
 $ go get github.com/synapsefi/synapsefi-go
 ```
@@ -10,11 +10,11 @@ $ go get github.com/synapsefi/synapsefi-go
 import github.com/synapsefi/synapsefi-go
 ```
 
-# Code Examples
+## Code Examples
 
 *queryParams* and *scope* are optional parameters
 
-## CLIENT METHODS
+### CLIENT METHODS
 
 ```go
 // credentials used to set headers for each method request
@@ -58,13 +58,13 @@ idempotencyKey := `1234567890`
 data, err := client.CreateSubscription(scopeSettings, "", idempotencyKey)
 ```
 
-#### Node
+##### Node
 
 ```go
 data, err := client.GetNodes(queryParams ...string)
 ```
 
-##### Other
+###### Other
 
 ```go
 data, err := client.GetCryptoMarketData()
@@ -74,7 +74,7 @@ data, err := client.LocateATMs(queryParams ...string)
 data, err := client.GetPublicKey(scope ...string)
 ```
 
-#### Subscription
+##### Subscription
 
 ```go
 data, err := client.GetSubscriptions(queryParams ...string)
@@ -84,13 +84,13 @@ data, err := client.UpdateSubscription(subscriptionID string, queryParams ...str
 
 ```
 
-#### Transaction
+##### Transaction
 
 ```go
 data, err := client.GetTransactions(queryParams ...string)
 ```
 
-#### User
+###### User
 
 ```go
 data, err := client.GetUsers(queryParams ...string)
@@ -98,9 +98,9 @@ user, err := client.GetUser(userID string, fullDehydrate bool, queryParams ...st
 user, err := client.CreateUser(userID string, queryParams ...string)
 ```
 
-## USER METHODS
+### USER METHODS
 
-#### Authentication
+##### Authentication
 
 ```go
 data, err := user.Auth(data string)
@@ -110,7 +110,7 @@ data, err := user.SubmitMFA(data string)
 data, err := user.VerifyPIN(pin string)
 ```
 
-#### Node
+##### Node
 
 ```go
 data, err := user.GetNodes(queryParams ...string)
@@ -120,7 +120,7 @@ data, err := user.UpdateNode(nodeID, data string)
 data, err := user.DeleteNode(nodeID string)
 ```
 
-#### Node (Other)
+##### Node (Other)
 
 ```go
 data, err := user.GetApplePayToken(nodeID, data string)
@@ -131,14 +131,14 @@ data, err := user.TriggerDummyTransactions(nodeID string, credit bool)
 data, err := user.VerifyMicroDeposit(nodeID, data string)
 ```
 
-#### Statement
+##### Statement
 
 ```go
 data, err := user.GetNodeStatements(nodeID string, queryParams ...string)
 data, err := user.GetStatements(queryParams ...string)
 ```
 
-#### Subnet
+##### Subnet
 
 ```go
 data, err := user.GetSubnets(nodeID string)
@@ -146,7 +146,7 @@ data, err := user.GetSubnet(nodeID, subnetID string)
 data, err := user.CreateSubnet(nodeID, data string)
 ```
 
-### Transaction
+#### Transaction
 
 ```go
 data, err := user.GetTransactions(nodeID, transactionID string)
@@ -157,7 +157,7 @@ data, err := user.CommentOnTransactionStatus(nodeID, transactionID, data string)
 data, err := user.DisputeTransaction(nodeID, transactionID string)
 ```
 
-#### User
+##### User
 
 ```go
 user, err := user.Update(data string, queryParams ...string)
@@ -165,7 +165,7 @@ user, err := user.Update(data string, queryParams ...string)
 data, err := user.CreateUBO(data string)
 ```
 
-# Tests
+## Tests
 
 To test mock functions (functions that exist as part of the Synapse API):
 
