@@ -1,0 +1,26 @@
+{
+  "url": "https://uat-api.synapsefi.com/v3.1/users/5bec6ebebaabfc00ab168fa0/nodes", 
+  "GET": {
+
+  },
+  "POST": {
+    "data": {
+      "type": "SYNAPSE-US",
+      "info":{
+          "nickname":"My Checking"
+      },
+      "extra": {
+        "supp_id": "123456"
+      },
+      "is_active": true
+    }
+  },
+  "PATCH": {
+    "data": {
+      "supp_id":"new_supp_id_1234"
+    }
+  },
+  "DELETE": {
+
+  }
+}

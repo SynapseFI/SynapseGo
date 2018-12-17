@@ -201,8 +201,6 @@ func Test_CreateUser(t *testing.T) {
 	// No parameters
 	testUser, err := testClient.CreateUser("")
 
-	t.Log(testUser)
-
 	assert.NoError(err)
 	assert.NotNil(testUser)
 }
