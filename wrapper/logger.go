@@ -1,21 +1,26 @@
 package wrapper
 
 import (
-	"github.com/sirupsen/logrus"
+	logrus "github.com/sirupsen/logrus"
 )
 
-var logger = logrus.New()
+type (
+	logger struct {
+	}
+)
+
+var log *logger
 
 // Info used to log information
-func infoLog(args ...interface{}) {
+func (l *logger) info(args ...interface{}) {
 	if developerMode {
-		logger.Info(args...)
+		logrus.Info(args...)
 	}
 }
 
 // Error used to log errors
-func errorLog(args ...interface{}) {
+func (l *logger) error(args ...interface{}) {
 	if developerMode {
-		logger.Error(args...)
+		logrus.Error(args...)
 	}
 }
