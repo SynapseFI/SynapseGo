@@ -7,7 +7,7 @@ func read(data []byte) map[string]interface{} {
 	err := json.Unmarshal(data, &d)
 
 	if err != nil {
-		errorLog(err)
+		panic(err)
 	}
 
 	return d
