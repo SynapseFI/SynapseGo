@@ -3,7 +3,7 @@ Simple API wrapper for Synapse v3 REST API. This library handles the user authen
 
 ## Documentation
 
-(Synapse Docs)[https://docs.synapsefi.com]
+[Synapse Docs](https://docs.synapsefi.com)
 
 ## Installation
 ```bash
@@ -154,10 +154,24 @@ user, err := user.Update(data string, queryParams ...string)
 
 ## Examples
 
-Register Fingerprint
+**Register Fingerprint**
 
 ```go
-// Fingerprint not registered. Please perform the MFA flow
+/*
+{
+	"error": {
+			"en": "Fingerprint not registered. Please perform the MFA flow."
+	},
+	"error_code": "10",
+	"http_code": "202",
+	"phone_numbers": [
+			"developer@email.com",
+			"901-111-2222"
+	],
+	"success": false
+}
+*/
+
 // Submit a valid email address or phone number from "phone_numbers" list
 res, err := user.Select2FA("developer@email.com")
 
@@ -166,7 +180,7 @@ res, err := user.VerifyPIN("123456")
 
 ```
 
-Set an `IDEMPOTENCY_KEY` (for `POST` requests only)
+**Set an `IDEMPOTENCY_KEY` (for `POST` requests only)**
 
 ```go
 scopeSettings := `{
@@ -186,7 +200,7 @@ idempotencyKey := `1234567890`
 data, err := client.CreateSubscription(scopeSettings, "", idempotencyKey)
 ```
 
-Submit optional query parameters
+**Submit optional query parameters**
 
 ```go
 params := "per_page=3&page=2"
