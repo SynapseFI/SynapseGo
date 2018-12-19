@@ -1,5 +1,5 @@
 # Synapse-Go
-Simple API wrapper for Synapse v3 REST API. This library handles the user authentication process. As long as a user has been previously authenticated, further authentication is not necessary in the development flow.
+Go-based API wrapper for Synapse v3 REST API. This library handles the user authentication process. As long as a user has been previously authenticated, further authentication is not necessary in the development flow.
 
 ## Documentation
 
@@ -22,7 +22,7 @@ import github.com/synapsefi/synapsefi-go
 
 ```go
 // credentials used to set headers for each method request
-var client = wrapper.New(
+var client = synapse.New(
 "ClientID":     "CLIENT_ID",
 "ClientSecret": "CLIENT_SECRET",
 "IP":           "IP_ADDRESS",
@@ -33,7 +33,7 @@ var client = wrapper.New(
 To enable logging (development mode):
 
 ```go
-var client = wrapper.New(
+var client = synapse.New(
 "ClientID":     "CLIENT_ID",
 "ClientSecret": "CLIENT_SECRET",
 "IP":           "IP_ADDRESS",
@@ -213,14 +213,14 @@ data, err := client.GetUsers(params)
 Functions that exist as part of the Synapse API:
 
 ```bash
-cd wrapper/
+cd synapse/
 go test -v --tags mock
 ```
 
 Other functions including (limited) API requests:
 
 ```bash
-cd wrapper/
+cd synapse/
 go test -v
 ```
 

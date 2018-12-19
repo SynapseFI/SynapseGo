@@ -1,6 +1,6 @@
 // +build !mock
 
-package wrapper
+package synapse
 
 import (
 	"encoding/json"
