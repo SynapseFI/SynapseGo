@@ -1,4 +1,1 @@
-golang.org/
-github.com/
-
-synapse/testdata/client_credentials.json
+testdata/client_credentials.json
