@@ -1,3 +1,4 @@
-main.go
+golang.org/
+github.com/
 
-wrapper/testdata/client_credentials.json
+synapse/testdata/client_credentials.json

@@ -1,4 +1,4 @@
-package wrapper
+package synapse
 
 import (
 	logrus "github.com/sirupsen/logrus"

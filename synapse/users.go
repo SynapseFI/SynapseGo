@@ -1,4 +1,4 @@
-package wrapper
+package synapse
 
 import "github.com/mitchellh/mapstructure"
 

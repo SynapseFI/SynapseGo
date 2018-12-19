@@ -1,4 +1,7 @@
-package wrapper
+/*
+Package synapse is a wrapper library for the Synapse API (https://docs.synapsefi.com)
+*/
+package synapse
 
 import (
 	"github.com/mitchellh/mapstructure"

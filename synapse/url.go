@@ -1,4 +1,4 @@
-package wrapper
+package synapse
 
 /********** GLOBAL VARIABLErS **********/
 const version = "v3.1"
