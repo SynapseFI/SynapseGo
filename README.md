@@ -1,5 +1,9 @@
-# SynapseFI-Go
-Simple API wrapper for SynapseFi v3 REST API.
+# Synapse-Go
+Simple API wrapper for Synapse v3 REST API. This library handles the user authentication process. As long as a user has been previously authenticated, further authentication is not necessary in the development flow.
+
+## Documentation
+
+(Synapse Docs)[https://docs.synapsefi.com]
 
 ## Installation
 ```bash
@@ -10,11 +14,11 @@ $ go get github.com/synapsefi/synapsefi-go
 import github.com/synapsefi/synapsefi-go
 ```
 
-## Code Examples
-
-*queryParams* and *scope* are optional parameters
+## Methods
 
 ### CLIENT METHODS
+
+*queryParams* and *scope* are optional parameters
 
 ```go
 // credentials used to set headers for each method request
@@ -36,26 +40,6 @@ var client = wrapper.New(
 "Fingerprint":  "FINGERPRINT",
 "devMode":      true
 )
-```
-
-To set an `IDEMPOTENCY_KEY` (for `POST` requests only)
-
-```go
-scopeSettings := `{
-		"scope": [
-			"USERS|POST",
-			"USER|PATCH",
-			"NODES|POST",
-			"NODE|PATCH",
-			"TRANS|POST",
-			"TRAN|PATCH"
-		],
-		"url": "https://requestb.in/zp216zzp"
-  }`
-
-idempotencyKey := `1234567890`
-
-data, err := client.CreateSubscription(scopeSettings, "", idempotencyKey)
 ```
 
 ##### Node
@@ -94,6 +78,8 @@ data, err := client.GetTransactions(queryParams ...string)
 
 ```go
 data, err := client.GetUsers(queryParams ...string)
+
+// returns a User struct
 user, err := client.GetUser(userID string, fullDehydrate bool, queryParams ...string)
 user, err := client.CreateUser(userID string, queryParams ...string)
 ```
@@ -160,21 +146,64 @@ data, err := user.DisputeTransaction(nodeID, transactionID string)
 ##### User
 
 ```go
-user, err := user.Update(data string, queryParams ...string)
-
 data, err := user.CreateUBO(data string)
+
+// returns a User struct
+user, err := user.Update(data string, queryParams ...string)
 ```
 
-## Tests
+## Examples
 
-To test mock functions (functions that exist as part of the Synapse API):
+Register Fingerprint
+
+```go
+// Fingerprint not registered. Please perform the MFA flow
+// Submit a valid email address or phone number from "phone_numbers" list
+res, err := user.Select2FA("developer@email.com")
+
+// MFA sent to developer@email.com
+res, err := user.VerifyPIN("123456")
+
+```
+
+Set an `IDEMPOTENCY_KEY` (for `POST` requests only)
+
+```go
+scopeSettings := `{
+		"scope": [
+			"USERS|POST",
+			"USER|PATCH",
+			"NODES|POST",
+			"NODE|PATCH",
+			"TRANS|POST",
+			"TRAN|PATCH"
+		],
+		"url": "https://requestb.in/zp216zzp"
+  }`
+
+idempotencyKey := `1234567890`
+
+data, err := client.CreateSubscription(scopeSettings, "", idempotencyKey)
+```
+
+Submit optional query parameters
+
+```go
+params := "per_page=3&page=2"
+
+data, err := client.GetUsers(params)
+```
+
+## Testing
+
+Functions that exist as part of the Synapse API:
 
 ```bash
 cd wrapper/
 go test -v --tags mock
 ```
 
-To test all other functions including (limited) API requests:
+Other functions including (limited) API requests:
 
 ```bash
 cd wrapper/
