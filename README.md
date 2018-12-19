@@ -30,7 +30,7 @@ var client = synapse.New(
 )
 ```
 
-To enable logging (development mode):
+Enable logging (development mode)
 
 ```go
 var client = synapse.New(

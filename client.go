@@ -1,5 +1,74 @@
 /*
 Package synapse is a wrapper library for the Synapse API (https://docs.synapsefi.com)
+
+Instantiate client
+
+	// credentials used to set headers for each method request
+	var client = synapse.New(
+	"ClientID":     "CLIENT_ID",
+	"ClientSecret": "CLIENT_SECRET",
+	"IP":           "IP_ADDRESS",
+	"Fingerprint":  "FINGERPRINT"
+	)
+
+Examples
+
+Enable logging (development mode)
+
+	var client = synapse.New(
+	"ClientID":     "CLIENT_ID",
+	"ClientSecret": "CLIENT_SECRET",
+	"IP":           "IP_ADDRESS",
+	"Fingerprint":  "FINGERPRINT",
+	"devMode":      true
+	)
+
+Register Fingerprint
+
+	// payload response
+	{
+		"error": {
+				"en": "Fingerprint not registered. Please perform the MFA flow."
+		},
+		"error_code": "10",
+		"http_code": "202",
+		"phone_numbers": [
+				"developer@email.com",
+				"901-111-2222"
+		],
+		"success": false
+	}
+
+	// Submit a valid email address or phone number from "phone_numbers" list
+	res, err := user.Select2FA("developer@email.com")
+
+	// MFA sent to developer@email.com
+	res, err := user.VerifyPIN("123456")
+
+Set an `IDEMPOTENCY_KEY` (for `POST` requests only)
+
+	scopeSettings := `{
+			"scope": [
+				"USERS|POST",
+				"USER|PATCH",
+				"NODES|POST",
+				"NODE|PATCH",
+				"TRANS|POST",
+				"TRAN|PATCH"
+			],
+			"url": "https://requestb.in/zp216zzp"
+		}`
+
+	idempotencyKey := `1234567890`
+
+	data, err := client.CreateSubscription(scopeSettings, "", idempotencyKey)
+
+Submit optional query parameters
+
+	params := "per_page=3&page=2"
+
+	data, err := client.GetUsers(params)
+
 */
 package synapse
 
