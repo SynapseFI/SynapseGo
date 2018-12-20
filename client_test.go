@@ -3,13 +3,14 @@
 package synapse
 
 import (
+	"encoding/json"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
 var clientData map[string]interface{}
-var clientMethodsData map[string]interface{}
+var mockClientResponse = make(map[string]interface{})
 
 /********** METHODS **********/
 
@@ -20,14 +21,13 @@ func init() {
 		panic(err)
 	}
 
-	mData, mErr := readFile("client_methods")
-
-	if mErr != nil {
-		panic(err)
-	}
-
 	clientData = data["clientData"].(map[string]interface{})
-	clientMethodsData = mData
+	marshallErr := json.Unmarshal(mockResponse, &mockClientResponse)
+
+	// if data is an empty stream this will cause an unmarshal error
+	if marshallErr != nil {
+		panic(marshallErr)
+	}
 }
 
 func createTestClient() *Client {
@@ -64,7 +64,7 @@ func Test_GetNodes(t *testing.T) {
 	testRes, err := testClient.GetNodes()
 
 	assert.NoError(err)
-	assert.NotNil(testRes)
+	assert.Equal(testRes, mockClientResponse)
 }
 
 /********** OTHER **********/
@@ -77,7 +77,7 @@ func Test_GetCryptoMarketData(t *testing.T) {
 	testRes, err := testClient.GetCryptoMarketData()
 
 	assert.NoError(err)
-	assert.NotNil(testRes)
+	assert.Equal(testRes, mockClientResponse)
 }
 
 func Test_GetCryptoQuotes(t *testing.T) {
@@ -88,7 +88,7 @@ func Test_GetCryptoQuotes(t *testing.T) {
 	testRes, err := testClient.GetCryptoQuotes()
 
 	assert.NoError(err)
-	assert.NotNil(testRes)
+	assert.Equal(testRes, mockClientResponse)
 }
 
 func Test_GetInstitutions(t *testing.T) {
@@ -99,7 +99,7 @@ func Test_GetInstitutions(t *testing.T) {
 	testRes, err := testClient.GetInstitutions()
 
 	assert.NoError(err)
-	assert.NotNil(testRes)
+	assert.Equal(testRes, mockClientResponse)
 }
 
 func Test_LocateATMs(t *testing.T) {
@@ -110,7 +110,7 @@ func Test_LocateATMs(t *testing.T) {
 	testRes, err := testClient.LocateATMs()
 
 	assert.NoError(err)
-	assert.NotNil(testRes)
+	assert.Equal(testRes, mockClientResponse)
 }
 
 func Test_GetPublicKey(t *testing.T) {
@@ -121,7 +121,7 @@ func Test_GetPublicKey(t *testing.T) {
 	testRes, err := testClient.GetPublicKey()
 
 	assert.NoError(err)
-	assert.NotNil(testRes)
+	assert.Equal(testRes, mockClientResponse)
 }
 
 /********** SUBSCRIPTION **********/
@@ -134,7 +134,7 @@ func Test_GetSubscriptions(t *testing.T) {
 	testRes, err := testClient.GetSubscriptions()
 
 	assert.NoError(err)
-	assert.NotNil(testRes)
+	assert.Equal(testRes, mockClientResponse)
 }
 
 func Test_GetSubscription(t *testing.T) {
@@ -145,7 +145,7 @@ func Test_GetSubscription(t *testing.T) {
 	testRes, err := testClient.GetSubscription("")
 
 	assert.NoError(err)
-	assert.NotNil(testRes)
+	assert.Equal(testRes, mockClientResponse)
 }
 
 func Test_CreateSubscription(t *testing.T) {
@@ -156,7 +156,7 @@ func Test_CreateSubscription(t *testing.T) {
 	testRes, err := testClient.CreateSubscription("")
 
 	assert.NoError(err)
-	assert.NotNil(testRes)
+	assert.Equal(testRes, mockClientResponse)
 }
 
 func Test_UpdateSubscription(t *testing.T) {
@@ -167,7 +167,7 @@ func Test_UpdateSubscription(t *testing.T) {
 	testRes, err := testClient.CreateSubscription("")
 
 	assert.NoError(err)
-	assert.NotNil(testRes)
+	assert.Equal(testRes, mockClientResponse)
 }
 
 /********** USER **********/
@@ -180,7 +180,7 @@ func Test_GetUsers(t *testing.T) {
 	testRes, err := testClient.GetUsers()
 
 	assert.NoError(err)
-	assert.NotNil(testRes)
+	assert.Equal(testRes, mockClientResponse)
 }
 
 func Test_GetUser(t *testing.T) {
@@ -188,10 +188,10 @@ func Test_GetUser(t *testing.T) {
 	testClient := createTestClient()
 
 	// No parameters
-	testRes, err := testClient.GetUser("", false)
+	testUser, err := testClient.GetUser("", false)
 
 	assert.NoError(err)
-	assert.NotNil(testRes)
+	assert.NotNil(testUser)
 }
 
 func Test_CreateUser(t *testing.T) {

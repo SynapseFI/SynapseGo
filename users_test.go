@@ -3,23 +3,31 @@
 package synapse
 
 import (
+	"encoding/json"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
 var userClientData map[string]interface{}
+var mockUsersResponse = make(map[string]interface{})
 
 /********** METHODS **********/
 
 func init() {
-	data, err := readFile("client_credentials")
+	testRes, err := readFile("client_credentials")
 
 	if err != nil {
 		panic(err)
 	}
 
-	userClientData = data
+	userClientData = testRes
+	marshallErr := json.Unmarshal(mockResponse, &mockUsersResponse)
+
+	// if data is an empty stream this will cause an unmarshal error
+	if marshallErr != nil {
+		panic(marshallErr)
+	}
 }
 
 func createTestUser() *User {
@@ -49,10 +57,10 @@ func Test_Authenticate(t *testing.T) {
 	testUser := createTestUser()
 
 	// No parameters
-	data, err := testUser.Authenticate("")
+	testRes, err := testUser.Authenticate("")
 
 	assert.NoError(err)
-	assert.NotNil(data)
+	assert.Equal(testRes, mockUsersResponse)
 }
 
 func Test_GetRefreshToken(t *testing.T) {
@@ -60,30 +68,30 @@ func Test_GetRefreshToken(t *testing.T) {
 	testUser := createTestUser()
 
 	// No parameters
-	data, err := testUser.GetRefreshToken()
+	testRes, err := testUser.GetRefreshToken()
 
 	assert.NoError(err)
-	assert.NotNil(data)
+	assert.Equal(testRes, mockUsersResponse)
 }
 func Test_Select2FA(t *testing.T) {
 	assert := assert.New(t)
 	testUser := createTestUser()
 
 	// No parameters
-	data, err := testUser.Select2FA("")
+	testRes, err := testUser.Select2FA("")
 
 	assert.NoError(err)
-	assert.NotNil(data)
+	assert.Equal(testRes, mockUsersResponse)
 }
 func Test_VerifyPIN(t *testing.T) {
 	assert := assert.New(t)
 	testUser := createTestUser()
 
 	// No parameters
-	data, err := testUser.VerifyPIN("")
+	testRes, err := testUser.VerifyPIN("")
 
 	assert.NoError(err)
-	assert.NotNil(data)
+	assert.Equal(testRes, mockUsersResponse)
 }
 
 func Test_SubmitMFA(t *testing.T) {
@@ -91,10 +99,10 @@ func Test_SubmitMFA(t *testing.T) {
 	testUser := createTestUser()
 
 	// No parameters
-	data, err := testUser.SubmitMFA("")
+	testRes, err := testUser.SubmitMFA("")
 
 	assert.NoError(err)
-	assert.NotNil(data)
+	assert.Equal(testRes, mockUsersResponse)
 }
 
 /********** NODE **********/
@@ -104,10 +112,10 @@ func Test_GetUserNodes(t *testing.T) {
 	testUser := createTestUser()
 
 	// No parameters
-	data, err := testUser.GetNodes()
+	testRes, err := testUser.GetNodes()
 
 	assert.NoError(err)
-	assert.NotNil(data)
+	assert.Equal(testRes, mockUsersResponse)
 }
 
 func Test_GetNode(t *testing.T) {
@@ -115,10 +123,10 @@ func Test_GetNode(t *testing.T) {
 	testUser := createTestUser()
 
 	// No parameters
-	data, err := testUser.GetNode("")
+	testRes, err := testUser.GetNode("")
 
 	assert.NoError(err)
-	assert.NotNil(data)
+	assert.Equal(testRes, mockUsersResponse)
 }
 
 func Test_CreateNode(t *testing.T) {
@@ -126,10 +134,10 @@ func Test_CreateNode(t *testing.T) {
 	testUser := createTestUser()
 
 	// No parameters
-	data, err := testUser.CreateNode("")
+	testRes, err := testUser.CreateNode("")
 
 	assert.NoError(err)
-	assert.NotNil(data)
+	assert.Equal(testRes, mockUsersResponse)
 }
 
 func Test_UpdateNode(t *testing.T) {
@@ -137,10 +145,10 @@ func Test_UpdateNode(t *testing.T) {
 	testUser := createTestUser()
 
 	// No parameters
-	data, err := testUser.UpdateNode("", "")
+	testRes, err := testUser.UpdateNode("", "")
 
 	assert.NoError(err)
-	assert.NotNil(data)
+	assert.Equal(testRes, mockUsersResponse)
 }
 
 // should delete node created in previous test?
@@ -149,10 +157,10 @@ func Test_DeleteNode(t *testing.T) {
 	testUser := createTestUser()
 
 	// No parameters
-	data, err := testUser.DeleteNode("")
+	testRes, err := testUser.DeleteNode("")
 
 	assert.NoError(err)
-	assert.NotNil(data)
+	assert.Equal(testRes, mockUsersResponse)
 }
 
 /********** NODE (OTHER) **********/
@@ -162,10 +170,10 @@ func Test_GetApplePayToken(t *testing.T) {
 	testUser := createTestUser()
 
 	// No parameters
-	data, err := testUser.GetApplePayToken("", "")
+	testRes, err := testUser.GetApplePayToken("", "")
 
 	assert.NoError(err)
-	assert.NotNil(data)
+	assert.Equal(testRes, mockUsersResponse)
 }
 
 func Test_ReinitiateMicroDeposit(t *testing.T) {
@@ -173,10 +181,10 @@ func Test_ReinitiateMicroDeposit(t *testing.T) {
 	testUser := createTestUser()
 
 	// No parameters
-	data, err := testUser.ReinitiateMicroDeposit("")
+	testRes, err := testUser.ReinitiateMicroDeposit("")
 
 	assert.NoError(err)
-	assert.NotNil(data)
+	assert.Equal(testRes, mockUsersResponse)
 }
 
 func Test_ResetDebitCard(t *testing.T) {
@@ -184,10 +192,10 @@ func Test_ResetDebitCard(t *testing.T) {
 	testUser := createTestUser()
 
 	// No parameters
-	data, err := testUser.ResetDebitCard("")
+	testRes, err := testUser.ResetDebitCard("")
 
 	assert.NoError(err)
-	assert.NotNil(data)
+	assert.Equal(testRes, mockUsersResponse)
 }
 
 func Test_ShipDebitCard(t *testing.T) {
@@ -195,10 +203,10 @@ func Test_ShipDebitCard(t *testing.T) {
 	testUser := createTestUser()
 
 	// No parameters
-	data, err := testUser.ShipDebitCard("", "")
+	testRes, err := testUser.ShipDebitCard("", "")
 
 	assert.NoError(err)
-	assert.NotNil(data)
+	assert.Equal(testRes, mockUsersResponse)
 }
 
 func Test_TriggerDummyTransactions(t *testing.T) {
@@ -206,10 +214,10 @@ func Test_TriggerDummyTransactions(t *testing.T) {
 	testUser := createTestUser()
 
 	// No parameters
-	data, err := testUser.TriggerDummyTransactions("", false)
+	testRes, err := testUser.TriggerDummyTransactions("", false)
 
 	assert.NoError(err)
-	assert.NotNil(data)
+	assert.Equal(testRes, mockUsersResponse)
 }
 
 func Test_VerifyMicroDeposit(t *testing.T) {
@@ -217,10 +225,10 @@ func Test_VerifyMicroDeposit(t *testing.T) {
 	testUser := createTestUser()
 
 	// No parameters
-	data, err := testUser.VerifyMicroDeposit("", "")
+	testRes, err := testUser.VerifyMicroDeposit("", "")
 
 	assert.NoError(err)
-	assert.NotNil(data)
+	assert.Equal(testRes, mockUsersResponse)
 }
 
 /********** STATEMENT **********/
@@ -230,10 +238,10 @@ func Test_GetNodeStatements(t *testing.T) {
 	testUser := createTestUser()
 
 	// No parameters
-	data, err := testUser.GetNodeStatements("")
+	testRes, err := testUser.GetNodeStatements("")
 
 	assert.NoError(err)
-	assert.NotNil(data)
+	assert.Equal(testRes, mockUsersResponse)
 }
 
 func Test_GetStatements(t *testing.T) {
@@ -241,10 +249,10 @@ func Test_GetStatements(t *testing.T) {
 	testUser := createTestUser()
 
 	// No parameters
-	data, err := testUser.GetStatements("")
+	testRes, err := testUser.GetStatements("")
 
 	assert.NoError(err)
-	assert.NotNil(data)
+	assert.Equal(testRes, mockUsersResponse)
 }
 
 /********** SUBNET **********/
@@ -254,10 +262,10 @@ func Test_GetSubnets(t *testing.T) {
 	testUser := createTestUser()
 
 	// No parameters
-	data, err := testUser.GetSubnets("")
+	testRes, err := testUser.GetSubnets("")
 
 	assert.NoError(err)
-	assert.NotNil(data)
+	assert.Equal(testRes, mockUsersResponse)
 }
 
 func Test_GetSubnet(t *testing.T) {
@@ -265,10 +273,10 @@ func Test_GetSubnet(t *testing.T) {
 	testUser := createTestUser()
 
 	// No parameters
-	data, err := testUser.GetSubnet("", "")
+	testRes, err := testUser.GetSubnet("", "")
 
 	assert.NoError(err)
-	assert.NotNil(data)
+	assert.Equal(testRes, mockUsersResponse)
 }
 
 func Test_CreateSubnet(t *testing.T) {
@@ -276,10 +284,10 @@ func Test_CreateSubnet(t *testing.T) {
 	testUser := createTestUser()
 
 	// No parameters
-	data, err := testUser.CreateSubnet("", "")
+	testRes, err := testUser.CreateSubnet("", "")
 
 	assert.NoError(err)
-	assert.NotNil(data)
+	assert.Equal(testRes, mockUsersResponse)
 }
 
 /********** TRANSACTION **********/
@@ -289,10 +297,10 @@ func Test_GetTransactions(t *testing.T) {
 	testUser := createTestUser()
 
 	// No parameters
-	data, err := testUser.GetTransactions("", "")
+	testRes, err := testUser.GetTransactions("", "")
 
 	assert.NoError(err)
-	assert.NotNil(data)
+	assert.Equal(testRes, mockUsersResponse)
 }
 
 func Test_GetTransaction(t *testing.T) {
@@ -300,10 +308,10 @@ func Test_GetTransaction(t *testing.T) {
 	testUser := createTestUser()
 
 	// No parameters
-	data, err := testUser.GetTransaction("", "")
+	testRes, err := testUser.GetTransaction("", "")
 
 	assert.NoError(err)
-	assert.NotNil(data)
+	assert.Equal(testRes, mockUsersResponse)
 }
 
 func Test_CreateTransaction(t *testing.T) {
@@ -311,10 +319,10 @@ func Test_CreateTransaction(t *testing.T) {
 	testUser := createTestUser()
 
 	// No parameters
-	data, err := testUser.CreateTransaction("", "", "")
+	testRes, err := testUser.CreateTransaction("", "", "")
 
 	assert.NoError(err)
-	assert.NotNil(data)
+	assert.Equal(testRes, mockUsersResponse)
 }
 
 func Test_DeleteTransaction(t *testing.T) {
@@ -322,10 +330,10 @@ func Test_DeleteTransaction(t *testing.T) {
 	testUser := createTestUser()
 
 	// No parameters
-	data, err := testUser.DeleteTransaction("", "")
+	testRes, err := testUser.DeleteTransaction("", "")
 
 	assert.NoError(err)
-	assert.NotNil(data)
+	assert.Equal(testRes, mockUsersResponse)
 
 }
 
@@ -334,10 +342,10 @@ func Test_CommentOnTransactionStatus(t *testing.T) {
 	testUser := createTestUser()
 
 	// No parameters
-	data, err := testUser.CommentOnTransactionStatus("", "", "")
+	testRes, err := testUser.CommentOnTransactionStatus("", "", "")
 
 	assert.NoError(err)
-	assert.NotNil(data)
+	assert.Equal(testRes, mockUsersResponse)
 }
 
 func Test_DisputeTransaction(t *testing.T) {
@@ -345,10 +353,10 @@ func Test_DisputeTransaction(t *testing.T) {
 	testUser := createTestUser()
 
 	// No parameters
-	data, err := testUser.DisputeTransaction("", "")
+	testRes, err := testUser.DisputeTransaction("", "")
 
 	assert.NoError(err)
-	assert.NotNil(data)
+	assert.Equal(testRes, mockUsersResponse)
 }
 
 /********** USER **********/
@@ -358,15 +366,15 @@ func Test_Update(t *testing.T) {
 	testUser := createTestUser()
 
 	// No parameters
-	data, err := testUser.Update("")
+	testRes, err := testUser.Update("")
 
 	assert.NoError(err)
-	assert.NotNil(data.AuthKey)
-	assert.NotNil(data.FullDehydrate)
-	assert.NotNil(data.UserID)
-	assert.NotNil(data.RefreshToken)
-	assert.NotNil(data.Response)
-	assert.NotNil(data.request)
+	assert.NotNil(testRes.AuthKey)
+	assert.NotNil(testRes.FullDehydrate)
+	assert.NotNil(testRes.UserID)
+	assert.NotNil(testRes.RefreshToken)
+	assert.NotNil(testRes.Response)
+	assert.NotNil(testRes.request)
 }
 
 func Test_CreateUBO(t *testing.T) {
@@ -374,8 +382,8 @@ func Test_CreateUBO(t *testing.T) {
 	testUser := createTestUser()
 
 	// No parameters
-	data, err := testUser.CreateUBO("")
+	testRes, err := testUser.CreateUBO("")
 
 	assert.NoError(err)
-	assert.NotNil(data)
+	assert.Equal(testRes, mockUsersResponse)
 }
