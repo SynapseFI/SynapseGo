@@ -114,7 +114,7 @@ func (c *Client) do(method, url, data string, queryParams []string) (map[string]
 		body, err = c.request.Delete(url)
 	}
 
-	return read(body), err
+	return readStream(body), err
 }
 
 /********** CLIENT **********/

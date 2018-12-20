@@ -71,14 +71,14 @@ func Test_Post(t *testing.T) {
 		t.Error(userErr)
 	}
 
-	rt := read(userRes)["refresh_token"].(string)
+	rt := readStream(userRes)["refresh_token"].(string)
 	authRes, authErr := testReq.Post(authURL+"/5bec6ebebaabfc00ab168fa0", `{ "refresh_token": "`+rt+`" }`, nil)
 
 	if authErr != nil {
 		t.Error(authErr)
 	}
 
-	authKey = read(authRes)["oauth_key"].(string)
+	authKey = readStream(authRes)["oauth_key"].(string)
 	testReq.authKey = authKey
 
 	res, err := testReq.Post(usersURL+"/5bec6ebebaabfc00ab168fa0/nodes", string(jsonData), nil)
@@ -87,7 +87,7 @@ func Test_Post(t *testing.T) {
 		t.Error(err)
 	}
 
-	testID = read(res)["nodes"].([]interface{})[0].(map[string]interface{})["_id"].(string)
+	testID = readStream(res)["nodes"].([]interface{})[0].(map[string]interface{})["_id"].(string)
 
 	assert.NotNil(string(res))
 }
