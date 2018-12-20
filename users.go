@@ -79,7 +79,7 @@ func (u *User) do(method, url, data string, queryParams []string) (map[string]in
 		return u.do(method, url, data, queryParams)
 	}
 
-	return read(response), err
+	return readStream(response), err
 }
 
 /********** AUTHENTICATION **********/
