@@ -17,6 +17,9 @@ type (
 
 /********** GLOBAL VARIABLES **********/
 var goreq = gorequest.New()
+var mockResponse = []byte(`{
+	"message": "This is a mock response"
+}`)
 
 /********** METHODS **********/
 
@@ -40,28 +43,24 @@ func (req *Request) updateRequest(clientID, clientSecret, fingerprint, ipAddress
 
 // Get performs a GET request
 func (req *Request) Get(url string, queryParams []string) ([]byte, error) {
-	var body []byte
-
-	return body, nil
+	return mockResponse, nil
 }
 
 // Post performs a POST request
 func (req *Request) Post(url, data string, queryParams []string) ([]byte, error) {
-	var body []byte
-
-	return body, nil
+	return mockResponse, nil
 }
 
 // Patch performs a PATCH request
 func (req *Request) Patch(url, data string, queryParams []string) ([]byte, error) {
-	var body []byte
-
-	return body, nil
+	return mockResponse, nil
 }
 
 // Delete performs a DELETE request
 func (req *Request) Delete(url string) ([]byte, error) {
-	var body []byte
+	body := []byte(`{
+		"message": "This is a mock response"
+	}`)
 
 	return body, nil
 }
