@@ -7,11 +7,11 @@ Go-based API wrapper for Synapse v3 REST API. This library handles the user auth
 
 ## Installation
 ```bash
-$ go get github.com/synapsefi/synapsefi-go
+$ go get github.com/synapsefi/synapse-go
 ```
 
 ```go
-import github.com/synapsefi/synapsefi-go
+import github.com/synapsefi/synapse-go
 ```
 
 ## Methods
