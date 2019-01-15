@@ -235,7 +235,7 @@ func (u *User) VerifyMicroDeposit(nodeID, data string) (map[string]interface{}, 
 func (u *User) GetNodeStatements(nodeID string, queryParams ...string) (map[string]interface{}, error) {
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID, path["statements"])
 
-	return u.do("GET", url, "", nil)
+	return u.do("GET", url, "", queryParams)
 }
 
 // GetStatements gets all of the user statements
@@ -247,11 +247,11 @@ func (u *User) GetStatements(queryParams ...string) (map[string]interface{}, err
 
 /********** SUBNET **********/
 
-// GetSubnets gets a single subnet object
-func (u *User) GetSubnets(nodeID string) (map[string]interface{}, error) {
+// GetNodeSubnets gets all subnets associated with a node
+func (u *User) GetNodeSubnets(nodeID string, queryParams ...string) (map[string]interface{}, error) {
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID, path["subnets"])
 
-	return u.do("GET", url, "", nil)
+	return u.do("GET", url, "", queryParams)
 }
 
 // GetSubnet gets a single subnet object
@@ -270,11 +270,18 @@ func (u *User) CreateSubnet(nodeID, data string) (map[string]interface{}, error)
 
 /********** TRANSACTION **********/
 
-// GetTransactions returns transactions associated with a node
-func (u *User) GetTransactions(nodeID, transactionID string) (map[string]interface{}, error) {
+// GetTransactions returns transactions associated with a user
+func (u *User) GetTransactions(queryParams ...string) (map[string]interface{}, error) {
+	url := buildURL(usersURL, u.UserID, path["trans"])
+
+	return u.do("GET", url, "", queryParams)
+}
+
+// GetNodeTransactions returns transactions associated with a node
+func (u *User) GetNodeTransactions(nodeID string, queryParams ...string) (map[string]interface{}, error) {
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID, path["trans"])
 
-	return u.do("GET", url, "", nil)
+	return u.do("GET", url, "", queryParams)
 }
 
 // GetTransaction returns a specific transaction associated with a node
@@ -291,8 +298,8 @@ func (u *User) CreateTransaction(nodeID, transactionID, data string) (map[string
 	return u.do("POST", url, data, nil)
 }
 
-// DeleteTransaction deletes/cancels a transaction
-func (u *User) DeleteTransaction(nodeID, transactionID string) (map[string]interface{}, error) {
+// CancelTransaction deletes/cancels a transaction
+func (u *User) CancelTransaction(nodeID, transactionID string) (map[string]interface{}, error) {
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID, path["transactions"], transactionID)
 
 	return u.do("DELETE", url, "", nil)
@@ -306,12 +313,8 @@ func (u *User) CommentOnTransactionStatus(nodeID, transactionID, data string) (m
 }
 
 // DisputeTransaction disputes a transaction for a user
-func (u *User) DisputeTransaction(nodeID, transactionID string) (map[string]interface{}, error) {
+func (u *User) DisputeTransaction(nodeID, transactionID, data string) (map[string]interface{}, error) {
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID, path["transactions"], transactionID, "dispute")
-
-	data := string(`{
-		"dispute_reason":"CHARGE_BACK"
-	}`)
 
 	return u.do("PATCH", url, data, nil)
 }
