@@ -113,7 +113,9 @@ body := `{
   "url": "https://requestb.in/zp216zzp"
 }`
 
-data, err := client.CreateSubscription(body)
+idempotencykey := "123456789"
+
+data, err := client.CreateSubscription(body, "", idempotencyKey)
 ```
 
 ##### Update Subscription
@@ -191,13 +193,13 @@ data, err := user.Auth(body)
 /*
 {
 	"error": {
-			"en": "Fingerprint not registered. Please perform the MFA flow."
+		en": "Fingerprint not registered. Please perform the MFA flow."
 	},
 	"error_code": "10",
 	"http_code": "202",
 	"phone_numbers": [
-			"developer@email.com",
-			"901-111-2222"
+		"developer@email.com",
+		"901-111-2222"
 	],
 	"success": false
 }
@@ -449,32 +451,4 @@ body := `{
 }`
 
 data, err := user.CreateUBO(body)
-```
-
-**Set an `IDEMPOTENCY_KEY` (for `POST` requests only)**
-
-```go
-scopeSettings := `{
-		"scope": [
-			"USERS|POST",
-			"USER|PATCH",
-			"NODES|POST",
-			"NODE|PATCH",
-			"TRANS|POST",
-			"TRAN|PATCH"
-		],
-		"url": "https://requestb.in/zp216zzp"
-  }`
-
-idempotencyKey := `1234567890`
-
-data, err := client.CreateSubscription(scopeSettings, "", idempotencyKey)
-```
-
-**Submit optional query parameters**
-
-```go
-params := "per_page=3&page=2"
-
-data, err := client.GetUsers(params)
 ```
