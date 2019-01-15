@@ -48,23 +48,25 @@
 ```go
 // credentials used to set headers for each method request
 var client = synapse.New(
-"ClientID":     "client_id_1239ABCdefghijk1092312309",
-"ClientSecret": "client_secret_1239ABCdefghijk1092312309",
-"IP":           "1.2.3.132",
-"Fingerprint":  "1023918209480asdf8341098",
-"devMode":      true
+"client_id_1239ABCdefghijk1092312309",
+"client_secret_1239ABCdefghijk1092312309",
+"1.2.3.132",
+"1023918209480asdf8341098",
 )
 ```
 
-Enable logging (development mode)
+Enable logging & turn off developer mode (developer mode is true by default)
 
 ```go
 var client = synapse.New(
-"ClientID":     "CLIENT_ID",
-"ClientSecret": "CLIENT_SECRET",
-"IP":           "IP_ADDRESS",
-"Fingerprint":  "FINGERPRINT",
-"devMode":      true
+	var client = synapse.New(
+	"CLIENT_ID",
+	"CLIENT_SECRET",
+	"IP_ADDRESS",
+	"FINGERPRINT",
+	true,
+	false,
+	)
 )
 ```
 

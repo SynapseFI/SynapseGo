@@ -5,22 +5,23 @@ Instantiate client
 
 	// credentials used to set headers for each method request
 	var client = synapse.New(
-	"ClientID":     "CLIENT_ID",
-	"ClientSecret": "CLIENT_SECRET",
-	"IP":           "IP_ADDRESS",
-	"Fingerprint":  "FINGERPRINT"
+	"CLIENT_ID",
+	"CLIENT_SECRET",
+	"IP_ADDRESS",
+	"FINGERPRINT",
 	)
 
 Examples
 
-Enable logging (development mode)
+Enable logging & turn off developer mode (developer mode is true by default)
 
 	var client = synapse.New(
-	"ClientID":     "CLIENT_ID",
-	"ClientSecret": "CLIENT_SECRET",
-	"IP":           "IP_ADDRESS",
-	"Fingerprint":  "FINGERPRINT",
-	"devMode":      true
+	"CLIENT_ID",
+	"CLIENT_SECRET",
+	"IP_ADDRESS",
+	"FINGERPRINT",
+	true,
+	false,
 	)
 
 Register Fingerprint
@@ -77,7 +78,8 @@ import (
 )
 
 /********** GLOBAL VARIABLES **********/
-var developerMode = false
+var developerMode = true
+var logMode = false
 
 /********** TYPES **********/
 
@@ -120,9 +122,15 @@ func (c *Client) do(method, url, data string, queryParams []string) (map[string]
 /********** CLIENT **********/
 
 // New creates a client object
-func New(clientID, clientSecret, ipAddress, fingerprint string, devMode ...bool) *Client {
-	if len(devMode) > 0 && devMode[0] == true {
-		developerMode = true
+func New(clientID, clientSecret, ipAddress, fingerprint string, modes ...bool) *Client {
+	if len(modes) > 0 {
+		if modes[0] == true {
+			logMode = true
+		}
+
+		if len(modes) > 1 && modes[1] == false {
+			developerMode = false
+		}
 	}
 
 	return &Client{
@@ -137,40 +145,40 @@ func New(clientID, clientSecret, ipAddress, fingerprint string, devMode ...bool)
 
 // GetNodes returns all of the nodes
 func (c *Client) GetNodes(queryParams ...string) (map[string]interface{}, error) {
-	return c.do("GET", nodesURL, "", queryParams)
+	return c.do("GET", path["nodes"], "", queryParams)
 }
 
 /********** OTHER **********/
 
 // GetCryptoMarketData returns market data for cryptocurrencies
 func (c *Client) GetCryptoMarketData() (map[string]interface{}, error) {
-	url := buildURL(nodesURL, "crypto-market-watch")
+	url := buildURL(path["nodes"], "crypto-market-watch")
 
 	return c.do("GET", url, "", nil)
 }
 
 // GetCryptoQuotes returns all of the quotes for crypto currencies
 func (c *Client) GetCryptoQuotes(queryParams ...string) (map[string]interface{}, error) {
-	url := buildURL(nodesURL, "crypto-quotes")
+	url := buildURL(path["nodes"], "crypto-quotes")
 
 	return c.do("GET", url, "", queryParams)
 }
 
 // GetInstitutions returns all of the nodes associated with a user
 func (c *Client) GetInstitutions() (map[string]interface{}, error) {
-	return c.do("GET", institutionsURL, "", nil)
+	return c.do("GET", path["institutions"], "", nil)
 }
 
 // LocateATMs returns a list of nearby ATMs
 func (c *Client) LocateATMs(queryParams ...string) (map[string]interface{}, error) {
-	url := buildURL(nodesURL, "atms")
+	url := buildURL(path["nodes"], "atms")
 
 	return c.do("GET", url, "", queryParams)
 }
 
 // GetPublicKey returns a public key as a token representing client credentials
 func (c *Client) GetPublicKey(scope ...string) (map[string]interface{}, error) {
-	url := clientURL + "?issue_public_key=YES&scope="
+	url := path["client"] + "?issue_public_key=YES&scope="
 	defaultScope := "OAUTH|POST,USERS|POST,USERS|GET,USER|GET,USER|PATCH,SUBSCRIPTIONS|GET,SUBSCRIPTIONS|POST,SUBSCRIPTION|GET,SUBSCRIPTION|PATCH,CLIENT|REPORTS,CLIENT|CONTROLS"
 
 	if len(scope) > 0 {
@@ -186,24 +194,24 @@ func (c *Client) GetPublicKey(scope ...string) (map[string]interface{}, error) {
 
 // GetSubscriptions returns all of the nodes associated with a user
 func (c *Client) GetSubscriptions(queryParams ...string) (map[string]interface{}, error) {
-	return c.do("GET", subscriptionsURL, "", queryParams)
+	return c.do("GET", path["subscriptions"], "", queryParams)
 }
 
 // GetSubscription returns a single subscription
 func (c *Client) GetSubscription(subscriptionID string) (map[string]interface{}, error) {
-	url := buildURL(subscriptionsURL, subscriptionID)
+	url := buildURL(path["subscriptions"], subscriptionID)
 
 	return c.do("GET", url, "", nil)
 }
 
 // CreateSubscription creates a subscription and returns the subscription data
 func (c *Client) CreateSubscription(data string, idempotencyKey ...string) (map[string]interface{}, error) {
-	return c.do("POST", subscriptionsURL, data, idempotencyKey)
+	return c.do("POST", path["subscriptions"], data, idempotencyKey)
 }
 
 // UpdateSubscription updates an existing subscription
 func (c *Client) UpdateSubscription(subscriptionID string, data string) (map[string]interface{}, error) {
-	url := buildURL(subscriptionsURL, subscriptionID)
+	url := buildURL(path["subscriptions"], subscriptionID)
 
 	return c.do("PATCH", url, data, nil)
 }
@@ -212,21 +220,21 @@ func (c *Client) UpdateSubscription(subscriptionID string, data string) (map[str
 
 // GetTransactions returns all client transactions
 func (c *Client) GetTransactions(queryParams ...string) (map[string]interface{}, error) {
-	return c.do("GET", transactionsURL, "", queryParams)
+	return c.do("GET", path["transactions"], "", queryParams)
 }
 
 /********** USER **********/
 
 // GetUsers returns a list of users
 func (c *Client) GetUsers(queryParams ...string) (map[string]interface{}, error) {
-	return c.do("GET", usersURL, "", queryParams)
+	return c.do("GET", path["users"], "", queryParams)
 }
 
 // GetUser returns a single user
 func (c *Client) GetUser(UserID string, fullDehydrate bool) (*User, error) {
 	var user User
 
-	url := buildURL(usersURL, UserID)
+	url := buildURL(path["users"], UserID)
 
 	if fullDehydrate != true {
 		url += "?full_dehydrate=yes"
@@ -247,7 +255,7 @@ func (c *Client) GetUser(UserID string, fullDehydrate bool) (*User, error) {
 func (c *Client) CreateUser(data string, idempotencyKey ...string) (*User, error) {
 	var user User
 
-	res, err := c.do("POST", usersURL, data, nil)
+	res, err := c.do("POST", path["users"], data, nil)
 
 	mapstructure.Decode(res, &user)
 

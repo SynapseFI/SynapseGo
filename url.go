@@ -18,18 +18,16 @@ var path = map[string]string{
 	"users":         "users",
 }
 
-var authURL = buildURL(baseURL, path["auth"])
-var clientURL = buildURL(baseURL, path["client"])
-var institutionsURL = buildURL(baseURL, path["institutions"])
-var nodesURL = buildURL(baseURL, path["nodes"])
-var subscriptionsURL = buildURL(baseURL, path["subscriptions"])
-var transactionsURL = buildURL(baseURL, path["transactions"])
-var usersURL = buildURL(baseURL, path["users"])
-
 /********** METHODS **********/
 
-func buildURL(basePath string, uri ...string) string {
-	url := basePath
+func buildURL(uri ...string) string {
+	var baseURL = "https://uat-api.synapsefi.com/" + version
+
+	if developerMode != true {
+		baseURL = "https://api.synapsefi.com/" + version
+	}
+
+	url := baseURL
 
 	for i := range uri {
 		url += "/" + uri[i]
