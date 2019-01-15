@@ -14,6 +14,10 @@ $ go get github.com/synapsefi/synapse-go
 import github.com/synapsefi/synapse-go
 ```
 
+## Examples
+
+Refer to [samples.md](samples/samples.md) and our [API documentation](https://docs.synapsefi.com/v3.1) for examples.
+
 ## Methods
 
 ### CLIENT METHODS
@@ -27,18 +31,6 @@ var client = synapse.New(
 "ClientSecret": "CLIENT_SECRET",
 "IP":           "IP_ADDRESS",
 "Fingerprint":  "FINGERPRINT"
-)
-```
-
-Enable logging (development mode)
-
-```go
-var client = synapse.New(
-"ClientID":     "CLIENT_ID",
-"ClientSecret": "CLIENT_SECRET",
-"IP":           "IP_ADDRESS",
-"Fingerprint":  "FINGERPRINT",
-"devMode":      true
 )
 ```
 
@@ -64,8 +56,7 @@ data, err := client.GetPublicKey(scope ...string)
 data, err := client.GetSubscriptions(queryParams ...string)
 data, err := client.GetSubscription(subscriptionID string, queryParams ...string)
 data, err := client.CreateSubscription(data string, queryParams ...string)
-data, err := client.UpdateSubscription(subscriptionID string, queryParams ...string)
-
+data, err := client.UpdateSubscription(subscriptionID string, data string, queryParams ...string)
 ```
 
 **Transaction**
@@ -81,7 +72,7 @@ data, err := client.GetUsers(queryParams ...string)
 
 // returns a User struct
 user, err := client.GetUser(userID string, fullDehydrate bool, queryParams ...string)
-user, err := client.CreateUser(userID string, queryParams ...string)
+user, err := client.CreateUser(data string, queryParams ...string)
 ```
 
 ### USER METHODS
@@ -150,62 +141,6 @@ data, err := user.CreateUBO(data string)
 
 // returns a User struct
 user, err := user.Update(data string, queryParams ...string)
-```
-
-## Examples
-
-**Register Fingerprint**
-
-```go
-/*
-{
-	"error": {
-			"en": "Fingerprint not registered. Please perform the MFA flow."
-	},
-	"error_code": "10",
-	"http_code": "202",
-	"phone_numbers": [
-			"developer@email.com",
-			"901-111-2222"
-	],
-	"success": false
-}
-*/
-
-// Submit a valid email address or phone number from "phone_numbers" list
-res, err := user.Select2FA("developer@email.com")
-
-// MFA sent to developer@email.com
-res, err := user.VerifyPIN("123456")
-
-```
-
-**Set an `IDEMPOTENCY_KEY` (for `POST` requests only)**
-
-```go
-scopeSettings := `{
-		"scope": [
-			"USERS|POST",
-			"USER|PATCH",
-			"NODES|POST",
-			"NODE|PATCH",
-			"TRANS|POST",
-			"TRAN|PATCH"
-		],
-		"url": "https://requestb.in/zp216zzp"
-  }`
-
-idempotencyKey := `1234567890`
-
-data, err := client.CreateSubscription(scopeSettings, "", idempotencyKey)
-```
-
-**Submit optional query parameters**
-
-```go
-params := "per_page=3&page=2"
-
-data, err := client.GetUsers(params)
 ```
 
 ## Testing
