@@ -39,10 +39,10 @@ func (req *Request) updateRequest(clientID, clientSecret, fingerprint, ipAddress
 /********** REQUEST **********/
 
 // Get performs a GET request
-func (req *Request) Get(url string, queryParams []string) ([]byte, error) {
-	var params string
-	if len(queryParams) > 0 {
-		params = queryParams[0]
+func (req *Request) Get(url string, params []string) ([]byte, error) {
+	var p string
+	if len(params) > 0 {
+		p = params[0]
 	}
 
 	res, body, errs := goreq.
@@ -50,7 +50,7 @@ func (req *Request) Get(url string, queryParams []string) ([]byte, error) {
 		Set("x-sp-gateway", req.clientID+"|"+req.clientSecret).
 		Set("x-sp-user-ip", req.ipAddress).
 		Set("x-sp-user", req.authKey+"|"+req.fingerprint).
-		Query(params).
+		Query(p).
 		EndBytes()
 
 	if len(errs) > 0 {
@@ -65,25 +65,18 @@ func (req *Request) Get(url string, queryParams []string) ([]byte, error) {
 }
 
 // Post performs a POST request
-func (req *Request) Post(url, data string, queryParams []string) ([]byte, error) {
-	var params string
-
+func (req *Request) Post(url, data string, params []string) ([]byte, error) {
 	newRequest := goreq.
 		Post(url).
 		Set("x-sp-gateway", req.clientID+"|"+req.clientSecret).
 		Set("x-sp-user-ip", req.ipAddress).
 		Set("x-sp-user", req.authKey+"|"+req.fingerprint)
 
-	if len(queryParams) > 0 {
-		params = queryParams[0]
-
-		if len(queryParams) > 1 {
-			newRequest.Set("x-sp-idempotency-key", queryParams[1])
-		}
+	if len(params) > 0 {
+		newRequest.Set("x-sp-idempotency-key", params[0])
 	}
 
 	res, body, errs := newRequest.
-		Query(params).
 		Send(data).
 		EndBytes()
 
@@ -99,10 +92,10 @@ func (req *Request) Post(url, data string, queryParams []string) ([]byte, error)
 }
 
 // Patch performs a PATCH request
-func (req *Request) Patch(url, data string, queryParams []string) ([]byte, error) {
-	var params string
-	if len(queryParams) > 0 {
-		params = queryParams[0]
+func (req *Request) Patch(url, data string, params []string) ([]byte, error) {
+	var p string
+	if len(params) > 0 {
+		p = params[0]
 	}
 
 	res, body, errs := goreq.
@@ -110,7 +103,7 @@ func (req *Request) Patch(url, data string, queryParams []string) ([]byte, error
 		Set("x-sp-gateway", req.clientID+"|"+req.clientSecret).
 		Set("x-sp-user-ip", req.ipAddress).
 		Set("x-sp-user", req.authKey+"|"+req.fingerprint).
-		Query(params).
+		Query(p).
 		Send(data).
 		EndBytes()
 

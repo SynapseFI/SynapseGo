@@ -29,7 +29,7 @@ type (
 
 /********** METHODS **********/
 
-func (u *User) do(method, url, data string, queryParams []string) (map[string]interface{}, error) {
+func (u *User) do(method, url, data string, params []string) (map[string]interface{}, error) {
 	var response []byte
 	var err error
 
@@ -37,13 +37,13 @@ func (u *User) do(method, url, data string, queryParams []string) (map[string]in
 
 	switch method {
 	case "GET":
-		response, err = u.request.Get(url, queryParams)
+		response, err = u.request.Get(url, params)
 
 	case "POST":
-		response, err = u.request.Post(url, data, queryParams)
+		response, err = u.request.Post(url, data, params)
 
 	case "PATCH":
-		response, err = u.request.Patch(url, data, queryParams)
+		response, err = u.request.Patch(url, data, params)
 
 	case "DELETE":
 		response, err = u.request.Delete(url)
@@ -59,7 +59,7 @@ func (u *User) do(method, url, data string, queryParams []string) (map[string]in
 
 		u.request.authKey = u.AuthKey
 
-		return u.do(method, url, data, queryParams)
+		return u.do(method, url, data, params)
 
 	case *IncorrectValues:
 		_, err := u.GetRefreshToken()
@@ -76,7 +76,7 @@ func (u *User) do(method, url, data string, queryParams []string) (map[string]in
 
 		u.request.authKey = u.AuthKey
 
-		return u.do(method, url, data, queryParams)
+		return u.do(method, url, data, params)
 	}
 
 	return readStream(response), err
@@ -146,11 +146,11 @@ func (u *User) VerifyPIN(pin string) (map[string]interface{}, error) {
 func (u *User) GetNodes(queryParams ...string) (map[string]interface{}, error) {
 	url := buildURL(usersURL, u.UserID, path["nodes"])
 
-	return u.do("GET", url, "", nil)
+	return u.do("GET", url, "", queryParams)
 }
 
 // GetNode returns a single node object
-func (u *User) GetNode(nodeID string, queryParams ...string) (map[string]interface{}, error) {
+func (u *User) GetNode(nodeID string) (map[string]interface{}, error) {
 
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID)
 
@@ -160,10 +160,10 @@ func (u *User) GetNode(nodeID string, queryParams ...string) (map[string]interfa
 }
 
 // CreateNode creates a node depending on the type of node specified
-func (u *User) CreateNode(data string) (map[string]interface{}, error) {
+func (u *User) CreateNode(data string, idempotencyKey ...string) (map[string]interface{}, error) {
 	url := buildURL(usersURL, u.UserID, path["nodes"])
 
-	return u.do("POST", url, data, nil)
+	return u.do("POST", url, data, idempotencyKey)
 }
 
 // UpdateNode updates a node
@@ -242,7 +242,7 @@ func (u *User) GetNodeStatements(nodeID string, queryParams ...string) (map[stri
 func (u *User) GetStatements(queryParams ...string) (map[string]interface{}, error) {
 	url := buildURL(usersURL, u.UserID, path["statements"])
 
-	return u.do("GET", url, "", nil)
+	return u.do("GET", url, "", queryParams)
 }
 
 /********** SUBNET **********/
@@ -262,24 +262,24 @@ func (u *User) GetSubnet(nodeID, subnetID string) (map[string]interface{}, error
 }
 
 // CreateSubnet creates a subnet object
-func (u *User) CreateSubnet(nodeID, data string) (map[string]interface{}, error) {
+func (u *User) CreateSubnet(nodeID, data string, idempotencyKey ...string) (map[string]interface{}, error) {
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID, path["subnets"])
 
-	return u.do("PATCH", url, data, nil)
+	return u.do("PATCH", url, data, idempotencyKey)
 }
 
 /********** TRANSACTION **********/
 
-// GetTransactions returns transactions associated with a user
-func (u *User) GetTransactions(queryParams ...string) (map[string]interface{}, error) {
-	url := buildURL(usersURL, u.UserID, path["trans"])
+// GetNodeTransactions returns transactions associated with a node
+func (u *User) GetNodeTransactions(nodeID string, queryParams ...string) (map[string]interface{}, error) {
+	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID, path["trans"])
 
 	return u.do("GET", url, "", queryParams)
 }
 
-// GetNodeTransactions returns transactions associated with a node
-func (u *User) GetNodeTransactions(nodeID string, queryParams ...string) (map[string]interface{}, error) {
-	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID, path["trans"])
+// GetTransactions returns transactions associated with a user
+func (u *User) GetTransactions(queryParams ...string) (map[string]interface{}, error) {
+	url := buildURL(usersURL, u.UserID, path["trans"])
 
 	return u.do("GET", url, "", queryParams)
 }
@@ -292,10 +292,10 @@ func (u *User) GetTransaction(nodeID, transactionID string) (map[string]interfac
 }
 
 // CreateTransaction creates a transaction for the specified node
-func (u *User) CreateTransaction(nodeID, transactionID, data string) (map[string]interface{}, error) {
+func (u *User) CreateTransaction(nodeID, transactionID, data string, idempotencyKey ...string) (map[string]interface{}, error) {
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID, path["trans"], transactionID)
 
-	return u.do("POST", url, data, nil)
+	return u.do("POST", url, data, idempotencyKey)
 }
 
 // CancelTransaction deletes/cancels a transaction
@@ -306,10 +306,10 @@ func (u *User) CancelTransaction(nodeID, transactionID string) (map[string]inter
 }
 
 // CommentOnTransactionStatus adds comment to the transaction status
-func (u *User) CommentOnTransactionStatus(nodeID, transactionID, data string) (map[string]interface{}, error) {
+func (u *User) CommentOnTransactionStatus(nodeID, transactionID, data string, idempotencyKey ...string) (map[string]interface{}, error) {
 	url := buildURL(usersURL, u.UserID, path["nodes"], nodeID, path["transactions"], transactionID)
 
-	return u.do("POST", url, data, nil)
+	return u.do("POST", url, data, idempotencyKey)
 }
 
 // DisputeTransaction disputes a transaction for a user
@@ -322,7 +322,7 @@ func (u *User) DisputeTransaction(nodeID, transactionID, data string) (map[strin
 /********** USER **********/
 
 // Update updates a single user and returns the updated user information
-func (u *User) Update(data string, queryParams ...string) (*User, error) {
+func (u *User) Update(data string) (*User, error) {
 	url := buildURL(usersURL, u.UserID)
 
 	res, err := u.do("PATCH", url, data, nil)

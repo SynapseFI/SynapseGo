@@ -190,22 +190,22 @@ func (c *Client) GetSubscriptions(queryParams ...string) (map[string]interface{}
 }
 
 // GetSubscription returns a single subscription
-func (c *Client) GetSubscription(subscriptionID string, queryParams ...string) (map[string]interface{}, error) {
+func (c *Client) GetSubscription(subscriptionID string) (map[string]interface{}, error) {
 	url := buildURL(subscriptionsURL, subscriptionID)
 
-	return c.do("GET", url, "", queryParams)
+	return c.do("GET", url, "", nil)
 }
 
 // CreateSubscription creates a subscription and returns the subscription data
-func (c *Client) CreateSubscription(data string, queryParams ...string) (map[string]interface{}, error) {
-	return c.do("POST", subscriptionsURL, data, queryParams)
+func (c *Client) CreateSubscription(data string, idempotencyKey ...string) (map[string]interface{}, error) {
+	return c.do("POST", subscriptionsURL, data, idempotencyKey)
 }
 
 // UpdateSubscription updates an existing subscription
-func (c *Client) UpdateSubscription(subscriptionID string, data string, queryParams ...string) (map[string]interface{}, error) {
+func (c *Client) UpdateSubscription(subscriptionID string, data string) (map[string]interface{}, error) {
 	url := buildURL(subscriptionsURL, subscriptionID)
 
-	return c.do("PATCH", url, data, queryParams)
+	return c.do("PATCH", url, data, nil)
 }
 
 /********** TRANSACTION **********/
@@ -223,7 +223,7 @@ func (c *Client) GetUsers(queryParams ...string) (map[string]interface{}, error)
 }
 
 // GetUser returns a single user
-func (c *Client) GetUser(UserID string, fullDehydrate bool, queryParams ...string) (*User, error) {
+func (c *Client) GetUser(UserID string, fullDehydrate bool) (*User, error) {
 	var user User
 
 	url := buildURL(usersURL, UserID)
@@ -232,7 +232,7 @@ func (c *Client) GetUser(UserID string, fullDehydrate bool, queryParams ...strin
 		url += "?full_dehydrate=yes"
 	}
 
-	res, err := c.do("GET", url, "", queryParams)
+	res, err := c.do("GET", url, "", nil)
 
 	mapstructure.Decode(res, &user)
 
@@ -244,10 +244,10 @@ func (c *Client) GetUser(UserID string, fullDehydrate bool, queryParams ...strin
 }
 
 // CreateUser creates a single user and returns the new user data
-func (c *Client) CreateUser(data string, queryParams ...string) (*User, error) {
+func (c *Client) CreateUser(data string, idempotencyKey ...string) (*User, error) {
 	var user User
 
-	res, err := c.do("POST", usersURL, data, queryParams)
+	res, err := c.do("POST", usersURL, data, nil)
 
 	mapstructure.Decode(res, &user)
 
