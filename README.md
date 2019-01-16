@@ -27,10 +27,10 @@ Refer to [samples.md](samples/samples.md) and our [API documentation](https://do
 ```go
 // credentials used to set headers for each method request
 var client = synapse.New(
-"ClientID":     "CLIENT_ID",
-"ClientSecret": "CLIENT_SECRET",
-"IP":           "IP_ADDRESS",
-"Fingerprint":  "FINGERPRINT"
+"CLIENT_ID",
+"CLIENT_SECRET",
+"IP_ADDRESS",
+"FINGERPRINT",
 )
 ```
 
