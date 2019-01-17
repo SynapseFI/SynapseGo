@@ -168,7 +168,6 @@ func (u *User) CreateNode(data string, idempotencyKey ...string) (map[string]int
 
 // UpdateNode updates a node
 func (u *User) UpdateNode(nodeID, data string) (map[string]interface{}, error) {
-
 	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID)
 
 	return u.do("PATCH", url, data, nil)

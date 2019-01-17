@@ -27,11 +27,9 @@ func buildURL(uri ...string) string {
 		baseURL = "https://api.synapsefi.com/" + version
 	}
 
-	url := baseURL
-
 	for i := range uri {
-		url += "/" + uri[i]
+		baseURL += "/" + uri[i]
 	}
 
-	return url
+	return baseURL
 }
