@@ -212,7 +212,7 @@ func (c *Client) GetSubscription(subscriptionID string) (map[string]interface{},
 
 // CreateSubscription creates a subscription and returns the subscription data
 func (c *Client) CreateSubscription(data string, idempotencyKey ...string) (map[string]interface{}, error) {
-	buildURL := path["subscriptions"]
+	url := path["subscriptions"]
 
 	return c.do("POST", url, data, idempotencyKey)
 }
@@ -267,7 +267,9 @@ func (c *Client) GetUser(UserID string, fullDehydrate bool) (*User, error) {
 func (c *Client) CreateUser(data string, idempotencyKey ...string) (*User, error) {
 	var user User
 
-	res, err := c.do("POST", path["users"], data, nil)
+	url := buildURL(path["users"])
+
+	res, err := c.do("POST", url, data, idempotencyKey)
 
 	mapstructure.Decode(res, &user)
 
