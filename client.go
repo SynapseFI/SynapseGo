@@ -145,7 +145,9 @@ func New(clientID, clientSecret, ipAddress, fingerprint string, modes ...bool) *
 
 // GetNodes returns all of the nodes
 func (c *Client) GetNodes(queryParams ...string) (map[string]interface{}, error) {
-	return c.do("GET", path["nodes"], "", queryParams)
+	url := buildURL(path["nodes"])
+
+	return c.do("GET", url, "", queryParams)
 }
 
 /********** OTHER **********/
@@ -166,7 +168,9 @@ func (c *Client) GetCryptoQuotes(queryParams ...string) (map[string]interface{},
 
 // GetInstitutions returns all of the nodes associated with a user
 func (c *Client) GetInstitutions() (map[string]interface{}, error) {
-	return c.do("GET", path["institutions"], "", nil)
+	url := buildURL(path["institutions"])
+
+	return c.do("GET", url, "", nil)
 }
 
 // LocateATMs returns a list of nearby ATMs
@@ -194,7 +198,9 @@ func (c *Client) GetPublicKey(scope ...string) (map[string]interface{}, error) {
 
 // GetSubscriptions returns all of the nodes associated with a user
 func (c *Client) GetSubscriptions(queryParams ...string) (map[string]interface{}, error) {
-	return c.do("GET", path["subscriptions"], "", queryParams)
+	url := buildURL(path["subscriptions"])
+
+	return c.do("GET", url, "", queryParams)
 }
 
 // GetSubscription returns a single subscription
@@ -206,7 +212,9 @@ func (c *Client) GetSubscription(subscriptionID string) (map[string]interface{},
 
 // CreateSubscription creates a subscription and returns the subscription data
 func (c *Client) CreateSubscription(data string, idempotencyKey ...string) (map[string]interface{}, error) {
-	return c.do("POST", path["subscriptions"], data, idempotencyKey)
+	buildURL := path["subscriptions"]
+
+	return c.do("POST", url, data, idempotencyKey)
 }
 
 // UpdateSubscription updates an existing subscription
@@ -220,14 +228,18 @@ func (c *Client) UpdateSubscription(subscriptionID string, data string) (map[str
 
 // GetTransactions returns all client transactions
 func (c *Client) GetTransactions(queryParams ...string) (map[string]interface{}, error) {
-	return c.do("GET", path["transactions"], "", queryParams)
+	url := path["transactions"]
+
+	return c.do("GET", url, "", queryParams)
 }
 
 /********** USER **********/
 
 // GetUsers returns a list of users
 func (c *Client) GetUsers(queryParams ...string) (map[string]interface{}, error) {
-	return c.do("GET", path["users"], "", queryParams)
+	url := path["users"]
+
+	return c.do("GET", url, "", queryParams)
 }
 
 // GetUser returns a single user
