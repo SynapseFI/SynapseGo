@@ -1,4 +1,4 @@
-# Synapse-Go
+# SynapseFI Go Library 
 Go-based API wrapper for Synapse v3 REST API. This library handles the user authentication process. As long as a the user's fingerprint is registered, further authentication is not necessary in the development flow.
 
 ## Documentation

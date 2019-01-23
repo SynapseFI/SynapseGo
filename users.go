@@ -264,7 +264,14 @@ func (u *User) GetSubnet(nodeID, subnetID string) (map[string]interface{}, error
 func (u *User) CreateSubnet(nodeID, data string, idempotencyKey ...string) (map[string]interface{}, error) {
 	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID, path["subnets"])
 
-	return u.do("PATCH", url, data, idempotencyKey)
+	return u.do("POST", url, data, idempotencyKey)
+}
+
+// UpdateSubnet updates a subnet object
+func (u *User) UpdateSubnet(nodeID, subnetID, data string) (map[string]interface{}, error) {
+	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID, path["subnets"], subnetID)
+
+	return u.do("PATCH", url, data, nil)
 }
 
 /********** TRANSACTION **********/
