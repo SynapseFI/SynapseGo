@@ -124,6 +124,17 @@ func Test_GetPublicKey(t *testing.T) {
 	assert.Equal(testRes, mockClientResponse)
 }
 
+func Test_GetWebhookLogs(t *testing.T) {
+	assert := assert.New(t)
+	testClient := createTestClient()
+
+	// No parameters
+	testRes, err := testClient.GetWebhookLogs()
+
+	assert.NoError(err)
+	assert.Equal(testRes, mockClientResponse)
+}
+
 /********** SUBSCRIPTION **********/
 
 func Test_GetSubscriptions(t *testing.T) {
