@@ -257,12 +257,12 @@ func Test_GetStatements(t *testing.T) {
 
 /********** SUBNET **********/
 
-func Test_GetSubnets(t *testing.T) {
+func Test_GetNodeSubnets(t *testing.T) {
 	assert := assert.New(t)
 	testUser := createTestUser()
 
 	// No parameters
-	testRes, err := testUser.GetSubnets("")
+	testRes, err := testUser.GetNodeSubnets("")
 
 	assert.NoError(err)
 	assert.Equal(testRes, mockUsersResponse)
@@ -285,6 +285,17 @@ func Test_CreateSubnet(t *testing.T) {
 
 	// No parameters
 	testRes, err := testUser.CreateSubnet("", "")
+
+	assert.NoError(err)
+	assert.Equal(testRes, mockUsersResponse)
+}
+
+funct Test_UpdateSubnet(t *testing.T) {
+	assert := assert.New(t)
+	testUser := createTestUser()
+
+	// No parameters
+	testRes, err := testUser.UpdateSubnet("", "", "")
 
 	assert.NoError(err)
 	assert.Equal(testRes, mockUsersResponse)
