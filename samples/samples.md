@@ -117,7 +117,7 @@ body := `{
 
 idempotencykey := "123456789"
 
-data, err := client.CreateSubscription(body, "", idempotencyKey)
+data, err := client.CreateSubscription(body, idempotencyKey)
 ```
 
 ##### Update Subscription
@@ -172,6 +172,11 @@ body := `{
 user, err := client.CreateUser(body)
 ```
 
+#### Get Webhook Logs
+```go
+data, err := client.GetWebhookLogs()
+```
+
 # USER
 
 ### Authentication
@@ -187,7 +192,7 @@ body := `{
     ]
 }`
 
-data, err := user.Auth(body)
+data, err := user.Authenticate(body)
 ```
 
 ##### Register Fingerprint
@@ -351,6 +356,21 @@ body := `{
 data, err := user.CreateSubnet(nodeID, body)
 ```
 
+##### Update Subnet
+```go
+nodeID := "594e606212e17a002f2e3251"
+subnetID := "5bc920f2fff373002bf0d51b"
+body := `{
+  "preferences": {
+    "allow_foreign_transactions":true,
+    "daily_atm_withdrawal_limit":10,
+    "daily_transaction_limit":1000
+  }
+}`
+
+data, err := user.UpdateSubnet(nodeID, subnetID, body)
+```
+
 ### Transactions
 
 ##### Get Transactions
@@ -418,7 +438,7 @@ data, err := user.CancelTransaction(nodeID, transID)
 
 ##### Update User or Update/Add Documents
 ```go
-body = {
+body := `{
   "update":{
     "login":{
       "email":"test2@synapsefi.com"
@@ -429,9 +449,9 @@ body = {
     "phone_number":"901-111-2222",
     "remove_phone_number":"901.111.1111"
     }
-}
+}`
 
-user.Update(body)
+data, err := user.Update(body)
 ```
 
 ##### Generate UBO

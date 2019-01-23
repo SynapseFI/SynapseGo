@@ -62,7 +62,7 @@ Set an `IDEMPOTENCY_KEY` (for `POST` requests only)
 
 	idempotencyKey := `1234567890`
 
-	data, err := client.CreateSubscription(scopeSettings, "", idempotencyKey)
+	data, err := client.CreateSubscription(scopeSettings, idempotencyKey)
 
 Submit optional query parameters
 
@@ -190,6 +190,13 @@ func (c *Client) GetPublicKey(scope ...string) (map[string]interface{}, error) {
 	}
 
 	url += defaultScope
+
+	return c.do("GET", url, "", nil)
+}
+
+// GetWebhookLogs returns all of the webhooks sent to a specific client
+func (c *Client) GetWebhookLogs() (map[string]interface{}, error) {
+	url := buildURL(path["subscriptions"], "logs")
 
 	return c.do("GET", url, "", nil)
 }
