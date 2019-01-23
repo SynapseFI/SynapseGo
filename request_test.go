@@ -47,7 +47,7 @@ func Test_Get(t *testing.T) {
 	assert := assert.New(t)
 	testReq := createRequestClient()
 
-	res, err := testReq.Get(usersURL+"/5bec6ebebaabfc00ab168fa0", nil)
+	res, err := testReq.Get(buildURL(path["users"], "/5bec6ebebaabfc00ab168fa0"), nil)
 
 	assert.NoError(err)
 	assert.NotNil(res)
@@ -65,14 +65,14 @@ func Test_Post(t *testing.T) {
 		t.Error(jsonErr)
 	}
 
-	userRes, userErr := testReq.Get(usersURL+"/5bec6ebebaabfc00ab168fa0", nil)
+	userRes, userErr := testReq.Get(buildURL(path["users"], "/5bec6ebebaabfc00ab168fa0"), nil)
 
 	if userErr != nil {
 		t.Error(userErr)
 	}
 
 	rt := readStream(userRes)["refresh_token"].(string)
-	authRes, authErr := testReq.Post(authURL+"/5bec6ebebaabfc00ab168fa0", `{ "refresh_token": "`+rt+`" }`, nil)
+	authRes, authErr := testReq.Post(buildURL(path["auth"], "/5bec6ebebaabfc00ab168fa0"), `{ "refresh_token": "`+rt+`" }`, nil)
 
 	if authErr != nil {
 		t.Error(authErr)
@@ -81,7 +81,7 @@ func Test_Post(t *testing.T) {
 	authKey = readStream(authRes)["oauth_key"].(string)
 	testReq.authKey = authKey
 
-	res, err := testReq.Post(usersURL+"/5bec6ebebaabfc00ab168fa0/nodes", string(jsonData), nil)
+	res, err := testReq.Post(buildURL(path["users"], "/5bec6ebebaabfc00ab168fa0/nodes"), string(jsonData), nil)
 
 	if err != nil {
 		t.Error(err)
@@ -105,7 +105,7 @@ func Test_Patch(t *testing.T) {
 		t.Error(err)
 	}
 
-	res, err := testReq.Patch(usersURL+"/5bec6ebebaabfc00ab168fa0/nodes/"+testID, string(jsonData), nil)
+	res, err := testReq.Patch(buildURL(path["users"], "/5bec6ebebaabfc00ab168fa0/nodes/", testID), string(jsonData), nil)
 
 	assert.NoError(err)
 	assert.NotNil(res)
@@ -116,7 +116,7 @@ func Test_Delete(t *testing.T) {
 	testReq := createRequestClient()
 	testReq.authKey = authKey
 
-	res, err := testReq.Delete(usersURL + "/5bec6ebebaabfc00ab168fa0/nodes/" + testID)
+	res, err := testReq.Delete(buildURL(path["users"], "/5bec6ebebaabfc00ab168fa0/nodes/", testID))
 
 	assert.NoError(err)
 	assert.NotNil(res)

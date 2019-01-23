@@ -290,7 +290,7 @@ func Test_CreateSubnet(t *testing.T) {
 	assert.Equal(testRes, mockUsersResponse)
 }
 
-funct Test_UpdateSubnet(t *testing.T) {
+func Test_UpdateSubnet(t *testing.T) {
 	assert := assert.New(t)
 	testUser := createTestUser()
 
@@ -341,7 +341,7 @@ func Test_DeleteTransaction(t *testing.T) {
 	testUser := createTestUser()
 
 	// No parameters
-	testRes, err := testUser.DeleteTransaction("", "")
+	testRes, err := testUser.CancelTransaction("", "")
 
 	assert.NoError(err)
 	assert.Equal(testRes, mockUsersResponse)
@@ -364,7 +364,7 @@ func Test_DisputeTransaction(t *testing.T) {
 	testUser := createTestUser()
 
 	// No parameters
-	testRes, err := testUser.DisputeTransaction("", "")
+	testRes, err := testUser.DisputeTransaction("", "", "")
 
 	assert.NoError(err)
 	assert.Equal(testRes, mockUsersResponse)
