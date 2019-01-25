@@ -196,15 +196,15 @@ func (u *User) ReinitiateMicroDeposit(nodeID string) (map[string]interface{}, er
 	return u.do("PATCH", url, "", nil)
 }
 
-// ResetDebitCard resets the debit card number, card cvv, and expiration date
-func (u *User) ResetDebitCard(nodeID string) (map[string]interface{}, error) {
+// ResetCardNode resets the debit card number, card cvv, and expiration date
+func (u *User) ResetCardNode(nodeID string) (map[string]interface{}, error) {
 	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID) + "?reset=YES"
 
 	return u.do("PATCH", url, "", nil)
 }
 
-// ShipDebitCard ships a physical debit card out to the user
-func (u *User) ShipDebitCard(nodeID, data string) (map[string]interface{}, error) {
+// ShipCardNode ships a physical debit card out to the user
+func (u *User) ShipCardNode(nodeID, data string) (map[string]interface{}, error) {
 	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID) + "?ship=YES"
 
 	return u.do("PATCH", url, data, nil)
@@ -270,6 +270,13 @@ func (u *User) CreateSubnet(nodeID, data string, idempotencyKey ...string) (map[
 // UpdateSubnet updates a subnet object
 func (u *User) UpdateSubnet(nodeID, subnetID, data string) (map[string]interface{}, error) {
 	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID, path["subnets"], subnetID)
+
+	return u.do("PATCH", url, data, nil)
+}
+
+// ShipCard ships a physical debit card out to the user
+func (u *User) ShipCard(nodeID, subnetID, data string) (map[string]interface{}, error) {
+	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID, path["subnets"], subnetID, "ship")
 
 	return u.do("PATCH", url, data, nil)
 }
