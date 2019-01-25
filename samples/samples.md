@@ -23,8 +23,8 @@
     * [Delete Node](#delete-node)
     * [Get Node Subnets](#get-node-subnets)
     * [Get Node Transactions](#get-node-transactions)
-    * [Ship Debit Card](#ship-debit-card)
-    * [Reset Debit Card](#reset-debit-card)
+    * [Ship Card Node](#ship-card-node)
+    * [Reset Card Node](#reset-card-node)
     * [Verify Micro Deposit](#verify-micro-deposit)
     * [Reinitiate Micro Deposit](#reinitiate-micro-deposit)
     * [Get Apple Pay Token](#get-apple-pay-token)
@@ -289,7 +289,7 @@ nodeID := "594e606212e17a002f2e3251"
 data, err := user.GetNodeTransactions(nodeID, "page=4&per_page=10")
 ```
 
-##### Ship Debit Card
+##### Ship Card Node
 ```go
 nodeID := "5ba05ed620b3aa005882c52a"
 body := `{
@@ -297,14 +297,14 @@ body := `{
   "expedite": True
 }`
 
-data, err := user.ShipDebitCard(nodeID, body)
+data, err := user.ShipCardNode(nodeID, body)
 ```
 
-##### Reset Debit Card
+##### Reset Card Node
 ```go
 nodeID := "5ba05ed620b3aa005882c52a"
 
-data, err := user.ResetDebit(nodeID)
+data, err := user.ResetCardNode(nodeID)
 ```
 
 ##### Verify Micro Deposit
@@ -366,6 +366,19 @@ body := `{
     "daily_atm_withdrawal_limit":10,
     "daily_transaction_limit":1000
   }
+}`
+
+data, err := user.UpdateSubnet(nodeID, subnetID, body)
+```
+
+#### Ship Card
+```go
+nodeID := "594e606212e17a002f2e3251"
+subnetID := "5bc920f2fff373002bf0d51b"
+body := `{
+  "fee_node_id":"5bba781485411800991b606b",
+  "expedite":false,
+  "card_style_id":"555"
 }`
 
 data, err := user.UpdateSubnet(nodeID, subnetID, body)

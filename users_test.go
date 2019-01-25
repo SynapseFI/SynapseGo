@@ -187,7 +187,7 @@ func Test_ReinitiateMicroDeposit(t *testing.T) {
 	assert.Equal(testRes, mockUsersResponse)
 }
 
-func Test_ResetDebitCard(t *testing.T) {
+func Test_ResetCardNode(t *testing.T) {
 	assert := assert.New(t)
 	testUser := createTestUser()
 
@@ -198,7 +198,7 @@ func Test_ResetDebitCard(t *testing.T) {
 	assert.Equal(testRes, mockUsersResponse)
 }
 
-func Test_ShipDebitCard(t *testing.T) {
+func Test_ShipCardNode(t *testing.T) {
 	assert := assert.New(t)
 	testUser := createTestUser()
 
