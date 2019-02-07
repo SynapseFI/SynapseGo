@@ -31,6 +31,8 @@
   + [Subnets](#subnets)
     * [Get Subnet](#get-subnet)
     * [Create Subnet](#create-subnet)
+    * [Update Subnet](#update-subnet)
+    * [Ship Card](#ship-card)
   + [Transactions](#transactions)
     * [Get User Transactions](#get-user-transactions)
     * [Create Transaction](#create-transaction)
@@ -381,7 +383,7 @@ body := `{
   "card_style_id":"555"
 }`
 
-data, err := user.UpdateSubnet(nodeID, subnetID, body)
+data, err := user.ShipCard(nodeID, subnetID, body)
 ```
 
 ### Transactions
