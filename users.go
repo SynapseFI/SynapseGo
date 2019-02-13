@@ -305,8 +305,8 @@ func (u *User) GetTransaction(nodeID, transactionID string) (map[string]interfac
 }
 
 // CreateTransaction creates a transaction for the specified node
-func (u *User) CreateTransaction(nodeID, transactionID, data string, idempotencyKey ...string) (map[string]interface{}, error) {
-	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID, path["trans"], transactionID)
+func (u *User) CreateTransaction(nodeID, data string, idempotencyKey ...string) (map[string]interface{}, error) {
+	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID, "transactions")
 
 	return u.do("POST", url, data, idempotencyKey)
 }
