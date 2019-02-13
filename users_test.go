@@ -330,7 +330,7 @@ func Test_CreateTransaction(t *testing.T) {
 	testUser := createTestUser()
 
 	// No parameters
-	testRes, err := testUser.CreateTransaction("", "", "")
+	testRes, err := testUser.CreateTransaction("", "")
 
 	assert.NoError(err)
 	assert.Equal(testRes, mockUsersResponse)
