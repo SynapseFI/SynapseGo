@@ -34,12 +34,12 @@
     * [Update Subnet](#update-subnet)
     * [Ship Card](#ship-card)
   + [Transactions](#transactions)
-    * [Get User Transactions](#get-user-transactions)
-    * [Create Transaction](#create-transaction)
+    * [Get Transactions](#get-transactions)
     * [Get Transaction](#get-transaction)
+    * [Create Transaction](#create-transaction)
     * [Comment on Transaction Status](#comment-on-transaction-status)
     * [Dispute Transaction](#dispute-transaction)
-    * [Cancel/Delete Transaction](#cancel-delete-transaction)
+    * [Cancel Transaction](#cancel-transaction)
   + [Users](#users)
     * [Update User or Update/Add Documents](#update-user-or-update-add-documents)
     * [Generate UBO](#generate-ubo)
@@ -395,7 +395,7 @@ nodeID := "594e606212e17a002f2e3251"
 data, err := user.GetTransactions(nodeID)
 ```
 
-##### Get Transactions
+##### Get Transaction
 ```go
 nodeID := "594e606212e17a002f2e3251"
 transID := "594e72124599e8002fe62e4f"
@@ -441,7 +441,7 @@ body := `{
 
 data, err := user.DisputeTransaction(nodeID, transID, body)
 ```
-##### Cancel/Delete Transaction
+##### Cancel Transaction
 ```go
 nodeID := "594e606212e17a002f2e3251"
 transID := "594e72124599e8002fe62e4f"
