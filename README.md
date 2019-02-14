@@ -1,4 +1,4 @@
-# SynapseFI Go Library 
+# SynapseFI Go Library
 Go-based API wrapper for Synapse v3 REST API. This library handles the user authentication process. As long as a the user's fingerprint is registered, further authentication is not necessary in the development flow.
 
 ## Documentation
@@ -128,7 +128,7 @@ data, err := user.CreateSubnet(nodeID, data string)
 ```go
 data, err := user.GetTransactions(nodeID, transactionID string)
 data, err := user.GetTransaction(nodeID, transactionID string)
-data, err := user.CreateTransaction(nodeID, transactionID, data string)
+data, err := user.CreateTransaction(nodeID, data string)
 data, err := user.DeleteTransaction(nodeID, transactionID string)
 data, err := user.CommentOnTransactionStatus(nodeID, transactionID, data string)
 data, err := user.DisputeTransaction(nodeID, transactionID string)
@@ -158,4 +158,3 @@ Other functions including (limited) API requests:
 cd synapse/
 go test -v
 ```
-
