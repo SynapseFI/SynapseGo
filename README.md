@@ -3,25 +3,25 @@ Go-based API wrapper for Synapse REST API. This library handles the user authent
 
 ## Documentation
 
-[Synapse Docs](https://docs.synapsefi.com)
+[Synapse Docs](https://docs.synapsefi.com/)
 
 ## Installation
 ```bash
-$ go get github.com/synapsefi/synapsego
+$ go get github.com/SynapseFI/SynapseGo
 ```
 
 **main.go**
 ```go
-import github.com/synapsefi/synapsego
+import github.com/SynapseFI/SynapseGo
 ```
 
 ## Examples
 
-Refer to [samples.md](samples/samples.md) and our [API documentation](https://docs.synapsefi.com/v3.1) for examples.
+Refer to [samples](samples/samples.md) and our [API documentation](https://docs.synapsefi.com/) for examples.
 
 ## Testing
 
-Functions that exist as part of the Synapse API:
+Functions that mock the Synapse API:
 
 ```bash
 cd synapse/
