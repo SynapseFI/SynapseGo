@@ -7,7 +7,6 @@ GOTEST=$(GOCMD) test
 all: build
 
 build:
-	@echo 'Building project...'
 	$(GOCMD) build
 
 test:
