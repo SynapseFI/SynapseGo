@@ -1,11 +1,13 @@
 module github.com/SynapseFI/SynapseGo
 
 require (
+	github.com/elazarl/goproxy v0.0.0-20181111060418-2ce16c963a8a // indirect
 	github.com/mitchellh/mapstructure v1.1.2
 	github.com/moul/http2curl v1.0.0 // indirect
 	github.com/parnurzeal/gorequest v0.2.15
 	github.com/pkg/errors v0.8.1 // indirect
 	github.com/sirupsen/logrus v1.3.0
-	github.com/stretchr/testify v1.2.2
-	golang.org/x/net v0.0.0-20190119204137-ed066c81e75e // indirect
+	github.com/smartystreets/goconvey v0.0.0-20190222223459-a17d461953aa // indirect
+	github.com/stretchr/testify v1.3.0
+	golang.org/x/net v0.0.0-20190225153610-fe579d43d832 // indirect
 )
