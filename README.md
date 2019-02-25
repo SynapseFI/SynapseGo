@@ -24,13 +24,11 @@ Refer to [samples](samples/samples.md) and our [API documentation](https://docs.
 Functions that mock the Synapse API:
 
 ```bash
-cd synapse/
 go test -v --tags mock
 ```
 
 Other functions including (limited) API requests:
 
 ```bash
-cd synapse/
 go test -v
 ```
