@@ -192,7 +192,7 @@ func Test_ResetCardNode(t *testing.T) {
 	testUser := createTestUser()
 
 	// No parameters
-	testRes, err := testUser.ResetDebitCard("")
+	testRes, err := testUser.ResetCardNode("")
 
 	assert.NoError(err)
 	assert.Equal(testRes, mockUsersResponse)
@@ -203,7 +203,7 @@ func Test_ShipCardNode(t *testing.T) {
 	testUser := createTestUser()
 
 	// No parameters
-	testRes, err := testUser.ShipDebitCard("", "")
+	testRes, err := testUser.ShipCardNode("", "")
 
 	assert.NoError(err)
 	assert.Equal(testRes, mockUsersResponse)
