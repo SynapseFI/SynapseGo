@@ -151,7 +151,6 @@ func (u *User) GetNodes(queryParams ...string) (map[string]interface{}, error) {
 
 // GetNode returns a single node object
 func (u *User) GetNode(nodeID string) (map[string]interface{}, error) {
-
 	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID)
 
 	res, err := u.do("GET", url, "", nil)

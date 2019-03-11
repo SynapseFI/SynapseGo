@@ -182,7 +182,7 @@ func (c *Client) LocateATMs(queryParams ...string) (map[string]interface{}, erro
 
 // GetPublicKey returns a public key as a token representing client credentials
 func (c *Client) GetPublicKey(scope ...string) (map[string]interface{}, error) {
-	url := path["client"] + "?issue_public_key=YES&scope="
+	url := buildURL(path["client"], "?issue_public_key=YES&scope=")
 	defaultScope := "OAUTH|POST,USERS|POST,USERS|GET,USER|GET,USER|PATCH,SUBSCRIPTIONS|GET,SUBSCRIPTIONS|POST,SUBSCRIPTION|GET,SUBSCRIPTION|PATCH,CLIENT|REPORTS,CLIENT|CONTROLS"
 
 	if len(scope) > 0 {
@@ -219,7 +219,7 @@ func (c *Client) GetSubscription(subscriptionID string) (map[string]interface{},
 
 // CreateSubscription creates a subscription and returns the subscription data
 func (c *Client) CreateSubscription(data string, idempotencyKey ...string) (map[string]interface{}, error) {
-	url := path["subscriptions"]
+	url := buildURL(path["subscriptions"])
 
 	return c.do("POST", url, data, idempotencyKey)
 }
@@ -235,7 +235,7 @@ func (c *Client) UpdateSubscription(subscriptionID string, data string) (map[str
 
 // GetTransactions returns all client transactions
 func (c *Client) GetTransactions(queryParams ...string) (map[string]interface{}, error) {
-	url := path["transactions"]
+	url := buildURL(path["transactions"])
 
 	return c.do("GET", url, "", queryParams)
 }
@@ -244,7 +244,7 @@ func (c *Client) GetTransactions(queryParams ...string) (map[string]interface{},
 
 // GetUsers returns a list of users
 func (c *Client) GetUsers(queryParams ...string) (map[string]interface{}, error) {
-	url := path["users"]
+	url := buildURL(path["users"])
 
 	return c.do("GET", url, "", queryParams)
 }
