@@ -84,7 +84,7 @@ func (req *Request) Post(url, data string, params []string) ([]byte, error) {
 		panic(errs)
 	}
 
-	if res.StatusCode != 200 {
+	if res.StatusCode != 200 && res.StatusCode != 202 {
 		return body, handleHTTPError(body)
 	}
 
