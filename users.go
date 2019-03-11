@@ -1,6 +1,8 @@
 package synapse
 
-import "github.com/mitchellh/mapstructure"
+import (
+	"github.com/mitchellh/mapstructure"
+)
 
 /*********** GLOBAL VARIABLES ***********/
 
@@ -58,7 +60,6 @@ func (u *User) do(method, url, data string, params []string) (map[string]interfa
 		}
 
 		u.request.authKey = u.AuthKey
-
 		return u.do(method, url, data, params)
 
 	case *IncorrectValues:
