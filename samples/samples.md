@@ -1,5 +1,7 @@
 # Table of Contents
-- [Client](#client)
+- [General](general-examples)
+  * [Query Parameters](#query-parameters)
+- [Client Examples](#client)
   * [Initialize Client](#initialize-client)
   * [Get Client Nodes](#get-client-nodes)
   * [Issue Public Key](#issue-public-key)
@@ -11,7 +13,7 @@
   * [Get Client Users](#get-client-users)
   * [Get User](#get-user)
   * [Create User](#create-user)
-- [User](#user)
+- [User Examples](#user)
   + [Authentication](#authentication)
     * [Get New Oauth](#get-new-oauth)
     * [Register Fingerprint](#register-fingerprint)
@@ -45,7 +47,21 @@
     * [Update User or Update/Add Documents](#update-user-or-update-add-documents)
     * [Generate UBO](#generate-ubo)
 
-# CLIENT
+## General Examples
+
+#### Query Parameters
+Query parameters must be of type `string` and follow the following pattern:
+`key=value&key=value&key=value`
+
+```go
+// Get Users with query parameters
+data, err := client.GetUsers("per_page=3&page=2")
+
+// Get User with full dehydrate
+user, err := client.GetUser("5bec6ebebaabfc00ab168fa0", client.IP, client.Fingerprint, "full_dehydrate=yes")
+```
+
+## Client Examples
 
 #### Initialize Client
 ```go
@@ -187,9 +203,9 @@ user, err := client.CreateUser(body, userIP, userFingerprint)
 data, err := client.GetWebhookLogs()
 ```
 
-# USER
+## User Examples
 
-## Authentication
+### Authentication
 
 #### Get New Oauth
 ```go
@@ -230,7 +246,7 @@ res, err := user.VerifyPIN("123456")
 
 ```
 
-## Nodes
+### Nodes
 
 #### Get User Nodes
 ```go
@@ -371,7 +387,7 @@ body = `{
 data, err := user.GenerateApplePayToken(nodeID, body)
 ```
 
-## Subnets
+### Subnets
 
 #### Get Subnet
 ```go
@@ -419,7 +435,7 @@ body := `{
 data, err := user.ShipCard(nodeID, subnetID, body)
 ```
 
-## Transactions
+### Transactions
 
 #### Get Transactions
 ```go
@@ -482,7 +498,7 @@ transID := "594e72124599e8002fe62e4f"
 data, err := user.CancelTransaction(nodeID, transID)
 ```
 
-## Users
+### Users
 
 #### Update User or Update/Add Documents
 ```go
