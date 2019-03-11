@@ -11,7 +11,9 @@ build:
 deps:
 	$(GOGET) ./..
 
-test:
+test: test-mock test-api
+
+test-mock:
 	$(GOTEST) -v --tags mock
 
 test-api:
