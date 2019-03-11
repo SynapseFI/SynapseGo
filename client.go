@@ -250,28 +250,25 @@ func (c *Client) GetUsers(queryParams ...string) (map[string]interface{}, error)
 }
 
 // GetUser returns a single user
-func (c *Client) GetUser(UserID string, fullDehydrate bool) (*User, error) {
+func (c *Client) GetUser(userID, ipAddress, fingerprint string, queryParams ...string) (*User, error) {
 	var user User
 
-	url := buildURL(path["users"], UserID)
+	url := buildURL(path["users"], userID)
 
-	if fullDehydrate != true {
-		url += "?full_dehydrate=yes"
-	}
-
-	res, err := c.do("GET", url, "", nil)
+	res, err := c.do("GET", url, "", queryParams)
 
 	mapstructure.Decode(res, &user)
 
-	user.request = user.request.updateRequest(c.ClientID, c.ClientSecret, c.Fingerprint, c.IP)
-	user.FullDehydrate = fullDehydrate
+	user.request = user.request.updateRequest(c.ClientID, c.ClientSecret, ipAddress, fingerprint)
 	user.Response = res
 
 	return &user, err
 }
 
 // CreateUser creates a single user and returns the new user data
-func (c *Client) CreateUser(data string, idempotencyKey ...string) (*User, error) {
+func (c *Client) CreateUser(data, ipAddress, fingerprint string, idempotencyKey ...string) (*User, error) {
+	c.request = c.request.updateRequest(c.ClientID, c.ClientSecret, ipAddress, fingerprint)
+
 	var user User
 
 	url := buildURL(path["users"])
@@ -280,7 +277,7 @@ func (c *Client) CreateUser(data string, idempotencyKey ...string) (*User, error
 
 	mapstructure.Decode(res, &user)
 
-	user.request = user.request.updateRequest(c.ClientID, c.ClientSecret, c.Fingerprint, c.IP)
+	user.request = user.request.updateRequest(c.ClientID, c.ClientSecret, ipAddress, fingerprint)
 	user.Response = res
 
 	return &user, err

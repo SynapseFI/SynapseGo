@@ -20,7 +20,7 @@ var goreq = gorequest.New()
 
 /********** METHODS **********/
 
-func (req *Request) updateRequest(clientID, clientSecret, fingerprint, ipAddress string, authKey ...string) Request {
+func (req *Request) updateRequest(clientID, clientSecret, ipAddress, fingerprint string, authKey ...string) Request {
 	var aKey string
 
 	if len(authKey) > 0 {

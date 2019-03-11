@@ -11,12 +11,11 @@ import (
 type (
 	// User represents a single user object
 	User struct {
-		AuthKey       string
-		FullDehydrate bool
-		UserID        string `mapstructure:"_id"`
-		RefreshToken  string `mapstructure:"refresh_token"`
-		Response      interface{}
-		request       Request
+		AuthKey      string
+		UserID       string `mapstructure:"_id"`
+		RefreshToken string `mapstructure:"refresh_token"`
+		Response     interface{}
+		request      Request
 	}
 
 	// Users represents a collection of user objects

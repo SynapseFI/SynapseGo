@@ -151,7 +151,11 @@ data, err := client.GetUsers()
 #### Get User
 ```go
 // set FullDehydrate to true
-user, err := client.GetUser("594e0fa2838454002ea317a0", true)
+userID = "594e0fa2838454002ea317a0"
+userIP = "127.0.0.1" // or client.IP
+userFingerprint = "TEST_FINGERPRINT" // or client.Fingerprint
+
+user, err := client.GetUser(userID, userIP, userFingerprint)
 ```
 
 #### Create User
@@ -172,10 +176,13 @@ body := `{
   ...
 }`
 
-user, err := client.CreateUser(body)
+userIP = "127.0.0.1" // or client.IP
+userFingerprint = "TEST_FINGERPRINT" // or client.Fingerprint
+
+user, err := client.CreateUser(body, userIP, userFingerprint)
 ```
 
-### Get Webhook Logs
+#### Get Webhook Logs
 ```go
 data, err := client.GetWebhookLogs()
 ```
