@@ -1,13 +1,15 @@
-BASE_DIR=$(shell echo $$GOPATH)
-
 GOCMD=go
 GOBUILD=$(GOCMD) build
+GOGET=$(GOCMD) get
 GOTEST=$(GOCMD) test
 
 all: build
 
 build:
-	$(GOCMD) build
+	$(GOBUILD)
+
+deps:
+	$(GOGET) ./..
 
 test:
 	$(GOTEST) -v --tags mock
