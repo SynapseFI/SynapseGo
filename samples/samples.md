@@ -18,7 +18,8 @@
   + [Nodes](#nodes)
     * [Get User Nodes](#get-user-nodes)
     * [Get Node](#get-node)
-    * [Create Node](#create-node)
+    + [Create Node](#create-node)
+        * [Bank Login w/ MFA](#bank-login)
     * [Update Node](#update-node)
     * [Delete Node](#delete-node)
     * [Get Node Subnets](#get-node-subnets)
@@ -46,7 +47,7 @@
 
 # CLIENT
 
-##### Initialize Client
+#### Initialize Client
 ```go
 // credentials used to set headers for each method request
 var client = synapse.New(
@@ -72,12 +73,12 @@ var client = synapse.New(
 )
 ```
 
-##### Get Client Nodes
+#### Get Client Nodes
 ```go
 data, err := client.GetNodes()
 ```
 
-##### Issue Public Key
+#### Issue Public Key
 ```go
 scope := "OAUTH|POST,USERS|POST,USERS|GET,USER|GET,USER|PATCH"
 
@@ -91,19 +92,19 @@ data, err := client.GetInstitutions()
 data, err := client.LocateATMs()
 ```
 
-##### Get Client Subscriptions
+#### Get Client Subscriptions
 ```go
 data, err := client.GetSubscriptions()
 ```
 
-##### Get Subscription
+#### Get Subscription
 ```go
 subsID := "589b6adec83e17002122196c"
 
 data, err := client.GetSubscription(subsID)
 ```
 
-##### Create Subscription 
+#### Create Subscription 
 ```go
 body := `{
   "scope": [
@@ -122,7 +123,7 @@ idempotencykey := "123456789"
 data, err := client.CreateSubscription(body, idempotencyKey)
 ```
 
-##### Update Subscription
+#### Update Subscription
 ```go
 subID := "589b6adec83e17002122196c"
 body := `{
@@ -137,23 +138,23 @@ body := `{
 data, err := client.UpdateSubscription(subID, body)
 ```
 
-##### Get Client Transactions
+#### Get Client Transactions
 ```go
 data, err := client.GetTransactions()
 ```
 
-##### Get Client Users 
+#### Get Client Users 
 ```go
 data, err := client.GetUsers()
 ```
 
-##### Get User
+#### Get User
 ```go
 // set FullDehydrate to true
 user, err := client.GetUser("594e0fa2838454002ea317a0", true)
 ```
 
-##### Create User
+#### Create User
 ```go
 body := `{
   "logins": [
@@ -174,16 +175,16 @@ body := `{
 user, err := client.CreateUser(body)
 ```
 
-#### Get Webhook Logs
+### Get Webhook Logs
 ```go
 data, err := client.GetWebhookLogs()
 ```
 
 # USER
 
-### Authentication
+## Authentication
 
-##### Get New Oauth
+#### Get New Oauth
 ```go
 body := `{
     "refresh_token":"refresh_Y5beJdBLtgvply3KIzrh72UxWMEqiTNoVAfDs98G",
@@ -197,7 +198,7 @@ body := `{
 data, err := user.Authenticate(body)
 ```
 
-##### Register Fingerprint
+#### Register Fingerprint
 ```go
 /*
 {
@@ -222,21 +223,21 @@ res, err := user.VerifyPIN("123456")
 
 ```
 
-### Nodes
+## Nodes
 
-##### Get User Nodes
+#### Get User Nodes
 ```go
 data, err := user.GetNodes()
 ```
 
-##### Get Node
+#### Get Node
 ```go
 nodeID := "594e606212e17a002f2e3251"
 
 data, err := user.GetNode(nodeID)
 ```
 
-##### Create Node
+#### Create Node
 Refer to the following docs for how to setup the payload for a specific Node type:
 - [Deposit Accounts](https://docs.synapsefi.com/v3.1/docs/deposit-accounts)
 - [Card Issuance](https://docs.synapsefi.com/v3.1/docs/card-issuance)
@@ -261,7 +262,32 @@ body := `{
 data, err := user.CreateNode(body)
 ```
 
-##### Update Node
+##### Bank Login w/ MFA
+```go
+body := `{
+  "type": "ACH-US",
+  "info":{
+    "bank_id":"synapse_good",
+    "bank_pw":"test1234",
+    "bank_name":"fake"
+  }
+}`
+
+data, err := user.CreateNode(body)
+
+// parse `access_token` from `data`
+
+// create MFA answer body
+
+mfaBody := `{
+  "access_token":"fake_cd60680b9addc013ca7fb25b2b704ba82d3",
+  "mfa_answer":"test_answer"
+}`
+
+achData, achErr := user.SubmitMFA(mfaBody)
+```
+
+#### Update Node
 ```go
 nodeID := "5ba05ed620b3aa005882c52a"
 body := `{
@@ -271,27 +297,27 @@ body := `{
 data, err := user.UpdateNode(nodeID, body)
 ```
 
-##### Delete Node
+#### Delete Node
 ```go
 nodeID := "594e606212e17a002f2e3251"
 
 data, err := user.DeleteNode(nodeID)
 ```
 
-##### Get Node Subnets
+#### Get Node Subnets
 ```go
 nodeID := "594e606212e17a002f2e3251"
 
 data, err := user.GetNodeSubnets(nodeID, "page=4&per_page=10")
 ```
-##### Get Node Transactions
+#### Get Node Transactions
 ```go
 nodeID := "594e606212e17a002f2e3251"
 
 data, err := user.GetNodeTransactions(nodeID, "page=4&per_page=10")
 ```
 
-##### Ship Card Node
+#### Ship Card Node
 ```go
 nodeID := "5ba05ed620b3aa005882c52a"
 body := `{
@@ -302,14 +328,14 @@ body := `{
 data, err := user.ShipCardNode(nodeID, body)
 ```
 
-##### Reset Card Node
+#### Reset Card Node
 ```go
 nodeID := "5ba05ed620b3aa005882c52a"
 
 data, err := user.ResetCardNode(nodeID)
 ```
 
-##### Verify Micro Deposit
+#### Verify Micro Deposit
 ```go
 nodeID := "5ba05ed620b3aa005882c52a"
 body := `{
@@ -319,14 +345,14 @@ body := `{
 data, err := user.VerifyMicroDeposit(nodeID, body)
 ```
 
-##### Reinitiate Micro Deposit
+#### Reinitiate Micro Deposit
 ```go
 nodeID := "5ba05ed620b3aa005882c52a"
 
 data, err := user.ReinitiateMicroDeposit(nodeID)
 ```
 
-##### Get Apple Pay Token
+#### Get Apple Pay Token
 ```go
 nodeID := "5ba05ed620b3aa005882c52a"
 body = `{
@@ -338,9 +364,9 @@ body = `{
 data, err := user.GenerateApplePayToken(nodeID, body)
 ```
 
-### Subnets
+## Subnets
 
-##### Get Subnet
+#### Get Subnet
 ```go
 nodeID := "594e606212e17a002f2e3251"
 subID := "59c9f77cd412960028b99d2b"
@@ -348,7 +374,7 @@ subID := "59c9f77cd412960028b99d2b"
 data, err := user.GetSubnet(nodeID, subID)
 ```
 
-##### Create Subnet
+#### Create Subnet
 ```go
 nodeID := "594e606212e17a002f2e3251"
 body := `{
@@ -358,7 +384,7 @@ body := `{
 data, err := user.CreateSubnet(nodeID, body)
 ```
 
-##### Update Subnet
+#### Update Subnet
 ```go
 nodeID := "594e606212e17a002f2e3251"
 subnetID := "5bc920f2fff373002bf0d51b"
@@ -386,16 +412,16 @@ body := `{
 data, err := user.ShipCard(nodeID, subnetID, body)
 ```
 
-### Transactions
+## Transactions
 
-##### Get Transactions
+#### Get Transactions
 ```go
 nodeID := "594e606212e17a002f2e3251"
 
 data, err := user.GetTransactions(nodeID)
 ```
 
-##### Get Transaction
+#### Get Transaction
 ```go
 nodeID := "594e606212e17a002f2e3251"
 transID := "594e72124599e8002fe62e4f"
@@ -403,7 +429,7 @@ transID := "594e72124599e8002fe62e4f"
 data, err := user.GetTransactions(nodeID, transID)
 ```
 
-##### Create Transaction
+#### Create Transaction
 ```go
 nodeID := "594e606212e17a002f2e3251"
 body := `{
@@ -423,7 +449,7 @@ body := `{
 data, err := user.CreateTransaction(nodeID, body)
 ```
 
-##### Comment on Transaction Status
+#### Comment on Transaction Status
 ```go
 nodeID := "594e606212e17a002f2e3251"
 transID := "594e72124599e8002fe62e4f"
@@ -431,7 +457,7 @@ transID := "594e72124599e8002fe62e4f"
 data, err := user.CommentOnTransactionStatus(nodeID, transID, "Pending verification...")
 ```
 
-##### Dispute Transaction
+#### Dispute Transaction
 ```go
 nodeID := "594e606212e17a002f2e3251"
 transID := "594e72124599e8002fe62e4f"
@@ -441,7 +467,7 @@ body := `{
 
 data, err := user.DisputeTransaction(nodeID, transID, body)
 ```
-##### Cancel Transaction
+#### Cancel Transaction
 ```go
 nodeID := "594e606212e17a002f2e3251"
 transID := "594e72124599e8002fe62e4f"
@@ -449,9 +475,9 @@ transID := "594e72124599e8002fe62e4f"
 data, err := user.CancelTransaction(nodeID, transID)
 ```
 
-### Users
+## Users
 
-##### Update User or Update/Add Documents
+#### Update User or Update/Add Documents
 ```go
 body := `{
   "update":{
@@ -469,7 +495,7 @@ body := `{
 data, err := user.Update(body)
 ```
 
-##### Generate UBO
+#### Generate UBO
 ```go
 body := `{
    "entity_info": {
