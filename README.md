@@ -1,4 +1,4 @@
-# SynapseFI Go Library
+# SynapseFI Go Library (BETA)
 Go-based API wrapper for Synapse REST API. This library handles the user authentication process. As long as the user's fingerprint is registered, further authentication is not necessary in the development flow.
 
 ## Documentation
