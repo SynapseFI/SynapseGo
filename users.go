@@ -61,22 +61,22 @@ func (u *User) do(method, url, data string, params []string) (map[string]interfa
 		u.request.authKey = u.AuthKey
 		return u.do(method, url, data, params)
 
-	case *IncorrectValues:
-		_, err := u.GetRefreshToken()
+		// case *IncorrectValues:
+		// 	_, err := u.GetRefreshToken()
 
-		if err != nil {
-			return nil, err
-		}
+		// 	if err != nil {
+		// 		return nil, err
+		// 	}
 
-		_, err = u.Authenticate(`{ "refresh_token": "` + u.RefreshToken + `" }`)
+		// 	_, err = u.Authenticate(`{ "refresh_token": "` + u.RefreshToken + `" }`)
 
-		if err != nil {
-			return nil, err
-		}
+		// 	if err != nil {
+		// 		return nil, err
+		// 	}
 
-		u.request.authKey = u.AuthKey
+		// 	u.request.authKey = u.AuthKey
 
-		return u.do(method, url, data, params)
+		// 	return u.do(method, url, data, params)
 	}
 
 	return readStream(response), err
