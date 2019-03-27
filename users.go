@@ -95,6 +95,7 @@ func (u *User) Authenticate(data string) (map[string]interface{}, error) {
 		u.request.authKey = res["oauth_key"].(string)
 	}
 
+	log.info("Authenticating user...")
 	return res, err
 }
 
@@ -108,6 +109,7 @@ func (u *User) GetRefreshToken() (map[string]interface{}, error) {
 		u.RefreshToken = res["refresh_token"].(string)
 	}
 
+	log.info("Getting user refresh token...")
 	return res, err
 }
 
@@ -119,6 +121,7 @@ func (u *User) Select2FA(device string) (map[string]interface{}, error) {
 
 	res, err := u.do("POST", url, data, nil)
 
+	log.info("Sending 2FA selection...")
 	return res, err
 }
 
@@ -126,6 +129,7 @@ func (u *User) Select2FA(device string) (map[string]interface{}, error) {
 func (u *User) SubmitMFA(data string) (map[string]interface{}, error) {
 	url := buildURL(path["users"], u.UserID, path["nodes"])
 
+	log.info("Submitting MFA...")
 	return u.do("POST", url, data, nil)
 }
 
@@ -137,6 +141,7 @@ func (u *User) VerifyPIN(pin string) (map[string]interface{}, error) {
 
 	res, err := u.do("POST", url, data, nil)
 
+	log.info("Sending pin verification...")
 	return res, err
 }
 
@@ -146,6 +151,7 @@ func (u *User) VerifyPIN(pin string) (map[string]interface{}, error) {
 func (u *User) GetNodes(queryParams ...string) (map[string]interface{}, error) {
 	url := buildURL(path["users"], u.UserID, path["nodes"])
 
+	log.info("Getting list of user nodes...")
 	return u.do("GET", url, "", queryParams)
 }
 
@@ -155,6 +161,7 @@ func (u *User) GetNode(nodeID string) (map[string]interface{}, error) {
 
 	res, err := u.do("GET", url, "", nil)
 
+	log.info("Getting user node...")
 	return res, err
 }
 
@@ -162,6 +169,7 @@ func (u *User) GetNode(nodeID string) (map[string]interface{}, error) {
 func (u *User) CreateNode(data string, idempotencyKey ...string) (map[string]interface{}, error) {
 	url := buildURL(path["users"], u.UserID, path["nodes"])
 
+	log.info("Creating user node...")
 	return u.do("POST", url, data, idempotencyKey)
 }
 
@@ -169,6 +177,7 @@ func (u *User) CreateNode(data string, idempotencyKey ...string) (map[string]int
 func (u *User) UpdateNode(nodeID, data string) (map[string]interface{}, error) {
 	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID)
 
+	log.info("Updating user node...")
 	return u.do("PATCH", url, data, nil)
 }
 
@@ -176,6 +185,7 @@ func (u *User) UpdateNode(nodeID, data string) (map[string]interface{}, error) {
 func (u *User) DeleteNode(nodeID string) (map[string]interface{}, error) {
 	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID)
 
+	log.info("Deleting user node...")
 	return u.do("DELETE", url, "", nil)
 }
 
@@ -185,6 +195,7 @@ func (u *User) DeleteNode(nodeID string) (map[string]interface{}, error) {
 func (u *User) GetApplePayToken(nodeID, data string) (map[string]interface{}, error) {
 	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID, "applepay")
 
+	log.info("Getting apple pay token...")
 	return u.do("PATCH", url, data, nil)
 }
 
@@ -192,6 +203,7 @@ func (u *User) GetApplePayToken(nodeID, data string) (map[string]interface{}, er
 func (u *User) ReinitiateMicroDeposit(nodeID string) (map[string]interface{}, error) {
 	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID) + "?resend_micro=YES"
 
+	log.info("Reinitiating mico-deposits...")
 	return u.do("PATCH", url, "", nil)
 }
 
@@ -199,6 +211,7 @@ func (u *User) ReinitiateMicroDeposit(nodeID string) (map[string]interface{}, er
 func (u *User) ResetCardNode(nodeID string) (map[string]interface{}, error) {
 	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID) + "?reset=YES"
 
+	log.info("Resetting card node...")
 	return u.do("PATCH", url, "", nil)
 }
 
@@ -206,6 +219,7 @@ func (u *User) ResetCardNode(nodeID string) (map[string]interface{}, error) {
 func (u *User) ShipCardNode(nodeID, data string) (map[string]interface{}, error) {
 	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID) + "?ship=YES"
 
+	log.info("Shipping card node...")
 	return u.do("PATCH", url, data, nil)
 }
 
@@ -217,6 +231,7 @@ func (u *User) TriggerDummyTransactions(nodeID string, credit bool) (map[string]
 		url += "?is_credit=YES"
 	}
 
+	log.info("Triggering dummy transactions...")
 	return u.do("GET", url, "", nil)
 }
 
@@ -224,6 +239,7 @@ func (u *User) TriggerDummyTransactions(nodeID string, credit bool) (map[string]
 func (u *User) VerifyMicroDeposit(nodeID, data string) (map[string]interface{}, error) {
 	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID)
 
+	log.info("Verifying micro-deposit amounts...")
 	return u.do("PATCH", url, data, nil)
 }
 
@@ -233,6 +249,7 @@ func (u *User) VerifyMicroDeposit(nodeID, data string) (map[string]interface{}, 
 func (u *User) GetNodeStatements(nodeID string, queryParams ...string) (map[string]interface{}, error) {
 	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID, path["statements"])
 
+	log.info("Getting list of node statements...")
 	return u.do("GET", url, "", queryParams)
 }
 
@@ -240,6 +257,7 @@ func (u *User) GetNodeStatements(nodeID string, queryParams ...string) (map[stri
 func (u *User) GetStatements(queryParams ...string) (map[string]interface{}, error) {
 	url := buildURL(path["users"], u.UserID, path["statements"])
 
+	log.info("Getting list of user statements...")
 	return u.do("GET", url, "", queryParams)
 }
 
@@ -249,6 +267,7 @@ func (u *User) GetStatements(queryParams ...string) (map[string]interface{}, err
 func (u *User) GetNodeSubnets(nodeID string, queryParams ...string) (map[string]interface{}, error) {
 	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID, path["subnets"])
 
+	log.info("Getting list of node subnets...")
 	return u.do("GET", url, "", queryParams)
 }
 
@@ -256,6 +275,7 @@ func (u *User) GetNodeSubnets(nodeID string, queryParams ...string) (map[string]
 func (u *User) GetSubnet(nodeID, subnetID string) (map[string]interface{}, error) {
 	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID, path["subnets"], subnetID)
 
+	log.info("Getting node subnet...")
 	return u.do("GET", url, "", nil)
 }
 
@@ -263,6 +283,7 @@ func (u *User) GetSubnet(nodeID, subnetID string) (map[string]interface{}, error
 func (u *User) CreateSubnet(nodeID, data string, idempotencyKey ...string) (map[string]interface{}, error) {
 	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID, path["subnets"])
 
+	log.info("Creating node subnet...")
 	return u.do("POST", url, data, idempotencyKey)
 }
 
@@ -270,6 +291,7 @@ func (u *User) CreateSubnet(nodeID, data string, idempotencyKey ...string) (map[
 func (u *User) UpdateSubnet(nodeID, subnetID, data string) (map[string]interface{}, error) {
 	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID, path["subnets"], subnetID)
 
+	log.info("Updating node subnet...")
 	return u.do("PATCH", url, data, nil)
 }
 
@@ -277,6 +299,7 @@ func (u *User) UpdateSubnet(nodeID, subnetID, data string) (map[string]interface
 func (u *User) ShipCard(nodeID, subnetID, data string) (map[string]interface{}, error) {
 	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID, path["subnets"], subnetID, "ship")
 
+	log.info("Shipping card...")
 	return u.do("PATCH", url, data, nil)
 }
 
@@ -286,6 +309,7 @@ func (u *User) ShipCard(nodeID, subnetID, data string) (map[string]interface{}, 
 func (u *User) GetNodeTransactions(nodeID string, queryParams ...string) (map[string]interface{}, error) {
 	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID, path["trans"])
 
+	log.info("Getting list of node transactions...")
 	return u.do("GET", url, "", queryParams)
 }
 
@@ -293,6 +317,7 @@ func (u *User) GetNodeTransactions(nodeID string, queryParams ...string) (map[st
 func (u *User) GetTransactions(queryParams ...string) (map[string]interface{}, error) {
 	url := buildURL(path["users"], u.UserID, path["trans"])
 
+	log.info("Getting list of user transactions...")
 	return u.do("GET", url, "", queryParams)
 }
 
@@ -300,6 +325,7 @@ func (u *User) GetTransactions(queryParams ...string) (map[string]interface{}, e
 func (u *User) GetTransaction(nodeID, transactionID string) (map[string]interface{}, error) {
 	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID, path["trans"], transactionID)
 
+	log.info("Getting user transaction...")
 	return u.do("GET", url, "", nil)
 }
 
@@ -307,6 +333,7 @@ func (u *User) GetTransaction(nodeID, transactionID string) (map[string]interfac
 func (u *User) CreateTransaction(nodeID, data string, idempotencyKey ...string) (map[string]interface{}, error) {
 	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID, path["transactions"])
 
+	log.info("Creating user transaction...")
 	return u.do("POST", url, data, idempotencyKey)
 }
 
@@ -314,6 +341,7 @@ func (u *User) CreateTransaction(nodeID, data string, idempotencyKey ...string) 
 func (u *User) CancelTransaction(nodeID, transactionID string) (map[string]interface{}, error) {
 	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID, path["transactions"], transactionID)
 
+	log.info("Cancelling user transaction...")
 	return u.do("DELETE", url, "", nil)
 }
 
@@ -321,6 +349,7 @@ func (u *User) CancelTransaction(nodeID, transactionID string) (map[string]inter
 func (u *User) CommentOnTransactionStatus(nodeID, transactionID, data string, idempotencyKey ...string) (map[string]interface{}, error) {
 	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID, path["transactions"], transactionID)
 
+	log.info("Adding comment to transaction status...")
 	return u.do("POST", url, data, idempotencyKey)
 }
 
@@ -328,6 +357,7 @@ func (u *User) CommentOnTransactionStatus(nodeID, transactionID, data string, id
 func (u *User) DisputeTransaction(nodeID, transactionID, data string) (map[string]interface{}, error) {
 	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID, path["transactions"], transactionID, "dispute")
 
+	log.info("Disputing transaction...")
 	return u.do("PATCH", url, data, nil)
 }
 
@@ -343,6 +373,7 @@ func (u *User) Update(data string) (*User, error) {
 
 	u.Response = res
 
+	log.info("Updating user...")
 	return u, err
 }
 
@@ -350,5 +381,6 @@ func (u *User) Update(data string) (*User, error) {
 func (u *User) CreateUBO(data string) (map[string]interface{}, error) {
 	url := buildURL(path["users"], u.UserID, "ubo")
 
+	log.info("Creating UBO...")
 	return u.do("PATCH", url, data, nil)
 }

@@ -133,6 +133,7 @@ func New(clientID, clientSecret, fingerprint, ipAddress string, modes ...bool) *
 		}
 	}
 
+	log.info("Building new client...")
 	return &Client{
 		ClientID:     clientID,
 		ClientSecret: clientSecret,
@@ -147,6 +148,7 @@ func New(clientID, clientSecret, fingerprint, ipAddress string, modes ...bool) *
 func (c *Client) GetNodes(queryParams ...string) (map[string]interface{}, error) {
 	url := buildURL(path["nodes"])
 
+	log.info("Getting list of nodes...")
 	return c.do("GET", url, "", queryParams)
 }
 
@@ -156,6 +158,7 @@ func (c *Client) GetNodes(queryParams ...string) (map[string]interface{}, error)
 func (c *Client) GetCryptoMarketData() (map[string]interface{}, error) {
 	url := buildURL(path["nodes"], "crypto-market-watch")
 
+	log.info("Getting crypto market data...")
 	return c.do("GET", url, "", nil)
 }
 
@@ -163,6 +166,7 @@ func (c *Client) GetCryptoMarketData() (map[string]interface{}, error) {
 func (c *Client) GetCryptoQuotes(queryParams ...string) (map[string]interface{}, error) {
 	url := buildURL(path["nodes"], "crypto-quotes")
 
+	log.info("Getting crypto market quotes...")
 	return c.do("GET", url, "", queryParams)
 }
 
@@ -170,6 +174,7 @@ func (c *Client) GetCryptoQuotes(queryParams ...string) (map[string]interface{},
 func (c *Client) GetInstitutions() (map[string]interface{}, error) {
 	url := buildURL(path["institutions"])
 
+	log.info("Getting list of institutions...")
 	return c.do("GET", url, "", nil)
 }
 
@@ -177,6 +182,7 @@ func (c *Client) GetInstitutions() (map[string]interface{}, error) {
 func (c *Client) LocateATMs(queryParams ...string) (map[string]interface{}, error) {
 	url := buildURL(path["nodes"], "atms")
 
+	log.info("Getting list of ATMs...")
 	return c.do("GET", url, "", queryParams)
 }
 
@@ -191,6 +197,7 @@ func (c *Client) GetPublicKey(scope ...string) (map[string]interface{}, error) {
 
 	url += defaultScope
 
+	log.info("Getting public key...")
 	return c.do("GET", url, "", nil)
 }
 
@@ -198,6 +205,7 @@ func (c *Client) GetPublicKey(scope ...string) (map[string]interface{}, error) {
 func (c *Client) GetWebhookLogs() (map[string]interface{}, error) {
 	url := buildURL(path["subscriptions"], "logs")
 
+	log.info("Getting webhook logs...")
 	return c.do("GET", url, "", nil)
 }
 
@@ -207,6 +215,7 @@ func (c *Client) GetWebhookLogs() (map[string]interface{}, error) {
 func (c *Client) GetSubscriptions(queryParams ...string) (map[string]interface{}, error) {
 	url := buildURL(path["subscriptions"])
 
+	log.info("Getting list of subscriptions...")
 	return c.do("GET", url, "", queryParams)
 }
 
@@ -214,6 +223,7 @@ func (c *Client) GetSubscriptions(queryParams ...string) (map[string]interface{}
 func (c *Client) GetSubscription(subscriptionID string) (map[string]interface{}, error) {
 	url := buildURL(path["subscriptions"], subscriptionID)
 
+	log.info("Getting subscription...")
 	return c.do("GET", url, "", nil)
 }
 
@@ -221,6 +231,7 @@ func (c *Client) GetSubscription(subscriptionID string) (map[string]interface{},
 func (c *Client) CreateSubscription(data string, idempotencyKey ...string) (map[string]interface{}, error) {
 	url := buildURL(path["subscriptions"])
 
+	log.info("Creating subscription...")
 	return c.do("POST", url, data, idempotencyKey)
 }
 
@@ -228,6 +239,7 @@ func (c *Client) CreateSubscription(data string, idempotencyKey ...string) (map[
 func (c *Client) UpdateSubscription(subscriptionID string, data string) (map[string]interface{}, error) {
 	url := buildURL(path["subscriptions"], subscriptionID)
 
+	log.info("Updating subscription...")
 	return c.do("PATCH", url, data, nil)
 }
 
@@ -237,6 +249,7 @@ func (c *Client) UpdateSubscription(subscriptionID string, data string) (map[str
 func (c *Client) GetTransactions(queryParams ...string) (map[string]interface{}, error) {
 	url := buildURL(path["transactions"])
 
+	log.info("Getting list of transactions...")
 	return c.do("GET", url, "", queryParams)
 }
 
@@ -246,6 +259,7 @@ func (c *Client) GetTransactions(queryParams ...string) (map[string]interface{},
 func (c *Client) GetUsers(queryParams ...string) (map[string]interface{}, error) {
 	url := buildURL(path["users"])
 
+	log.info("Getting list of users...")
 	return c.do("GET", url, "", queryParams)
 }
 
@@ -262,6 +276,7 @@ func (c *Client) GetUser(userID, fingerprint, ipAddress string, queryParams ...s
 	user.request = user.request.updateRequest(c.ClientID, c.ClientSecret, fingerprint, ipAddress)
 	user.Response = res
 
+	log.info("Getting user...")
 	return &user, err
 }
 
@@ -280,5 +295,6 @@ func (c *Client) CreateUser(data, fingerprint, ipAddress string, idempotencyKey 
 	user.request = user.request.updateRequest(c.ClientID, c.ClientSecret, fingerprint, ipAddress)
 	user.Response = res
 
+	log.info("Creating user...")
 	return &user, err
 }

@@ -61,6 +61,7 @@ func (req *Request) Get(url string, params []string) ([]byte, error) {
 		return body, handleHTTPError(body)
 	}
 
+	log.info("GET", res.Status, url)
 	return body, nil
 }
 
@@ -88,6 +89,7 @@ func (req *Request) Post(url, data string, params []string) ([]byte, error) {
 		return body, handleHTTPError(body)
 	}
 
+	log.info("POST", res.Status, url)
 	return body, nil
 }
 
@@ -115,6 +117,7 @@ func (req *Request) Patch(url, data string, params []string) ([]byte, error) {
 		return body, handleHTTPError(body)
 	}
 
+	log.info("PATCH", res.Status, url)
 	return body, nil
 }
 
@@ -135,5 +138,6 @@ func (req *Request) Delete(url string) ([]byte, error) {
 		return body, handleHTTPError(body)
 	}
 
+	log.info("DELETE", res.Status, url)
 	return body, nil
 }
