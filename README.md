@@ -1,4 +1,6 @@
-# SynapseFI Go Library (BETA)
+# SynapseFI Go Library
+![status](https://img.shields.io/badge/status-beta-yellow.svg)
+
 Go-based API wrapper for Synapse REST API. This library handles the user authentication process. As long as the user's fingerprint is registered, further authentication is not necessary in the development flow.
 
 ## Documentation
