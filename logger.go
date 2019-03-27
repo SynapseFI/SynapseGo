@@ -1,7 +1,7 @@
 package synapse
 
 import (
-	logrus "github.com/sirupsen/logrus"
+	logging "log"
 )
 
 type (
@@ -11,16 +11,16 @@ type (
 
 var log *logger
 
-// Info used to log information
-func (l *logger) info(args ...interface{}) {
-	if logMode {
-		logrus.Info(args...)
-	}
-}
-
 // Error used to log errors
 func (l *logger) error(args ...interface{}) {
 	if logMode {
-		logrus.Error(args...)
+		logging.Println(args...)
+	}
+}
+
+// Info used to log information
+func (l *logger) info(args ...interface{}) {
+	if logMode {
+		logging.Println(args...)
 	}
 }
