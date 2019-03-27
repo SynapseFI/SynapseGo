@@ -58,7 +58,7 @@ Query parameters must be of type `string` and follow the following pattern:
 data, err := client.GetUsers("per_page=3&page=2")
 
 // Get User with full dehydrate
-user, err := client.GetUser("5bec6ebebaabfc00ab168fa0", client.IP, client.Fingerprint, "full_dehydrate=yes")
+user, err := client.GetUser("5bec6ebebaabfc00ab168fa0", client.Fingerprint, client.IP, "full_dehydrate=yes")
 ```
 
 ## Client Examples
@@ -168,10 +168,10 @@ data, err := client.GetUsers()
 ```go
 // set FullDehydrate to true
 userID = "594e0fa2838454002ea317a0"
-userIP = "127.0.0.1" // or client.IP
 userFingerprint = "TEST_FINGERPRINT" // or client.Fingerprint
+userIP = "127.0.0.1" // or client.IP
 
-user, err := client.GetUser(userID, userIP, userFingerprint)
+user, err := client.GetUser(userID, userFingerprint, userIP)
 ```
 
 #### Create User
