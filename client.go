@@ -122,7 +122,7 @@ func (c *Client) do(method, url, data string, queryParams []string) (map[string]
 /********** CLIENT **********/
 
 // New creates a client object
-func New(clientID, clientSecret, ipAddress, fingerprint string, modes ...bool) *Client {
+func New(clientID, clientSecret, fingerprint, ipAddress string, modes ...bool) *Client {
 	if len(modes) > 0 {
 		if modes[0] == true {
 			logMode = true
@@ -250,7 +250,7 @@ func (c *Client) GetUsers(queryParams ...string) (map[string]interface{}, error)
 }
 
 // GetUser returns a single user
-func (c *Client) GetUser(userID, ipAddress, fingerprint string, queryParams ...string) (*User, error) {
+func (c *Client) GetUser(userID, fingerprint, ipAddress string, queryParams ...string) (*User, error) {
 	var user User
 
 	url := buildURL(path["users"], userID)
@@ -259,15 +259,15 @@ func (c *Client) GetUser(userID, ipAddress, fingerprint string, queryParams ...s
 
 	mapstructure.Decode(res, &user)
 
-	user.request = user.request.updateRequest(c.ClientID, c.ClientSecret, ipAddress, fingerprint)
+	user.request = user.request.updateRequest(c.ClientID, c.ClientSecret, fingerprint, ipAddress)
 	user.Response = res
 
 	return &user, err
 }
 
 // CreateUser creates a single user and returns the new user data
-func (c *Client) CreateUser(data, ipAddress, fingerprint string, idempotencyKey ...string) (*User, error) {
-	c.request = c.request.updateRequest(c.ClientID, c.ClientSecret, ipAddress, fingerprint)
+func (c *Client) CreateUser(data, fingerprint, ipAddress string, idempotencyKey ...string) (*User, error) {
+	c.request = c.request.updateRequest(c.ClientID, c.ClientSecret, fingerprint, ipAddress)
 
 	var user User
 
@@ -277,7 +277,7 @@ func (c *Client) CreateUser(data, ipAddress, fingerprint string, idempotencyKey 
 
 	mapstructure.Decode(res, &user)
 
-	user.request = user.request.updateRequest(c.ClientID, c.ClientSecret, ipAddress, fingerprint)
+	user.request = user.request.updateRequest(c.ClientID, c.ClientSecret, fingerprint, ipAddress)
 	user.Response = res
 
 	return &user, err
