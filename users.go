@@ -34,7 +34,7 @@ func (u *User) do(method, url, data string, params []string) (map[string]interfa
 	var response []byte
 	var err error
 
-	u.request = u.request.updateRequest(u.request.clientID, u.request.clientSecret, u.request.fingerprint, u.request.ipAddress, u.AuthKey)
+	u.request = u.request.updateRequest(u.request.clientID, u.request.clientSecret, u.request.ipAddress, u.request.fingerprint, u.AuthKey)
 
 	switch method {
 	case "GET":

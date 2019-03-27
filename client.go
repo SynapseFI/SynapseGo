@@ -100,7 +100,7 @@ func (c *Client) do(method, url, data string, queryParams []string) (map[string]
 	var body []byte
 	var err error
 
-	c.request = c.request.updateRequest(c.ClientID, c.ClientSecret, c.Fingerprint, c.IP)
+	c.request = c.request.updateRequest(c.ClientID, c.ClientSecret, c.IP, c.Fingerprint)
 
 	switch method {
 	case "GET":
