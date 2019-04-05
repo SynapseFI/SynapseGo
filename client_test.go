@@ -34,8 +34,8 @@ func createTestClient() *Client {
 	return New(
 		clientData["clientID"].(string),
 		clientData["clientSecret"].(string),
-		clientData["ipAddress"].(string),
 		clientData["fingerprint"].(string),
+		clientData["ipAddress"].(string),
 	)
 }
 
