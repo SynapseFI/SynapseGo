@@ -40,7 +40,7 @@ func createTestUser() *User {
 		cred["fingerprint"].(string),
 	)
 
-	testUser, err := testClient.GetUser("", false)
+	testUser, err := testClient.GetUser("", "", "")
 
 	if err != nil {
 		panic(err)
@@ -73,6 +73,18 @@ func Test_GetRefreshToken(t *testing.T) {
 	assert.NoError(err)
 	assert.Equal(testRes, mockUsersResponse)
 }
+
+func Test_RegisterFingerprint(t *testing.T) {
+	assert := assert.New(t)
+	testUser := createTestUser()
+
+	// No parameters
+	testRes, err := testUser.RegisterFingerprint("TEST_FINGERPRINT")
+
+	assert.NoError(err)
+	assert.Equal(testRes, mockUsersResponse)
+}
+
 func Test_Select2FA(t *testing.T) {
 	assert := assert.New(t)
 	testUser := createTestUser()
@@ -381,7 +393,6 @@ func Test_Update(t *testing.T) {
 
 	assert.NoError(err)
 	assert.NotNil(testRes.AuthKey)
-	assert.NotNil(testRes.FullDehydrate)
 	assert.NotNil(testRes.UserID)
 	assert.NotNil(testRes.RefreshToken)
 	assert.NotNil(testRes.Response)

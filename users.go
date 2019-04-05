@@ -113,6 +113,20 @@ func (u *User) GetRefreshToken() (map[string]interface{}, error) {
 	return res, err
 }
 
+// RegisterFingerprint submits a new fingerprint and triggers the MFA flow
+func (u *User) RegisterFingerprint(fp string) (map[string]interface{}, error) {
+	url := buildURL(path["auth"], u.UserID)
+
+	u.request.fingerprint = fp
+
+	data := `{ "refresh_token": "` + u.RefreshToken + `" }`
+
+	res, err := u.do("POST", url, data, nil)
+
+	log.info("Registering new fingerprint...")
+	return res, err
+}
+
 // Select2FA sends the 2FA device selection to the system
 func (u *User) Select2FA(device string) (map[string]interface{}, error) {
 	url := buildURL(path["auth"], u.UserID)
