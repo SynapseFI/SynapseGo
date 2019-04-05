@@ -223,6 +223,8 @@ data, err := user.Authenticate(body)
 
 #### Register Fingerprint
 ```go
+// Submit a new fingerprint to be registered for the user
+data, err := user.RegisterFingerprint("NEW_FINGERPRINT")
 /*
 {
 	"error": {
@@ -239,10 +241,10 @@ data, err := user.Authenticate(body)
 */
 
 // Submit a valid email address or phone number from "phone_numbers" list
-res, err := user.Select2FA("developer@email.com")
+data, err := user.Select2FA("developer@email.com")
 
 // MFA sent to developer@email.com
-res, err := user.VerifyPIN("123456")
+data, err := user.VerifyPIN("123456")
 
 ```
 
