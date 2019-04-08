@@ -237,8 +237,8 @@ func (u *User) ShipCardNode(nodeID, data string) (map[string]interface{}, error)
 	return u.do("PATCH", url, data, nil)
 }
 
-// TriggerDummyTransactions triggers external dummy transactions on deposit or card accounts
-func (u *User) TriggerDummyTransactions(nodeID string, queryParams ...string) (map[string]interface{}, error) {
+// CreateDummyTransaction triggers external dummy transactions on internal accounts
+func (u *User) CreateDummyTransaction(nodeID string, queryParams ...string) (map[string]interface{}, error) {
 	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID) + "/dummy-tran"
 
 	log.info("Triggering dummy transactions...")

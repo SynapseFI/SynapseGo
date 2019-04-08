@@ -221,12 +221,12 @@ func Test_ShipCardNode(t *testing.T) {
 	assert.Equal(testRes, mockUsersResponse)
 }
 
-func Test_TriggerDummyTransactions(t *testing.T) {
+func Test_CreateDummyTransaction(t *testing.T) {
 	assert := assert.New(t)
 	testUser := createTestUser()
 
 	// No parameters
-	testRes, err := testUser.TriggerDummyTransactions("", "")
+	testRes, err := testUser.CreateDummyTransaction("", "")
 
 	assert.NoError(err)
 	assert.Equal(testRes, mockUsersResponse)
