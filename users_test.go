@@ -226,7 +226,7 @@ func Test_TriggerDummyTransactions(t *testing.T) {
 	testUser := createTestUser()
 
 	// No parameters
-	testRes, err := testUser.TriggerDummyTransactions("", false)
+	testRes, err := testUser.TriggerDummyTransactions("", "")
 
 	assert.NoError(err)
 	assert.Equal(testRes, mockUsersResponse)

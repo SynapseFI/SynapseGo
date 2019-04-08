@@ -238,15 +238,11 @@ func (u *User) ShipCardNode(nodeID, data string) (map[string]interface{}, error)
 }
 
 // TriggerDummyTransactions triggers external dummy transactions on deposit or card accounts
-func (u *User) TriggerDummyTransactions(nodeID string, credit bool) (map[string]interface{}, error) {
+func (u *User) TriggerDummyTransactions(nodeID string, queryParams ...string) (map[string]interface{}, error) {
 	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID) + "/dummy-tran"
 
-	if credit == true {
-		url += "?is_credit=YES"
-	}
-
 	log.info("Triggering dummy transactions...")
-	return u.do("GET", url, "", nil)
+	return u.do("GET", url, "", queryParams)
 }
 
 // VerifyMicroDeposit verifies micro-deposit amounts for a node

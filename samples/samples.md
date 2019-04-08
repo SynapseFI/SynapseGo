@@ -474,6 +474,14 @@ body := `{
 data, err := user.CreateTransaction(nodeID, body)
 ```
 
+#### Create Dummy Transaction
+```go
+nodeID := "594e606212e17a002f2e3251"
+queryParams := "is_credit=YES&type=INTERCHANGE&subnetid=5caac735e1232a0029ee649c&foreign_transaction=NO"
+
+data, err := user.CreateTransaction(nodeID, queryParams)
+```
+
 #### Comment on Transaction Status
 ```go
 nodeID := "594e606212e17a002f2e3251"
