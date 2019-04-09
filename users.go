@@ -213,8 +213,8 @@ func (u *User) GetApplePayToken(nodeID, data string) (map[string]interface{}, er
 	return u.do("PATCH", url, data, nil)
 }
 
-// ReinitiateMicroDeposit reinitiates micro-deposits for an ACH-US node with AC/RT
-func (u *User) ReinitiateMicroDeposit(nodeID string) (map[string]interface{}, error) {
+// ReinitiateMicroDeposits reinitiates micro-deposits for an ACH-US node with AC/RT
+func (u *User) ReinitiateMicroDeposits(nodeID string) (map[string]interface{}, error) {
 	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID) + "?resend_micro=YES"
 
 	log.info("Reinitiating mico-deposits...")

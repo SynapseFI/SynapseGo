@@ -29,7 +29,7 @@
     * [Ship Card Node](#ship-card-node)
     * [Reset Card Node](#reset-card-node)
     * [Verify Micro Deposit](#verify-micro-deposit)
-    * [Reinitiate Micro Deposit](#reinitiate-micro-deposit)
+    * [Reinitiate Micro Deposits](#reinitiate-micro-deposits)
     * [Get Apple Pay Token](#get-apple-pay-token)
   + [Subnets](#subnets)
     * [Get Subnet](#get-subnet)
@@ -370,11 +370,11 @@ body := `{
 data, err := user.VerifyMicroDeposit(nodeID, body)
 ```
 
-#### Reinitiate Micro Deposit
+#### Reinitiate Micro Deposits
 ```go
 nodeID := "5ba05ed620b3aa005882c52a"
 
-data, err := user.ReinitiateMicroDeposit(nodeID)
+data, err := user.ReinitiateMicroDeposits(nodeID)
 ```
 
 #### Get Apple Pay Token

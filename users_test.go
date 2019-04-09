@@ -188,12 +188,12 @@ func Test_GetApplePayToken(t *testing.T) {
 	assert.Equal(testRes, mockUsersResponse)
 }
 
-func Test_ReinitiateMicroDeposit(t *testing.T) {
+func Test_ReinitiateMicroDeposits(t *testing.T) {
 	assert := assert.New(t)
 	testUser := createTestUser()
 
 	// No parameters
-	testRes, err := testUser.ReinitiateMicroDeposit("")
+	testRes, err := testUser.ReinitiateMicroDeposits("")
 
 	assert.NoError(err)
 	assert.Equal(testRes, mockUsersResponse)
