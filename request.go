@@ -54,7 +54,7 @@ func (req *Request) Get(url string, params []string) ([]byte, error) {
 		EndBytes()
 
 	if len(errs) > 0 {
-		panic(errs)
+		return nil, errs[0]
 	}
 
 	if res.StatusCode != 200 {
@@ -82,7 +82,7 @@ func (req *Request) Post(url, data string, params []string) ([]byte, error) {
 		EndBytes()
 
 	if len(errs) > 0 {
-		panic(errs)
+		return nil, errs[0]
 	}
 
 	if res.StatusCode != 200 && res.StatusCode != 202 {
@@ -110,7 +110,7 @@ func (req *Request) Patch(url, data string, params []string) ([]byte, error) {
 		EndBytes()
 
 	if len(errs) > 0 {
-		panic(errs)
+		return nil, errs[0]
 	}
 
 	if res.StatusCode != 200 {
@@ -131,7 +131,7 @@ func (req *Request) Delete(url string) ([]byte, error) {
 		EndBytes()
 
 	if len(errs) > 0 {
-		panic(errs)
+		return nil, errs[0]
 	}
 
 	if res.StatusCode != 200 {
