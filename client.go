@@ -188,7 +188,7 @@ func (c *Client) LocateATMs(queryParams ...string) (map[string]interface{}, erro
 
 // GetPublicKey returns a public key as a token representing client credentials
 func (c *Client) GetPublicKey(scope ...string) (map[string]interface{}, error) {
-	url := buildURL(path["client"], "?issue_public_key=YES&scope=")
+	url := buildURL(path["client"]) + "?issue_public_key=YES&scope="
 	defaultScope := "OAUTH|POST,USERS|POST,USERS|GET,USER|GET,USER|PATCH,SUBSCRIPTIONS|GET,SUBSCRIPTIONS|POST,SUBSCRIPTION|GET,SUBSCRIPTION|PATCH,CLIENT|REPORTS,CLIENT|CONTROLS"
 
 	if len(scope) > 0 {
