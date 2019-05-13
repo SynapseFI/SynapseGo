@@ -192,10 +192,10 @@ body := `{
   ...
 }`
 
-userIP = "127.0.0.1" // or client.IP
 userFingerprint = "TEST_FINGERPRINT" // or client.Fingerprint
+userIP = "127.0.0.1" // or client.IP
 
-user, err := client.CreateUser(body, userIP, userFingerprint)
+user, err := client.CreateUser(body, userFingerprint, userIP)
 ```
 
 #### Get Webhook Logs
