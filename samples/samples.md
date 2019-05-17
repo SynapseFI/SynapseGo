@@ -69,24 +69,22 @@ user, err := client.GetUser("5bec6ebebaabfc00ab168fa0", client.Fingerprint, clie
 var client = synapse.New(
 "client_id_1239ABCdefghijk1092312309",
 "client_secret_1239ABCdefghijk1092312309",
-"1.2.3.132",
 "1023918209480asdf8341098",
+"1.2.3.132",
 )
 ```
 
 Enable logging & turn off developer mode (developer mode is true by default)
 
 ```go
-var client = synapse.New(
 	var client = synapse.New(
 	"CLIENT_ID",
-	"CLIENT_SECRET",
+  "CLIENT_SECRET",
+	"FINGERPRINT",  
 	"IP_ADDRESS",
-	"FINGERPRINT",
 	true,
 	false,
 	)
-)
 ```
 
 #### Get Client Nodes
