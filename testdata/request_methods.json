@@ -5,7 +5,7 @@
   },
   "POST": {
     "data": {
-      "type": "SYNAPSE-US",
+      "type": "DEPOSIT-US",
       "info":{
           "nickname":"My Checking"
       },
