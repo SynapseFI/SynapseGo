@@ -150,6 +150,16 @@ func (c *Client) GetNodes(queryParams ...string) (map[string]interface{}, error)
 	return c.do("GET", url, "", queryParams)
 }
 
+// GetTradeMarketData returns data on a stock based on its ticker symbol
+func (c *Client) GetTradeMarketData(tickerSymbol string) (map[string]interface{}, error) {
+	url := buildURL(path["nodes"], "trade-market-watch")
+
+	ts := []string{tickerSymbol}
+
+	log.info("Getting trade market data for " + tickerSymbol)
+	return c.do("GET", url, "", ts)
+}
+
 /********** OTHER **********/
 
 // GetCryptoMarketData returns market data for cryptocurrencies
@@ -186,7 +196,7 @@ func (c *Client) LocateATMs(queryParams ...string) (map[string]interface{}, erro
 
 // GetPublicKey returns a public key as a token representing client credentials
 func (c *Client) GetPublicKey(scope ...string) (map[string]interface{}, error) {
-	url := buildURL(path["client"]) + "?issue_public_key=YES&scope="
+	url := buildURL(path["client"])
 	defaultScope := "OAUTH|POST,USERS|POST,USERS|GET,USER|GET,USER|PATCH,SUBSCRIPTIONS|GET,SUBSCRIPTIONS|POST,SUBSCRIPTION|GET,SUBSCRIPTION|PATCH,CLIENT|REPORTS,CLIENT|CONTROLS"
 
 	if len(scope) > 0 {
@@ -194,9 +204,10 @@ func (c *Client) GetPublicKey(scope ...string) (map[string]interface{}, error) {
 	}
 
 	url += defaultScope
+	qp := []string{"?issue_public_key=YES&scope=" + defaultScope}
 
 	log.info("Getting public key...")
-	return c.do("GET", url, "", nil)
+	return c.do("GET", url, "", qp)
 }
 
 // GetWebhookLogs returns all of the webhooks sent to a specific client
@@ -205,6 +216,14 @@ func (c *Client) GetWebhookLogs() (map[string]interface{}, error) {
 
 	log.info("Getting webhook logs...")
 	return c.do("GET", url, "", nil)
+}
+
+// VerifyRoutingNumber checks and returns the bank details of a routing number
+func (c *Client) VerifyRoutingNumber(data string) (map[string]interface{}, error) {
+	url := buildURL("routing-number-verification")
+
+	log.info("Retrieving routing number details")
+	return c.do("GET", url, data, nil)
 }
 
 /********** SUBSCRIPTION **********/
