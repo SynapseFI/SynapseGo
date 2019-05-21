@@ -58,9 +58,5 @@ func (req *Request) Patch(url, data string, queryParams []string) ([]byte, error
 
 // Delete performs a DELETE request
 func (req *Request) Delete(url string) ([]byte, error) {
-	body := []byte(`{
-		"message": "This is a mock response"
-	}`)
-
-	return body, nil
+	return mockResponse, nil
 }
