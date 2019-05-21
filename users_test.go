@@ -36,11 +36,11 @@ func createTestUser() *User {
 	testClient := New(
 		cred["clientID"].(string),
 		cred["clientSecret"].(string),
-		cred["ipAddress"].(string),
 		cred["fingerprint"].(string),
+		cred["ipAddress"].(string),
 	)
 
-	testUser, err := testClient.GetUser("", "", "")
+	testUser, err := testClient.GetUser("")
 
 	if err != nil {
 		panic(err)
@@ -57,7 +57,7 @@ func Test_Authenticate(t *testing.T) {
 	testUser := createTestUser()
 
 	// No parameters
-	testRes, err := testUser.Authenticate("")
+	testRes, err := testUser.Authenticate("", "", "")
 
 	assert.NoError(err)
 	assert.Equal(testRes, mockUsersResponse)

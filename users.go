@@ -34,8 +34,6 @@ func (u *User) do(method, url, data string, params []string) (map[string]interfa
 	var response []byte
 	var err error
 
-	u.request = u.request.updateRequest(u.request.clientID, u.request.clientSecret, u.request.fingerprint, u.request.ipAddress, u.AuthKey)
-
 	switch method {
 	case "GET":
 		response, err = u.request.Get(url, params)
@@ -52,7 +50,7 @@ func (u *User) do(method, url, data string, params []string) (map[string]interfa
 
 	switch err.(type) {
 	case *IncorrectUserCredentials:
-		_, err = u.Authenticate(`{ "refresh_token": "` + u.RefreshToken + `" }`)
+		_, err = u.Authenticate(`{ "refresh_token": "`+u.RefreshToken+`" }`, u.request.fingerprint, u.request.ipAddress)
 
 		if err != nil {
 			return nil, err
@@ -85,10 +83,17 @@ func (u *User) do(method, url, data string, params []string) (map[string]interfa
 /********** AUTHENTICATION **********/
 
 // Authenticate returns an oauth key and sets it to the user object
-func (u *User) Authenticate(data string) (map[string]interface{}, error) {
+// If the refresh token is expired the API will automatically send a new one
+// Capture refresh token every time
+func (u *User) Authenticate(data, fingerprint, ipAddress string) (map[string]interface{}, error) {
 	url := buildURL(path["auth"], u.UserID)
 
+	u.request.updateRequest(u.request.clientID, u.request.clientSecret, fingerprint, ipAddress)
 	res, err := u.do("POST", url, data, nil)
+
+	if res["refresh_token"] != nil {
+		u.RefreshToken = res["refresh_token"].(string)
+	}
 
 	if res["oauth_key"] != nil {
 		u.AuthKey = res["oauth_key"].(string)
