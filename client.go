@@ -100,8 +100,6 @@ func (c *Client) do(method, url, data string, queryParams []string) (map[string]
 	var body []byte
 	var err error
 
-	c.request = c.request.updateRequest(c.ClientID, c.ClientSecret, c.Fingerprint, c.IP)
-
 	switch method {
 	case "GET":
 		body, err = c.request.Get(url, queryParams)
@@ -264,16 +262,12 @@ func (c *Client) GetUsers(queryParams ...string) (map[string]interface{}, error)
 }
 
 // GetUser returns a single user
-func (c *Client) GetUser(userID, fingerprint, ipAddress string, queryParams ...string) (*User, error) {
-	var user User
-
+func (c *Client) GetUser(userID string, queryParams ...string) (*User, error) {
 	url := buildURL(path["users"], userID)
-
 	res, err := c.do("GET", url, "", queryParams)
 
+	var user User
 	mapstructure.Decode(res, &user)
-
-	user.request = user.request.updateRequest(c.ClientID, c.ClientSecret, fingerprint, ipAddress)
 	user.Response = res
 
 	log.info("Getting user...")
@@ -282,17 +276,19 @@ func (c *Client) GetUser(userID, fingerprint, ipAddress string, queryParams ...s
 
 // CreateUser creates a single user and returns the new user data
 func (c *Client) CreateUser(data, fingerprint, ipAddress string, idempotencyKey ...string) (*User, error) {
-	c.request = c.request.updateRequest(c.ClientID, c.ClientSecret, fingerprint, ipAddress)
-
 	var user User
+	user.request = Request{
+		"",
+		c.ClientID,
+		c.ClientSecret,
+		fingerprint,
+		ipAddress,
+	}
 
 	url := buildURL(path["users"])
-
-	res, err := c.do("POST", url, data, idempotencyKey)
+	res, err := user.do("POST", url, data, idempotencyKey)
 
 	mapstructure.Decode(res, &user)
-
-	user.request = user.request.updateRequest(c.ClientID, c.ClientSecret, fingerprint, ipAddress)
 	user.Response = res
 
 	log.info("Creating user...")
