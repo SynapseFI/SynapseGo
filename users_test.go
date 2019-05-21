@@ -267,6 +267,17 @@ func Test_GetStatements(t *testing.T) {
 	assert.Equal(testRes, mockUsersResponse)
 }
 
+func Test_CreateNodeStatements(t *testing.T) {
+	assert := assert.New(t)
+	testUser := createTestUser()
+
+	// No parameters
+	testRes, err := testUser.CreateNodeStatements("", "")
+
+	assert.NoError(err)
+	assert.Equal(testRes, mockUsersResponse)
+}
+
 /********** SUBNET **********/
 
 func Test_GetNodeSubnets(t *testing.T) {

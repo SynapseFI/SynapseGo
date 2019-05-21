@@ -67,6 +67,17 @@ func Test_GetNodes(t *testing.T) {
 	assert.Equal(testRes, mockClientResponse)
 }
 
+func Test_GetTradeMarketData(t *testing.T) {
+	assert := assert.New(t)
+	testClient := createTestClient()
+
+	// No parameters
+	testRes, err := testClient.GetTradeMarketData("")
+
+	assert.NoError(err)
+	assert.Equal(testRes, mockClientResponse)
+}
+
 /********** OTHER **********/
 
 func Test_GetCryptoMarketData(t *testing.T) {
@@ -130,6 +141,16 @@ func Test_GetWebhookLogs(t *testing.T) {
 
 	// No parameters
 	testRes, err := testClient.GetWebhookLogs()
+
+	assert.NoError(err)
+	assert.Equal(testRes, mockClientResponse)
+}
+
+func Test_VerifyRoutingNumber(t *testing.T) {
+	assert := assert.New(t)
+	testClient := createTestClient()
+
+	testRes, err := testClient.VerifyRoutingNumber("")
 
 	assert.NoError(err)
 	assert.Equal(testRes, mockClientResponse)
