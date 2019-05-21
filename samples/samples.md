@@ -166,10 +166,8 @@ data, err := client.GetUsers()
 ```go
 // set FullDehydrate to true
 userID = "594e0fa2838454002ea317a0"
-userFingerprint = "TEST_FINGERPRINT" // or client.Fingerprint
-userIP = "127.0.0.1" // or client.IP
 
-user, err := client.GetUser(userID, userFingerprint, userIP)
+user, err := client.GetUser(userID)
 ```
 
 #### Create User
@@ -205,7 +203,12 @@ data, err := client.GetWebhookLogs()
 
 ### Authentication
 
-#### Get New Oauth
+**To perform user actions, users must be authenticated**
+- If performing user actions with a **new user** (i.e. created during the current session), further authentication is not necessary
+- If performing user actions with any other user, please authenticate the user
+- User authentication is only required at the start of a new session (`user.AuthKey == nil`), the wrapper will handle future authentication sessions
+
+#### Authenticate User
 ```go
 body := `{
     "refresh_token":"refresh_Y5beJdBLtgvply3KIzrh72UxWMEqiTNoVAfDs98G",
@@ -216,7 +219,10 @@ body := `{
     ]
 }`
 
-data, err := user.Authenticate(body)
+userFingerprint = "TEST_FINGERPRINT" // or client.Fingerprint
+userIP = "127.0.0.1" // or client.IP
+
+data, err := user.Authenticate(body, userFingerprint, userIP)
 ```
 
 #### Register Fingerprint
