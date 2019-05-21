@@ -276,6 +276,14 @@ func (u *User) GetStatements(queryParams ...string) (map[string]interface{}, err
 	return u.do("GET", url, "", queryParams)
 }
 
+// CreateNodeStatements creates ad-hoc statements for the specified node
+func (u *User) CreateNodeStatements(nodeID, data string, idempotencyKey ...string) (map[string]interface{}, error) {
+	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID, path["statements"])
+
+	log.info("Creating ad-hoc statements")
+	return u.do("POST", url, data, idempotencyKey)
+}
+
 /********** SUBNET **********/
 
 // GetNodeSubnets gets all subnets associated with a node
