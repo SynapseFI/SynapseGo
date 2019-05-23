@@ -1,9 +1,11 @@
 # Table of Contents
-- [General](general-examples)
+- [General Examples](#general-examples)
   * [Query Parameters](#query-parameters)
 - [Client Examples](#client-examples)
   + [Client](#client)
     * [Initialize Client](#initialize-client)
+  + [Authentication](#authentication-client)
+    * [Get Public Key](#get-public-key)
   + [Nodes](#nodes-client)
     * [Get Client Nodes](#get-client-nodes)
     * [Get Trade Market Data](#get-trade-market-data)
@@ -12,7 +14,6 @@
     * [Get Crypto Quotes](#get-crypto-quotes)
     * [Get Institutions](#get-institutions)
     * [Locate ATMs](#locate-atms)
-    * [Issue Public Key](#issue-public-key)
     * [Verify Routing Number](#verify-routing-number)
   + [Subscriptions](#subscriptions-client)
     * [Get Client Subscriptions](#get-client-subscriptions)
@@ -23,7 +24,7 @@
   + [Transactions](#transactions-client)
     * [Get Client Transactions](#get-client-transactions)
   + [Users](#users-client)
-    * [Get Client Users](#get-client-users)
+    * [Get Users](#get-users)
     * [Get User](#get-user)
     * [Create User](#create-user)
 - [User Examples](#user)
@@ -47,18 +48,19 @@
     * [Reset Card Node](#reset-card-node)   
     * [Get Apple Pay Token](#get-apple-pay-token)
   + [Statements](#statements)
-    * [Get Node Statements](#get-node-statements)
     * [Get Statements](#get-statements)
+    * [Get Node Statements](#get-node-statements)
     * [Create Node Statements](#create-node-statements)
   + [Subnets](#subnets)
+    * [Get Subnets](#get-subnets)
     * [Get Node Subnets](#get-node-subnets)
     * [Get Subnet](#get-subnet)
     * [Create Subnet](#create-subnet)
     * [Update Subnet](#update-subnet)
     * [Ship Card](#ship-card)
   + [Transactions](#transactions)
-    * [Get Node Transactions](#get-node-transactions)
     * [Get Transactions](#get-transactions)
+    * [Get Node Transactions](#get-node-transactions)
     * [Get Transaction](#get-transaction)
     * [Create Transaction](#create-transaction)
     * [Cancel Transaction](#cancel-transaction)  
@@ -110,6 +112,16 @@ Enable logging & turn off developer mode (developer mode is true by default)
 	false,
 	)
 ```
+
+### Authentication (Client)
+
+#### Get Public Key
+```go
+scope := "OAUTH|POST,USERS|POST,USERS|GET,USER|GET,USER|PATCH"
+
+data, err := client.GetPublicKey(scope)
+```
+
 ### Nodes (Client)
 
 #### Get Client Nodes
@@ -142,20 +154,6 @@ data, err := client.GetInstitutions()
 #### Locate ATMs
 ```go
 data, err = client.LocateATMs()
-```
-
-#### Issue Public Key
-```go
-scope := "OAUTH|POST,USERS|POST,USERS|GET,USER|GET,USER|PATCH"
-
-data, err := client.GetPublicKey(scope)
-```
-
-```go
-data, err := client.GetCryptoMarketData()
-data, err := client.GetCryptoQuotes()
-data, err := client.GetInstitutions()
-data, err := client.LocateATMs()
 ```
 
 #### Verify Routing Number
@@ -230,7 +228,7 @@ data, err := client.GetTransactions()
 
 ### Users (Client)
 
-#### Get Client Users 
+#### Get Users 
 ```go
 data, err := client.GetUsers()
 ```
@@ -469,16 +467,16 @@ data, err := user.GenerateApplePayToken(nodeID, body)
 
 ### Statements
 
+#### Get Statements
+```go
+data, err := user.GetStatements()
+```
+
 #### Get Node Statements
 ```go
 nodeID := "594e606212e17a002f2e3251"
 
 data, err := user.GetNodeStatements(nodeID)
-```
-
-#### Get Statements
-```go
-data, err := user.GetStatements()
 ```
 
 #### Create Node Statements
@@ -494,6 +492,11 @@ data, err := user.CreateNodeStatements(nodeID, body)
 ```
 
 ### Subnets
+
+#### Get Subnets
+```go
+data, err := user.GetSubnets()
+```
 
 #### Get Node Subnets
 ```go
@@ -550,16 +553,16 @@ data, err := user.ShipCard(nodeID, subnetID, body)
 
 ### Transactions
 
+#### Get Transactions
+```go
+data, err := user.GetTransactions()
+```
+
 #### Get Node Transactions
 ```go
 nodeID := "594e606212e17a002f2e3251"
 
 data, err := user.GetNodeTransactions(nodeID)
-```
-
-#### Get Transactions
-```go
-data, err := user.GetTransactions()
 ```
 
 #### Get Transaction
