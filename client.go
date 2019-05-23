@@ -210,14 +210,6 @@ func (c *Client) GetPublicKey(scope ...string) (map[string]interface{}, error) {
 	return c.do("GET", url, "", qp)
 }
 
-// GetWebhookLogs returns all of the webhooks sent to a specific client
-func (c *Client) GetWebhookLogs() (map[string]interface{}, error) {
-	url := buildURL(path["subscriptions"], "logs")
-
-	log.info("Getting webhook logs...")
-	return c.do("GET", url, "", nil)
-}
-
 // VerifyRoutingNumber checks and returns the bank details of a routing number
 func (c *Client) VerifyRoutingNumber(data string) (map[string]interface{}, error) {
 	url := buildURL("routing-number-verification")
@@ -258,6 +250,14 @@ func (c *Client) UpdateSubscription(subscriptionID string, data string) (map[str
 
 	log.info("Updating subscription...")
 	return c.do("PATCH", url, data, nil)
+}
+
+// GetWebhookLogs returns all of the webhooks sent to a specific client
+func (c *Client) GetWebhookLogs() (map[string]interface{}, error) {
+	url := buildURL(path["subscriptions"], "logs")
+
+	log.info("Getting webhook logs...")
+	return c.do("GET", url, "", nil)
 }
 
 /********** TRANSACTION **********/
