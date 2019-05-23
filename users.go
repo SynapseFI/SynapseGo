@@ -210,11 +210,11 @@ func (u *User) DeleteNode(nodeID string) (map[string]interface{}, error) {
 
 /********** NODE (OTHER) **********/
 
-// GetApplePayToken generates tokenized info for Apple Wallet
-func (u *User) GetApplePayToken(nodeID, data string) (map[string]interface{}, error) {
-	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID, "applepay")
+// VerifyMicroDeposit verifies micro-deposit amounts for a node
+func (u *User) VerifyMicroDeposit(nodeID, data string) (map[string]interface{}, error) {
+	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID)
 
-	log.info("Getting apple pay token...")
+	log.info("Verifying micro-deposit amounts...")
 	return u.do("PATCH", url, data, nil)
 }
 
@@ -242,19 +242,11 @@ func (u *User) ShipCardNode(nodeID, data string) (map[string]interface{}, error)
 	return u.do("PATCH", url, data, nil)
 }
 
-// CreateDummyTransaction triggers external dummy transactions on internal accounts
-func (u *User) CreateDummyTransaction(nodeID string, queryParams ...string) (map[string]interface{}, error) {
-	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID) + "/dummy-tran"
+// GetApplePayToken generates tokenized info for Apple Wallet
+func (u *User) GetApplePayToken(nodeID, data string) (map[string]interface{}, error) {
+	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID, "applepay")
 
-	log.info("Triggering dummy transactions...")
-	return u.do("GET", url, "", queryParams)
-}
-
-// VerifyMicroDeposit verifies micro-deposit amounts for a node
-func (u *User) VerifyMicroDeposit(nodeID, data string) (map[string]interface{}, error) {
-	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID)
-
-	log.info("Verifying micro-deposit amounts...")
+	log.info("Getting apple pay token...")
 	return u.do("PATCH", url, data, nil)
 }
 
@@ -291,6 +283,14 @@ func (u *User) GetNodeSubnets(nodeID string, queryParams ...string) (map[string]
 	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID, path["subnets"])
 
 	log.info("Getting list of node subnets...")
+	return u.do("GET", url, "", queryParams)
+}
+
+// GetSubnets gets all subnets associated with a user
+func (u *User) GetSubnets(queryParams ...string) (map[string]interface{}, error) {
+	url := buildURL(path["users"], u.UserID, path["subnets"])
+
+	log.info("Getting list of user subnets...")
 	return u.do("GET", url, "", queryParams)
 }
 
@@ -382,6 +382,14 @@ func (u *User) DisputeTransaction(nodeID, transactionID, data string) (map[strin
 
 	log.info("Disputing transaction...")
 	return u.do("PATCH", url, data, nil)
+}
+
+// CreateDummyTransaction triggers external dummy transactions on internal accounts
+func (u *User) CreateDummyTransaction(nodeID string, queryParams ...string) (map[string]interface{}, error) {
+	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID) + "/dummy-tran"
+
+	log.info("Triggering dummy transactions...")
+	return u.do("GET", url, "", queryParams)
 }
 
 /********** USER **********/
