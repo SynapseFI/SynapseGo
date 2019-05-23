@@ -2,6 +2,33 @@
 
 All notable changes to this project will be documented in this file.
 
+## 2019-05-23
+
+### Added
+- [User] `GetSubnets` to get a list of user subnets
+- Examples
+  + [Client]
+    * `GetTradeMarkeData`
+    * `GetCryptoMarketData`
+    * `GetCryptoQuotes`
+    * `GetInstitutions`
+    * `LocateATMs`
+    * `VerifyRoutingNumber`
+  + [User]
+    * `GetRefreshToken`
+    * `Select2FA`
+    * `SubmitMFA`
+    * `VerifyPIN`
+    * `GetNodeStatements`
+    * `GetStatements`
+    * `CreateNodeStatements`
+    * `GetSubnets`
+    * `CreateDummyTransactions`
+
+### Changed
+- Rename `samples/` to `examples/`
+- Rename `samples.md` to `examples.md`
+
 ## 2019-05-21
 
 ### Added
