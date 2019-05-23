@@ -1,51 +1,73 @@
 # Table of Contents
 - [General](general-examples)
   * [Query Parameters](#query-parameters)
-- [Client Examples](#client)
-  * [Initialize Client](#initialize-client)
-  * [Get Client Nodes](#get-client-nodes)
-  * [Issue Public Key](#issue-public-key)
-  * [Get Client Subscriptions](#get-client-subscriptions)
-  * [Get Subscription](#get-subscription)
-  * [Create Subscription](#create-subscription)
-  * [Update Subscription](#update-subscription)
-  * [Get Client Transactions](#get-client-transactions)
-  * [Get Client Users](#get-client-users)
-  * [Get User](#get-user)
-  * [Create User](#create-user)
+- [Client Examples](#client-examples)
+  + [Client](#client)
+    * [Initialize Client](#initialize-client)
+  + [Nodes](#nodes-client)
+    * [Get Client Nodes](#get-client-nodes)
+    * [Get Trade Market Data](#get-trade-market-data)
+  + [Other](#other-client)
+    * [Get Crypto Market Data](#get-crypto-market-data)
+    * [Get Crypto Quotes](#get-crypto-quotes)
+    * [Get Institutions](#get-institutions)
+    * [Locate ATMs](#locate-atms)
+    * [Issue Public Key](#issue-public-key)
+    * [Verify Routing Number](#verify-routing-number)
+  + [Subscriptions](#subscriptions-client)
+    * [Get Client Subscriptions](#get-client-subscriptions)
+    * [Get Subscription](#get-subscription)
+    * [Create Subscription](#create-subscription)
+    * [Update Subscription](#update-subscription)
+    * [Get Subscription Logs](#get-subscription-logs)
+  + [Transactions](#transactions-client)
+    * [Get Client Transactions](#get-client-transactions)
+  + [Users](#users-client)
+    * [Get Client Users](#get-client-users)
+    * [Get User](#get-user)
+    * [Create User](#create-user)
 - [User Examples](#user)
   + [Authentication](#authentication)
-    * [Get New Oauth](#get-new-oauth)
+    * [Authenticate](#authenticate)
+    * [Get Refresh Token](#get-refresh-token)
     * [Register Fingerprint](#register-fingerprint)
+    * [Select2FA](#select-2fa)
+    * [SubmitMFA](#submit-mfa)
+    * [VerifyPIN](#verify-pin)
   + [Nodes](#nodes)
-    * [Get User Nodes](#get-user-nodes)
+    * [Get Nodes](#get-nodes)
     * [Get Node](#get-node)
     + [Create Node](#create-node)
         * [Bank Login w/ MFA](#bank-login)
     * [Update Node](#update-node)
     * [Delete Node](#delete-node)
-    * [Get Node Subnets](#get-node-subnets)
-    * [Get Node Transactions](#get-node-transactions)
-    * [Ship Card Node](#ship-card-node)
-    * [Reset Card Node](#reset-card-node)
-    * [Verify Micro Deposit](#verify-micro-deposit)
+    * [Verify Micro Deposit](#verify-micro-deposit)    
     * [Reinitiate Micro Deposits](#reinitiate-micro-deposits)
+    * [Ship Card Node](#ship-card-node)
+    * [Reset Card Node](#reset-card-node)   
     * [Get Apple Pay Token](#get-apple-pay-token)
+  + [Statements](#statements)
+    * [Get Node Statements](#get-node-statements)
+    * [Get Statements](#get-statements)
+    * [Create Node Statements](#create-node-statements)
   + [Subnets](#subnets)
+    * [Get Node Subnets](#get-node-subnets)
     * [Get Subnet](#get-subnet)
     * [Create Subnet](#create-subnet)
     * [Update Subnet](#update-subnet)
     * [Ship Card](#ship-card)
   + [Transactions](#transactions)
+    * [Get Node Transactions](#get-node-transactions)
     * [Get Transactions](#get-transactions)
     * [Get Transaction](#get-transaction)
     * [Create Transaction](#create-transaction)
+    * [Cancel Transaction](#cancel-transaction)  
     * [Comment on Transaction Status](#comment-on-transaction-status)
     * [Dispute Transaction](#dispute-transaction)
-    * [Cancel Transaction](#cancel-transaction)
+    * [Create Dummy Transactions](#create-dummy-transactions)
   + [Users](#users)
     * [Update User or Update/Add Documents](#update-user-or-update-add-documents)
-    * [Generate UBO](#generate-ubo)
+    * [Create UBO](#create-ubo)
 
 ## General Examples
 
@@ -62,6 +84,8 @@ user, err := client.GetUser("5bec6ebebaabfc00ab168fa0", client.Fingerprint, clie
 ```
 
 ## Client Examples
+
+### Client
 
 #### Initialize Client
 ```go
@@ -86,10 +110,38 @@ Enable logging & turn off developer mode (developer mode is true by default)
 	false,
 	)
 ```
+### Nodes (Client)
 
 #### Get Client Nodes
 ```go
 data, err := client.GetNodes()
+```
+
+#### Get Trade Market Data
+```go
+data, err := client.GetTradeMarketData("AAPL")
+```
+
+### Other (Client)
+
+#### Get Crypto Market Data
+```go
+data, err := client.GetCryptoMarketData()
+```
+
+#### GetCryptoQuotes
+```go
+data, err := client.GetCryptoQuotes()
+```
+
+#### Get Institutions
+```go
+data, err := client.GetInstitutions()
+```
+
+#### Locate ATMs
+```go
+data, err = client.LocateATMs()
 ```
 
 #### Issue Public Key
@@ -105,6 +157,18 @@ data, err := client.GetCryptoQuotes()
 data, err := client.GetInstitutions()
 data, err := client.LocateATMs()
 ```
+
+#### Verify Routing Number
+```go
+body := `{
+  "routing_num": "084008426",
+  "type": "ACH-US"
+}`
+
+data, err := client.VerifyRoutingNumber(body)
+```
+
+### Subscriptions (Client)
 
 #### Get Client Subscriptions
 ```go
@@ -152,10 +216,19 @@ body := `{
 data, err := client.UpdateSubscription(subID, body)
 ```
 
+#### Get Subscription Logs
+```go
+data, err := client.GetWebhookLogs()
+```
+
+### Transactions (Client)
+
 #### Get Client Transactions
 ```go
 data, err := client.GetTransactions()
 ```
+
+### Users (Client)
 
 #### Get Client Users 
 ```go
@@ -194,11 +267,6 @@ userIP = "127.0.0.1" // or client.IP
 user, err := client.CreateUser(body, userFingerprint, userIP)
 ```
 
-#### Get Webhook Logs
-```go
-data, err := client.GetWebhookLogs()
-```
-
 ## User Examples
 
 ### Authentication
@@ -208,21 +276,26 @@ data, err := client.GetWebhookLogs()
 - If performing user actions with any other user, please authenticate the user
 - User authentication is only required at the start of a new session (`user.AuthKey == nil`), the wrapper will handle future authentication sessions
 
-#### Authenticate User
+#### Authenticate
 ```go
 body := `{
-    "refresh_token":"refresh_Y5beJdBLtgvply3KIzrh72UxWMEqiTNoVAfDs98G",
-    "scope":[
-        "USER|PATCH",
-        "USER|GET",
-        ...
-    ]
+  "refresh_token":"refresh_Y5beJdBLtgvply3KIzrh72UxWMEqiTNoVAfDs98G",
+  "scope":[
+      "USER|PATCH",
+      "USER|GET",
+      ...
+  ]
 }`
 
 userFingerprint = "TEST_FINGERPRINT" // or client.Fingerprint
 userIP = "127.0.0.1" // or client.IP
 
 data, err := user.Authenticate(body, userFingerprint, userIP)
+```
+
+#### Get Refresh Token
+```go
+data, err := user.GetRefreshToken()
 ```
 
 #### Register Fingerprint
@@ -243,18 +316,32 @@ data, err := user.RegisterFingerprint("NEW_FINGERPRINT")
 	"success": false
 }
 */
+```
 
+#### Select 2FA
+```go
 // Submit a valid email address or phone number from "phone_numbers" list
 data, err := user.Select2FA("developer@email.com")
+```
 
+#### Submit MFA
+```go
+body := `{
+  "access_token":"fake_cd60680b9addc013ca7fb25b2b704ba82d3",
+  "mfa_answer":"test_answer"
+}`
+data, err := user.SubmitMFA(body)
+```
+
+#### Verify PIN
+```go
 // MFA sent to developer@email.com
 data, err := user.VerifyPIN("123456")
-
 ```
 
 ### Nodes
 
-#### Get User Nodes
+#### Get Nodes
 ```go
 data, err := user.GetNodes()
 ```
@@ -333,17 +420,21 @@ nodeID := "594e606212e17a002f2e3251"
 data, err := user.DeleteNode(nodeID)
 ```
 
-#### Get Node Subnets
+#### Verify Micro Deposit
 ```go
-nodeID := "594e606212e17a002f2e3251"
+nodeID := "5ba05ed620b3aa005882c52a"
+body := `{
+  "micro":[0.1,0.1]
+}`
 
-data, err := user.GetNodeSubnets(nodeID, "page=4&per_page=10")
+data, err := user.VerifyMicroDeposit(nodeID, body)
 ```
-#### Get Node Transactions
-```go
-nodeID := "594e606212e17a002f2e3251"
 
-data, err := user.GetNodeTransactions(nodeID, "page=4&per_page=10")
+#### Reinitiate Micro Deposits
+```go
+nodeID := "5ba05ed620b3aa005882c52a"
+
+data, err := user.ReinitiateMicroDeposits(nodeID)
 ```
 
 #### Ship Card Node
@@ -364,23 +455,6 @@ nodeID := "5ba05ed620b3aa005882c52a"
 data, err := user.ResetCardNode(nodeID)
 ```
 
-#### Verify Micro Deposit
-```go
-nodeID := "5ba05ed620b3aa005882c52a"
-body := `{
-  "micro":[0.1,0.1]
-}`
-
-data, err := user.VerifyMicroDeposit(nodeID, body)
-```
-
-#### Reinitiate Micro Deposits
-```go
-nodeID := "5ba05ed620b3aa005882c52a"
-
-data, err := user.ReinitiateMicroDeposits(nodeID)
-```
-
 #### Get Apple Pay Token
 ```go
 nodeID := "5ba05ed620b3aa005882c52a"
@@ -393,7 +467,40 @@ body = `{
 data, err := user.GenerateApplePayToken(nodeID, body)
 ```
 
+### Statements
+
+#### Get Node Statements
+```go
+nodeID := "594e606212e17a002f2e3251"
+
+data, err := user.GetNodeStatements(nodeID)
+```
+
+#### Get Statements
+```go
+data, err := user.GetStatements()
+```
+
+#### Create Node Statements
+```go
+nodeID := "5b4b2df145d1cc006d088f2e"
+body := `{
+  "date_start": 1525132800000,
+  "date_end": 1525132800000,
+  "webhook": "https://wh.synapsefi.com/gen_me_statement_001"
+}`
+
+data, err := user.CreateNodeStatements(nodeID, body)
+```
+
 ### Subnets
+
+#### Get Node Subnets
+```go
+nodeID := "594e606212e17a002f2e3251"
+
+data, err := user.GetNodeSubnets(nodeID, "page=4&per_page=10")
+```
 
 #### Get Subnet
 ```go
@@ -443,11 +550,16 @@ data, err := user.ShipCard(nodeID, subnetID, body)
 
 ### Transactions
 
-#### Get Transactions
+#### Get Node Transactions
 ```go
 nodeID := "594e606212e17a002f2e3251"
 
-data, err := user.GetTransactions(nodeID)
+data, err := user.GetNodeTransactions(nodeID)
+```
+
+#### Get Transactions
+```go
+data, err := user.GetTransactions()
 ```
 
 #### Get Transaction
@@ -455,7 +567,7 @@ data, err := user.GetTransactions(nodeID)
 nodeID := "594e606212e17a002f2e3251"
 transID := "594e72124599e8002fe62e4f"
 
-data, err := user.GetTransactions(nodeID, transID)
+data, err := user.GetTransaction(nodeID, transID)
 ```
 
 #### Create Transaction
@@ -478,12 +590,12 @@ body := `{
 data, err := user.CreateTransaction(nodeID, body)
 ```
 
-#### Create Dummy Transaction
+#### Cancel Transaction
 ```go
 nodeID := "594e606212e17a002f2e3251"
-queryParams := "is_credit=YES&type=INTERCHANGE&subnetid=5caac735e1232a0029ee649c&foreign_transaction=NO"
+transID := "594e72124599e8002fe62e4f"
 
-data, err := user.CreateDummyTransaction(nodeID, queryParams)
+data, err := user.CancelTransaction(nodeID, transID)
 ```
 
 #### Comment on Transaction Status
@@ -504,12 +616,13 @@ body := `{
 
 data, err := user.DisputeTransaction(nodeID, transID, body)
 ```
-#### Cancel Transaction
+
+#### Create Dummy Transaction
 ```go
 nodeID := "594e606212e17a002f2e3251"
-transID := "594e72124599e8002fe62e4f"
+queryParams := "is_credit=YES&type=INTERCHANGE&subnetid=5caac735e1232a0029ee649c&foreign_transaction=NO"
 
-data, err := user.CancelTransaction(nodeID, transID)
+data, err := user.CreateDummyTransaction(nodeID, queryParams)
 ```
 
 ### Users
