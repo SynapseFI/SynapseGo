@@ -252,19 +252,19 @@ func (u *User) GetApplePayToken(nodeID, data string) (map[string]interface{}, er
 
 /********** STATEMENT **********/
 
-// GetNodeStatements gets all of the node statements
-func (u *User) GetNodeStatements(nodeID string, queryParams ...string) (map[string]interface{}, error) {
-	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID, path["statements"])
-
-	log.info("Getting list of node statements...")
-	return u.do("GET", url, "", queryParams)
-}
-
 // GetStatements gets all of the user statements
 func (u *User) GetStatements(queryParams ...string) (map[string]interface{}, error) {
 	url := buildURL(path["users"], u.UserID, path["statements"])
 
 	log.info("Getting list of user statements...")
+	return u.do("GET", url, "", queryParams)
+}
+
+// GetNodeStatements gets all of the node statements
+func (u *User) GetNodeStatements(nodeID string, queryParams ...string) (map[string]interface{}, error) {
+	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID, path["statements"])
+
+	log.info("Getting list of node statements...")
 	return u.do("GET", url, "", queryParams)
 }
 
@@ -278,19 +278,19 @@ func (u *User) CreateNodeStatements(nodeID, data string, idempotencyKey ...strin
 
 /********** SUBNET **********/
 
-// GetNodeSubnets gets all subnets associated with a node
-func (u *User) GetNodeSubnets(nodeID string, queryParams ...string) (map[string]interface{}, error) {
-	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID, path["subnets"])
-
-	log.info("Getting list of node subnets...")
-	return u.do("GET", url, "", queryParams)
-}
-
 // GetSubnets gets all subnets associated with a user
 func (u *User) GetSubnets(queryParams ...string) (map[string]interface{}, error) {
 	url := buildURL(path["users"], u.UserID, path["subnets"])
 
 	log.info("Getting list of user subnets...")
+	return u.do("GET", url, "", queryParams)
+}
+
+// GetNodeSubnets gets all subnets associated with a node
+func (u *User) GetNodeSubnets(nodeID string, queryParams ...string) (map[string]interface{}, error) {
+	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID, path["subnets"])
+
+	log.info("Getting list of node subnets...")
 	return u.do("GET", url, "", queryParams)
 }
 
@@ -328,19 +328,19 @@ func (u *User) ShipCard(nodeID, subnetID, data string) (map[string]interface{}, 
 
 /********** TRANSACTION **********/
 
-// GetNodeTransactions returns transactions associated with a node
-func (u *User) GetNodeTransactions(nodeID string, queryParams ...string) (map[string]interface{}, error) {
-	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID, path["trans"])
-
-	log.info("Getting list of node transactions...")
-	return u.do("GET", url, "", queryParams)
-}
-
 // GetTransactions returns transactions associated with a user
 func (u *User) GetTransactions(queryParams ...string) (map[string]interface{}, error) {
 	url := buildURL(path["users"], u.UserID, path["trans"])
 
 	log.info("Getting list of user transactions...")
+	return u.do("GET", url, "", queryParams)
+}
+
+// GetNodeTransactions returns transactions associated with a node
+func (u *User) GetNodeTransactions(nodeID string, queryParams ...string) (map[string]interface{}, error) {
+	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID, path["trans"])
+
+	log.info("Getting list of node transactions...")
 	return u.do("GET", url, "", queryParams)
 }
 
