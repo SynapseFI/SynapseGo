@@ -26,8 +26,10 @@ All notable changes to this project will be documented in this file.
     * `CreateDummyTransactions`
 
 ### Changed
-- Rename `samples/` to `examples/`
-- Rename `samples.md` to `examples.md`
+- Renamed `samples/` to `examples/`
+- Renamed `samples.md` to `examples.md`
+
+---
 
 ## 2019-05-21
 
