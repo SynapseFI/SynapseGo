@@ -19,7 +19,7 @@ import github.com/SynapseFI/SynapseGo
 
 ## Examples
 
-Refer to [samples](samples/samples.md) and our [API documentation](https://docs.synapsefi.com/) for examples.
+Refer to [examples](examples/examples.md) and our [API documentation](https://docs.synapsefi.com/) for examples.
 
 ## Testing
 
