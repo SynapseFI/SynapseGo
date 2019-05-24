@@ -54,9 +54,22 @@ func Test_New(t *testing.T) {
 	assert.Equal(clientData["fingerprint"].(string), testClient.Fingerprint)
 }
 
+/********** AUTHENTICATION **********/
+
+func Test_GetPublicKey(t *testing.T) {
+	assert := assert.New(t)
+	testClient := createTestClient()
+
+	// No parameters
+	testRes, err := testClient.GetPublicKey()
+
+	assert.NoError(err)
+	assert.Equal(testRes, mockClientResponse)
+}
+
 /********** NODE **********/
 
-func Test_GetNodes(t *testing.T) {
+func Test_GetClientNodes(t *testing.T) {
 	assert := assert.New(t)
 	testClient := createTestClient()
 
@@ -124,28 +137,6 @@ func Test_LocateATMs(t *testing.T) {
 	assert.Equal(testRes, mockClientResponse)
 }
 
-func Test_GetPublicKey(t *testing.T) {
-	assert := assert.New(t)
-	testClient := createTestClient()
-
-	// No parameters
-	testRes, err := testClient.GetPublicKey()
-
-	assert.NoError(err)
-	assert.Equal(testRes, mockClientResponse)
-}
-
-func Test_GetWebhookLogs(t *testing.T) {
-	assert := assert.New(t)
-	testClient := createTestClient()
-
-	// No parameters
-	testRes, err := testClient.GetWebhookLogs()
-
-	assert.NoError(err)
-	assert.Equal(testRes, mockClientResponse)
-}
-
 func Test_VerifyRoutingNumber(t *testing.T) {
 	assert := assert.New(t)
 	testClient := createTestClient()
@@ -197,6 +188,29 @@ func Test_UpdateSubscription(t *testing.T) {
 
 	// No parameters
 	testRes, err := testClient.CreateSubscription("")
+
+	assert.NoError(err)
+	assert.Equal(testRes, mockClientResponse)
+}
+
+func Test_GetWebhookLogs(t *testing.T) {
+	assert := assert.New(t)
+	testClient := createTestClient()
+
+	// No parameters
+	testRes, err := testClient.GetWebhookLogs()
+
+	assert.NoError(err)
+	assert.Equal(testRes, mockClientResponse)
+}
+
+/********** TRANSACTION **********/
+
+func Test_GetClientTransactions(t *testing.T) {
+	assert := assert.New(t)
+	testClient := createTestClient()
+
+	testRes, err := testClient.GetTransactions()
 
 	assert.NoError(err)
 	assert.Equal(testRes, mockClientResponse)

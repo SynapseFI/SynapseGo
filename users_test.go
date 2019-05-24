@@ -95,16 +95,6 @@ func Test_Select2FA(t *testing.T) {
 	assert.NoError(err)
 	assert.Equal(testRes, mockUsersResponse)
 }
-func Test_VerifyPIN(t *testing.T) {
-	assert := assert.New(t)
-	testUser := createTestUser()
-
-	// No parameters
-	testRes, err := testUser.VerifyPIN("")
-
-	assert.NoError(err)
-	assert.Equal(testRes, mockUsersResponse)
-}
 
 func Test_SubmitMFA(t *testing.T) {
 	assert := assert.New(t)
@@ -117,9 +107,20 @@ func Test_SubmitMFA(t *testing.T) {
 	assert.Equal(testRes, mockUsersResponse)
 }
 
+func Test_VerifyPIN(t *testing.T) {
+	assert := assert.New(t)
+	testUser := createTestUser()
+
+	// No parameters
+	testRes, err := testUser.VerifyPIN("")
+
+	assert.NoError(err)
+	assert.Equal(testRes, mockUsersResponse)
+}
+
 /********** NODE **********/
 
-func Test_GetUserNodes(t *testing.T) {
+func Test_GetNodes(t *testing.T) {
 	assert := assert.New(t)
 	testUser := createTestUser()
 
@@ -177,12 +178,12 @@ func Test_DeleteNode(t *testing.T) {
 
 /********** NODE (OTHER) **********/
 
-func Test_GetApplePayToken(t *testing.T) {
+func Test_VerifyMicroDeposit(t *testing.T) {
 	assert := assert.New(t)
 	testUser := createTestUser()
 
 	// No parameters
-	testRes, err := testUser.GetApplePayToken("", "")
+	testRes, err := testUser.VerifyMicroDeposit("", "")
 
 	assert.NoError(err)
 	assert.Equal(testRes, mockUsersResponse)
@@ -221,23 +222,12 @@ func Test_ShipCardNode(t *testing.T) {
 	assert.Equal(testRes, mockUsersResponse)
 }
 
-func Test_CreateDummyTransaction(t *testing.T) {
+func Test_GetApplePayToken(t *testing.T) {
 	assert := assert.New(t)
 	testUser := createTestUser()
 
 	// No parameters
-	testRes, err := testUser.CreateDummyTransaction("", "")
-
-	assert.NoError(err)
-	assert.Equal(testRes, mockUsersResponse)
-}
-
-func Test_VerifyMicroDeposit(t *testing.T) {
-	assert := assert.New(t)
-	testUser := createTestUser()
-
-	// No parameters
-	testRes, err := testUser.VerifyMicroDeposit("", "")
+	testRes, err := testUser.GetApplePayToken("", "")
 
 	assert.NoError(err)
 	assert.Equal(testRes, mockUsersResponse)
@@ -245,23 +235,23 @@ func Test_VerifyMicroDeposit(t *testing.T) {
 
 /********** STATEMENT **********/
 
-func Test_GetNodeStatements(t *testing.T) {
-	assert := assert.New(t)
-	testUser := createTestUser()
-
-	// No parameters
-	testRes, err := testUser.GetNodeStatements("")
-
-	assert.NoError(err)
-	assert.Equal(testRes, mockUsersResponse)
-}
-
 func Test_GetStatements(t *testing.T) {
 	assert := assert.New(t)
 	testUser := createTestUser()
 
 	// No parameters
 	testRes, err := testUser.GetStatements("")
+
+	assert.NoError(err)
+	assert.Equal(testRes, mockUsersResponse)
+}
+
+func Test_GetNodeStatements(t *testing.T) {
+	assert := assert.New(t)
+	testUser := createTestUser()
+
+	// No parameters
+	testRes, err := testUser.GetNodeStatements("")
 
 	assert.NoError(err)
 	assert.Equal(testRes, mockUsersResponse)
@@ -279,6 +269,17 @@ func Test_CreateNodeStatements(t *testing.T) {
 }
 
 /********** SUBNET **********/
+
+func Test_GetSubnets(t *testing.T) {
+	assert := assert.New(t)
+	testUser := createTestUser()
+
+	// No parameters
+	testRes, err := testUser.GetSubnets()
+
+	assert.NoError(err)
+	assert.Equal(testRes, mockUsersResponse)
+}
 
 func Test_GetNodeSubnets(t *testing.T) {
 	assert := assert.New(t)
@@ -324,6 +325,16 @@ func Test_UpdateSubnet(t *testing.T) {
 	assert.Equal(testRes, mockUsersResponse)
 }
 
+func Test_ShipCard(t *testing.T) {
+	assert := assert.New(t)
+	testUser := createTestUser()
+
+	testRes, err := testUser.ShipCard("", "", "")
+
+	assert.NoError(err)
+	assert.Equal(testRes, mockUsersResponse)
+}
+
 /********** TRANSACTION **********/
 
 func Test_GetTransactions(t *testing.T) {
@@ -332,6 +343,16 @@ func Test_GetTransactions(t *testing.T) {
 
 	// No parameters
 	testRes, err := testUser.GetTransactions("", "")
+
+	assert.NoError(err)
+	assert.Equal(testRes, mockUsersResponse)
+}
+
+func Test_GetNodeTransactions(t *testing.T) {
+	assert := assert.New(t)
+	testUser := createTestUser()
+
+	testRes, err := testUser.GetNodeTransactions("")
 
 	assert.NoError(err)
 	assert.Equal(testRes, mockUsersResponse)
@@ -359,7 +380,7 @@ func Test_CreateTransaction(t *testing.T) {
 	assert.Equal(testRes, mockUsersResponse)
 }
 
-func Test_DeleteTransaction(t *testing.T) {
+func Test_CancelTransaction(t *testing.T) {
 	assert := assert.New(t)
 	testUser := createTestUser()
 
@@ -388,6 +409,17 @@ func Test_DisputeTransaction(t *testing.T) {
 
 	// No parameters
 	testRes, err := testUser.DisputeTransaction("", "", "")
+
+	assert.NoError(err)
+	assert.Equal(testRes, mockUsersResponse)
+}
+
+func Test_CreateDummyTransaction(t *testing.T) {
+	assert := assert.New(t)
+	testUser := createTestUser()
+
+	// No parameters
+	testRes, err := testUser.CreateDummyTransaction("", "")
 
 	assert.NoError(err)
 	assert.Equal(testRes, mockUsersResponse)
