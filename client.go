@@ -284,14 +284,21 @@ func (c *Client) GetUsers(queryParams ...string) (map[string]interface{}, error)
 }
 
 // GetUser returns a single user
-func (c *Client) GetUser(userID string, queryParams ...string) (*User, error) {
+func (c *Client) GetUser(userID string, fingerprint, ipAddress string, queryParams ...string) (*User, error) {
 	url := buildURL(path["users"], userID)
 	res, err := c.do("GET", url, "", queryParams)
 
 	var user User
 	mapstructure.Decode(res, &user)
 	user.Response = res
-
+	user.request = Request{
+		"",
+		c.ClientID,
+		c.ClientSecret,
+		fingerprint,
+		ipAddress,
+	}
+	
 	log.info("Getting user...")
 	return &user, err
 }
