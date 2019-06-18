@@ -137,6 +137,7 @@ func New(clientID, clientSecret, fingerprint, ipAddress string, modes ...bool) *
 		ClientSecret: clientSecret,
 		Fingerprint:  fingerprint,
 		IP:           ipAddress,
+		request:      Request{"", clientID, clientSecret, fingerprint, ipAddress},
 	}
 }
 
