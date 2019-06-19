@@ -74,8 +74,6 @@ Submit optional query parameters
 package synapse
 
 import (
-	"fmt"
-
 	"github.com/mitchellh/mapstructure"
 )
 
@@ -300,7 +298,7 @@ func (c *Client) GetUser(userID string, fingerprint, ipAddress string, queryPara
 		fingerprint,
 		ipAddress,
 	}
-	fmt.Println(user.request)
+
 	log.info("Getting user...")
 	return &user, err
 }
@@ -315,7 +313,7 @@ func (c *Client) CreateUser(data, fingerprint, ipAddress string, idempotencyKey 
 		fingerprint,
 		ipAddress,
 	}
-	fmt.Println(user.request)
+	
 	url := buildURL(path["users"])
 	res, err := user.do("POST", url, data, idempotencyKey)
 
