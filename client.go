@@ -298,7 +298,6 @@ func (c *Client) GetUser(userID string, fingerprint, ipAddress string, queryPara
 		fingerprint,
 		ipAddress,
 	}
-
 	log.info("Getting user...")
 	return &user, err
 }
@@ -313,7 +312,6 @@ func (c *Client) CreateUser(data, fingerprint, ipAddress string, idempotencyKey 
 		fingerprint,
 		ipAddress,
 	}
-	
 	url := buildURL(path["users"])
 	res, err := user.do("POST", url, data, idempotencyKey)
 
