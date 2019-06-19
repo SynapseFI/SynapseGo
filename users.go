@@ -104,6 +104,13 @@ func (u *User) Authenticate(data, fingerprint, ipAddress string) (map[string]int
 	return res, err
 }
 
+func (u *User) SetAuthKey(oauthKey string) {
+	u.AuthKey = oauthKey
+	u.request.authKey = oauthKey
+
+	log.info("Updating auth key...")
+}
+
 // GetRefreshToken performs a GET request and returns a new refresh token
 func (u *User) GetRefreshToken() (map[string]interface{}, error) {
 	url := buildURL(path["users"], u.UserID)
