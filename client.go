@@ -212,6 +212,14 @@ func (c *Client) LocateATMs(queryParams ...string) (map[string]interface{}, erro
 	return c.do("GET", url, "", queryParams)
 }
 
+// VerifyAddress checks if an address if valid
+func (c *Client) VerifyAddress(data string) (map[string]interface{}, error) {
+	url := buildURL("address-verification")
+
+	log.info("Verifying address...")
+	return c.do("POST", url, data, nil)
+}
+
 // VerifyRoutingNumber checks and returns the bank details of a routing number
 func (c *Client) VerifyRoutingNumber(data string) (map[string]interface{}, error) {
 	url := buildURL("routing-number-verification")
