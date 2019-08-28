@@ -49,7 +49,7 @@ func (u *User) do(method, url, data string, params []string) (map[string]interfa
 	}
 
 	switch err.(type) {
-	case *UnauthorizedAction:
+	case *IncorrectUserCredentials:
 		_, err = u.Authenticate(`{ "refresh_token": "`+u.RefreshToken+`" }`, u.request.fingerprint, u.request.ipAddress)
 
 		if err != nil {
@@ -330,7 +330,7 @@ func (u *User) ShipCard(nodeID, subnetID, data string) (map[string]interface{}, 
 
 // GetTransactions returns transactions associated with a user
 func (u *User) GetTransactions(queryParams ...string) (map[string]interface{}, error) {
-	url := buildURL(path["users"], u.UserID, path["transactions"])
+	url := buildURL(path["users"], u.UserID, path["trans"])
 
 	log.info("Getting list of user transactions...")
 	return u.do("GET", url, "", queryParams)
@@ -338,7 +338,7 @@ func (u *User) GetTransactions(queryParams ...string) (map[string]interface{}, e
 
 // GetNodeTransactions returns transactions associated with a node
 func (u *User) GetNodeTransactions(nodeID string, queryParams ...string) (map[string]interface{}, error) {
-	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID, path["transactions"])
+	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID, path["trans"])
 
 	log.info("Getting list of node transactions...")
 	return u.do("GET", url, "", queryParams)
@@ -346,7 +346,7 @@ func (u *User) GetNodeTransactions(nodeID string, queryParams ...string) (map[st
 
 // GetTransaction returns a specific transaction associated with a node
 func (u *User) GetTransaction(nodeID, transactionID string) (map[string]interface{}, error) {
-	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID, path["transactions"], transactionID)
+	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID, path["trans"], transactionID)
 
 	log.info("Getting user transaction...")
 	return u.do("GET", url, "", nil)

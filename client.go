@@ -131,20 +131,12 @@ func New(clientID, clientSecret, fingerprint, ipAddress string, modes ...bool) *
 		}
 	}
 
-	request := Request{
-		clientID:     clientID,
-		clientSecret: clientSecret,
-		fingerprint:  fingerprint,
-		ipAddress:    ipAddress,
-	}
-
 	log.info("Building new client...")
 	return &Client{
 		ClientID:     clientID,
 		ClientSecret: clientSecret,
 		Fingerprint:  fingerprint,
 		IP:           ipAddress,
-		request:      request,
 	}
 }
 
@@ -306,15 +298,6 @@ func (c *Client) GetUser(userID string, queryParams ...string) (*User, error) {
 	var user User
 	mapstructure.Decode(res, &user)
 	user.Response = res
-
-	request := Request{
-		clientID:     c.ClientID,
-		clientSecret: c.ClientSecret,
-		fingerprint:  c.Fingerprint,
-		ipAddress:    c.IP,
-	}
-
-	user.request = request
 
 	log.info("Getting user...")
 	return &user, err
