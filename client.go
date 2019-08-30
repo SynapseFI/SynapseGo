@@ -307,16 +307,13 @@ func (c *Client) GetUser(userID string, fingerprint, ipAddress string, queryPara
 	var user User
 	mapstructure.Decode(res, &user)
 	user.Response = res
-
-	request := Request{
+	user.request = Request{
 		authKey:      "",
 		clientID:     c.ClientID,
 		clientSecret: c.ClientSecret,
 		fingerprint:  fingerprint,
 		ipAddress:    ipAddress,
 	}
-
-	user.request = request
 
 	log.info("Getting user...")
 	return &user, err
