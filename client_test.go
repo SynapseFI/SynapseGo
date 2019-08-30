@@ -137,6 +137,16 @@ func Test_LocateATMs(t *testing.T) {
 	assert.Equal(testRes, mockClientResponse)
 }
 
+func Test_VerifyAddress(t *testing.T) {
+	assert := assert.New(t)
+	testClient := createTestClient()
+
+	testRes, err := testClient.VerifyAddress("")
+
+	assert.NoError(err)
+	assert.Equal(testRes, mockClientResponse)
+}
+
 func Test_VerifyRoutingNumber(t *testing.T) {
 	assert := assert.New(t)
 	testClient := createTestClient()

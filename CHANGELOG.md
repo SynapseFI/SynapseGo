@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## 2019-08-26
+
+### Added
+- [Client] `VerifyAddress` to test for address validity
+- Examples
+  + [Client]
+    * `VerifyAddress`
+
 ## 2019-05-23
 
 ### Added
