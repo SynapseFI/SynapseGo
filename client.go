@@ -300,7 +300,7 @@ func (c *Client) GetUsers(queryParams ...string) (map[string]interface{}, error)
 }
 
 // GetUser returns a single user
-func (c *Client) GetUser(userID string, queryParams ...string) (*User, error) {
+func (c *Client) GetUser(userID string, fingerprint, ipAddress string, queryParams ...string) (*User, error) {
 	url := buildURL(path["users"], userID)
 	res, err := c.do("GET", url, "", queryParams)
 
@@ -312,8 +312,8 @@ func (c *Client) GetUser(userID string, queryParams ...string) (*User, error) {
 		authKey:      "",
 		clientID:     c.ClientID,
 		clientSecret: c.ClientSecret,
-		fingerprint:  c.Fingerprint,
-		ipAddress:    c.IP,
+		fingerprint:  fingerprint,
+		ipAddress:    ipAddress,
 	}
 
 	user.request = request
