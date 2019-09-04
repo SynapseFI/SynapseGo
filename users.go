@@ -49,11 +49,14 @@ func (u *User) do(method, url, data string, params []string) (map[string]interfa
 	}
 
 	switch err.(type) {
-	case *UnauthorizedAction:
-		_, err = u.Authenticate(`{ "refresh_token": "`+u.RefreshToken+`" }`, u.request.fingerprint, u.request.ipAddress)
+	case *ActionPending:
+		return readStream(response), err
 
-		if err != nil {
-			return nil, err
+	case *UnauthorizedAction:
+		res, authErr := u.Authenticate(`{ "refresh_token": "`+u.RefreshToken+`" }`, u.request.fingerprint, u.request.ipAddress)
+
+		if authErr != nil {
+			return res, authErr
 		}
 
 		u.request.authKey = u.AuthKey
