@@ -40,7 +40,7 @@ func createTestUser() *User {
 		cred["ipAddress"].(string),
 	)
 
-	testUser, err := testClient.GetUser("")
+	testUser, err := testClient.GetUser("", "", "")
 
 	if err != nil {
 		panic(err)

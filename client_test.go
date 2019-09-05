@@ -244,7 +244,7 @@ func Test_GetUser(t *testing.T) {
 	testClient := createTestClient()
 
 	// No parameters
-	testUser, err := testClient.GetUser("")
+	testUser, err := testClient.GetUser("", "", "")
 
 	assert.NoError(err)
 	assert.NotNil(testUser)

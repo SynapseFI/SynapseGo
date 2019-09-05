@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## 2019-09-05
+
+### Changed
+- [Client] `GetUser` now requires `fingerprint` and `ipAddress`
+
 ## 2019-08-26
 
 ### Added
