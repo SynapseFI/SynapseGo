@@ -5,7 +5,7 @@
   },
   "POST": {
     "data": {
-      "type": "DEPOSIT-US",
+      "type": "CUSTODY-US",
       "info":{
           "nickname":"My Checking"
       },
