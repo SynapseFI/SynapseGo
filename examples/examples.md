@@ -15,6 +15,7 @@
     * [Get Institutions](#get-institutions)
     * [Locate ATMs](#locate-atms)
     * [Verify Routing Number](#verify-routing-number)
+    * [Verify Address](#verify-address)
   + [Subscriptions](#subscriptions-client)
     * [Get Client Subscriptions](#get-client-subscriptions)
     * [Get Subscription](#get-subscription)
@@ -164,6 +165,18 @@ body := `{
 }`
 
 data, err := client.VerifyRoutingNumber(body)
+```
+
+#### Verify Address
+```go
+address := `{
+  "address_street": "170 St Germain St",
+  "address_city": "SF",
+  "address_subdivision": "CA",
+  "address_country_code": "US",
+  "address_postal_code": "94404"
+}`
+data, err := client.VerifyAddress(address)
 ```
 
 ### Subscriptions (Client)
