@@ -59,37 +59,54 @@ func Test_Post(t *testing.T) {
 
 	testData := requestData["POST"].(map[string]interface{})["data"]
 
-	jsonData, jsonErr := json.Marshal(testData)
-
-	if jsonErr != nil {
-		t.Error(jsonErr)
-	}
-
-	userRes, userErr := testReq.Get(buildURL(path["users"], "/5bec6ebebaabfc00ab168fa0"), nil)
-
-	if userErr != nil {
-		t.Error(userErr)
-	}
-
-	rt := readStream(userRes)["refresh_token"].(string)
-	authRes, authErr := testReq.Post(buildURL(path["auth"], "/5bec6ebebaabfc00ab168fa0"), `{ "refresh_token": "`+rt+`" }`, nil)
-
-	if authErr != nil {
-		t.Error(authErr)
-	}
-
-	authKey = readStream(authRes)["oauth_key"].(string)
-	testReq.authKey = authKey
-
-	res, err := testReq.Post(buildURL(path["users"], "/5bec6ebebaabfc00ab168fa0/nodes"), string(jsonData), nil)
+	jsonData, err := json.Marshal(testData)
 
 	if err != nil {
 		t.Error(err)
 	}
 
-	testID = readStream(res)["nodes"].([]interface{})[0].(map[string]interface{})["_id"].(string)
+	userRes, err := testReq.Get(buildURL(path["users"], "/5bec6ebebaabfc00ab168fa0"), nil)
 
-	assert.NotNil(string(res))
+	if err != nil {
+		t.Error(err)
+	}
+
+	res, err := readStream(userRes)
+
+	if err != nil {
+		t.Error(err)
+	}
+
+	authRes, err := testReq.Post(buildURL(path["auth"], "/5bec6ebebaabfc00ab168fa0"), `{ "refresh_token": "`+res["refresh_token"].(string)+`" }`, nil)
+
+	if err != nil {
+		t.Error(err)
+	}
+
+	authResponse, err := readStream(authRes)
+
+	if err != nil {
+		t.Error(err)
+	}
+
+	authKey = authResponse["oauth_key"].(string)
+	testReq.authKey = authKey
+
+	postRes, err := testReq.Post(buildURL(path["users"], "/5bec6ebebaabfc00ab168fa0/nodes"), string(jsonData), nil)
+
+	if err != nil {
+		t.Error(err)
+	}
+
+	postResponse, err := readStream(postRes)
+
+	if err != nil {
+		t.Error(err)
+	}
+
+	testID = postResponse["nodes"].([]interface{})[0].(map[string]interface{})["_id"].(string)
+
+	assert.NotNil(string(postRes))
 }
 
 func Test_Patch(t *testing.T) {

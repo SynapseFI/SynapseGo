@@ -30,7 +30,7 @@ type (
 
 /********** METHODS **********/
 
-func (u *User) do(method, url, data string, params []string) (map[string]interface{}, error) {
+func (u *User) do(method, url, data string, params []string) ([]byte, error) {
 	var response []byte
 	var err error
 
@@ -50,7 +50,7 @@ func (u *User) do(method, url, data string, params []string) (map[string]interfa
 
 	switch err.(type) {
 	case *ActionPending:
-		return readStream(response), err
+		return response, err
 
 	case *UnauthorizedAction:
 		res, authErr := u.Authenticate(`{ "refresh_token": "`+u.RefreshToken+`" }`, u.request.fingerprint, u.request.ipAddress)
@@ -80,7 +80,7 @@ func (u *User) do(method, url, data string, params []string) (map[string]interfa
 		// 	return u.do(method, url, data, params)
 	}
 
-	return readStream(response), err
+	return response, err
 }
 
 /********** AUTHENTICATION **********/
@@ -88,41 +88,51 @@ func (u *User) do(method, url, data string, params []string) (map[string]interfa
 // Authenticate returns an oauth key and sets it to the user object
 // If the refresh token is expired the API will automatically send a new one
 // Capture refresh token every time
-func (u *User) Authenticate(data, fingerprint, ipAddress string) (map[string]interface{}, error) {
+func (u *User) Authenticate(data, fingerprint, ipAddress string) ([]byte, error) {
 	log.info("========== AUTHENTICATE ==========")
 	url := buildURL(path["auth"], u.UserID)
 
 	u.request.updateRequest(u.request.clientID, u.request.clientSecret, fingerprint, ipAddress)
 	res, err := u.do("POST", url, data, nil)
+	response, resErr := readStream(res)
 
-	if res["refresh_token"] != nil {
-		u.RefreshToken = res["refresh_token"].(string)
+	if resErr != nil {
+		return nil, resErr
 	}
 
-	if res["oauth_key"] != nil {
-		u.AuthKey = res["oauth_key"].(string)
-		u.request.authKey = res["oauth_key"].(string)
+	if response["refresh_token"] != nil {
+		u.RefreshToken = response["refresh_token"].(string)
+	}
+
+	if response["oauth_key"] != nil {
+		u.AuthKey = response["oauth_key"].(string)
+		u.request.authKey = response["oauth_key"].(string)
 	}
 
 	return res, err
 }
 
 // GetRefreshToken performs a GET request and returns a new refresh token
-func (u *User) GetRefreshToken() (map[string]interface{}, error) {
+func (u *User) GetRefreshToken() ([]byte, error) {
 	log.info("========== GET REFRESH TOKEN ==========")
 	url := buildURL(path["users"], u.UserID)
 
 	res, err := u.do("GET", url, "", nil)
+	response, resErr := readStream(res)
 
-	if res["refresh_token"] != nil {
-		u.RefreshToken = res["refresh_token"].(string)
+	if resErr != nil {
+		return nil, resErr
+	}
+
+	if response["refresh_token"] != nil {
+		u.RefreshToken = response["refresh_token"].(string)
 	}
 
 	return res, err
 }
 
 // RegisterFingerprint submits a new fingerprint and triggers the MFA flow
-func (u *User) RegisterFingerprint(fp string) (map[string]interface{}, error) {
+func (u *User) RegisterFingerprint(fp string) ([]byte, error) {
 	log.info("========== REGISTER FINGERPRINT ==========")
 	url := buildURL(path["auth"], u.UserID)
 
@@ -136,7 +146,7 @@ func (u *User) RegisterFingerprint(fp string) (map[string]interface{}, error) {
 }
 
 // Select2FA sends the 2FA device selection to the API
-func (u *User) Select2FA(device string) (map[string]interface{}, error) {
+func (u *User) Select2FA(device string) ([]byte, error) {
 	log.info("========== SELECT 2FA DEVICE ==========")
 	url := buildURL(path["auth"], u.UserID)
 
@@ -148,7 +158,7 @@ func (u *User) Select2FA(device string) (map[string]interface{}, error) {
 }
 
 // SubmitMFA submits the access token and mfa answer
-func (u *User) SubmitMFA(data string) (map[string]interface{}, error) {
+func (u *User) SubmitMFA(data string) ([]byte, error) {
 	log.info("========== SUBMIT MFA RESPONSE ==========")
 	url := buildURL(path["users"], u.UserID, path["nodes"])
 
@@ -156,7 +166,7 @@ func (u *User) SubmitMFA(data string) (map[string]interface{}, error) {
 }
 
 // VerifyPIN sends the requested pin to the API to complete the 2FA process
-func (u *User) VerifyPIN(pin string) (map[string]interface{}, error) {
+func (u *User) VerifyPIN(pin string) ([]byte, error) {
 	log.info("========== VERIFY PIN ==========")
 	url := buildURL(path["auth"], u.UserID)
 
@@ -170,7 +180,7 @@ func (u *User) VerifyPIN(pin string) (map[string]interface{}, error) {
 /********** NODE **********/
 
 // GetNodes returns all of the nodes associated with a user
-func (u *User) GetNodes(queryParams ...string) (map[string]interface{}, error) {
+func (u *User) GetNodes(queryParams ...string) ([]byte, error) {
 	log.info("========== GET USER NODES ==========")
 	url := buildURL(path["users"], u.UserID, path["nodes"])
 
@@ -178,7 +188,7 @@ func (u *User) GetNodes(queryParams ...string) (map[string]interface{}, error) {
 }
 
 // GetNode returns a single node object
-func (u *User) GetNode(nodeID string) (map[string]interface{}, error) {
+func (u *User) GetNode(nodeID string) ([]byte, error) {
 	log.info("========== GET NODE ==========")
 	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID)
 
@@ -188,7 +198,7 @@ func (u *User) GetNode(nodeID string) (map[string]interface{}, error) {
 }
 
 // CreateNode creates a node depending on the type of node specified
-func (u *User) CreateNode(data string, idempotencyKey ...string) (map[string]interface{}, error) {
+func (u *User) CreateNode(data string, idempotencyKey ...string) ([]byte, error) {
 	log.info("========== CREATE NODE ==========")
 	url := buildURL(path["users"], u.UserID, path["nodes"])
 
@@ -196,7 +206,7 @@ func (u *User) CreateNode(data string, idempotencyKey ...string) (map[string]int
 }
 
 // UpdateNode updates a node
-func (u *User) UpdateNode(nodeID, data string) (map[string]interface{}, error) {
+func (u *User) UpdateNode(nodeID, data string) ([]byte, error) {
 	log.info("========== UPDATE NODE ==========")
 	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID)
 
@@ -204,7 +214,7 @@ func (u *User) UpdateNode(nodeID, data string) (map[string]interface{}, error) {
 }
 
 // DeleteNode deletes a node
-func (u *User) DeleteNode(nodeID string) (map[string]interface{}, error) {
+func (u *User) DeleteNode(nodeID string) ([]byte, error) {
 	log.info("========== DELETE NODE ==========")
 	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID)
 
@@ -214,7 +224,7 @@ func (u *User) DeleteNode(nodeID string) (map[string]interface{}, error) {
 /********** NODE (OTHER) **********/
 
 // VerifyMicroDeposit verifies micro-deposit amounts for a node
-func (u *User) VerifyMicroDeposit(nodeID, data string) (map[string]interface{}, error) {
+func (u *User) VerifyMicroDeposit(nodeID, data string) ([]byte, error) {
 	log.info("========== VERIFY MICRO-DEPOSITS ==========")
 	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID)
 
@@ -222,7 +232,7 @@ func (u *User) VerifyMicroDeposit(nodeID, data string) (map[string]interface{}, 
 }
 
 // ReinitiateMicroDeposits reinitiates micro-deposits for an ACH-US node with AC/RT
-func (u *User) ReinitiateMicroDeposits(nodeID string) (map[string]interface{}, error) {
+func (u *User) ReinitiateMicroDeposits(nodeID string) ([]byte, error) {
 	log.info("========== RE-INITIATE MICRO-DEPOSITS ==========")
 	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID) + "?resend_micro=YES"
 
@@ -230,7 +240,7 @@ func (u *User) ReinitiateMicroDeposits(nodeID string) (map[string]interface{}, e
 }
 
 // ResetCardNode resets the debit card number, card cvv, and expiration date
-func (u *User) ResetCardNode(nodeID string) (map[string]interface{}, error) {
+func (u *User) ResetCardNode(nodeID string) ([]byte, error) {
 	log.info("========== RESET CARD ==========)")
 	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID) + "?reset=YES"
 
@@ -238,7 +248,7 @@ func (u *User) ResetCardNode(nodeID string) (map[string]interface{}, error) {
 }
 
 // ShipCardNode ships a physical debit card out to the user
-func (u *User) ShipCardNode(nodeID, data string) (map[string]interface{}, error) {
+func (u *User) ShipCardNode(nodeID, data string) ([]byte, error) {
 	log.info("========== SHIP CARD ==========")
 	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID) + "?ship=YES"
 
@@ -246,7 +256,7 @@ func (u *User) ShipCardNode(nodeID, data string) (map[string]interface{}, error)
 }
 
 // GetApplePayToken generates tokenized info for Apple Wallet
-func (u *User) GetApplePayToken(nodeID, data string) (map[string]interface{}, error) {
+func (u *User) GetApplePayToken(nodeID, data string) ([]byte, error) {
 	log.info("========== GET APPLE PAY TOKEN ==========")
 	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID, "applepay")
 
@@ -256,7 +266,7 @@ func (u *User) GetApplePayToken(nodeID, data string) (map[string]interface{}, er
 /********** STATEMENT **********/
 
 // GetStatements gets all of the user statements
-func (u *User) GetStatements(queryParams ...string) (map[string]interface{}, error) {
+func (u *User) GetStatements(queryParams ...string) ([]byte, error) {
 	log.info("========== GET USER STATEMENTS ==========")
 	url := buildURL(path["users"], u.UserID, path["statements"])
 
@@ -264,7 +274,7 @@ func (u *User) GetStatements(queryParams ...string) (map[string]interface{}, err
 }
 
 // GetNodeStatements gets all of the node statements
-func (u *User) GetNodeStatements(nodeID string, queryParams ...string) (map[string]interface{}, error) {
+func (u *User) GetNodeStatements(nodeID string, queryParams ...string) ([]byte, error) {
 	log.info("========== GET NODE STATEMENTS ==========")
 	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID, path["statements"])
 
@@ -272,7 +282,7 @@ func (u *User) GetNodeStatements(nodeID string, queryParams ...string) (map[stri
 }
 
 // CreateNodeStatements creates ad-hoc statements for the specified node
-func (u *User) CreateNodeStatements(nodeID, data string, idempotencyKey ...string) (map[string]interface{}, error) {
+func (u *User) CreateNodeStatements(nodeID, data string, idempotencyKey ...string) ([]byte, error) {
 	log.info("========== CREATE AD-HOC STATEMENT ==========")
 	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID, path["statements"])
 
@@ -282,7 +292,7 @@ func (u *User) CreateNodeStatements(nodeID, data string, idempotencyKey ...strin
 /********** SUBNET **********/
 
 // GetSubnets gets all subnets associated with a user
-func (u *User) GetSubnets(queryParams ...string) (map[string]interface{}, error) {
+func (u *User) GetSubnets(queryParams ...string) ([]byte, error) {
 	log.info("========== GET USER SUBNETS ==========")
 	url := buildURL(path["users"], u.UserID, path["subnets"])
 
@@ -290,7 +300,7 @@ func (u *User) GetSubnets(queryParams ...string) (map[string]interface{}, error)
 }
 
 // GetNodeSubnets gets all subnets associated with a node
-func (u *User) GetNodeSubnets(nodeID string, queryParams ...string) (map[string]interface{}, error) {
+func (u *User) GetNodeSubnets(nodeID string, queryParams ...string) ([]byte, error) {
 	log.info("========== GET NODE SUBNETS ==========")
 	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID, path["subnets"])
 
@@ -298,7 +308,7 @@ func (u *User) GetNodeSubnets(nodeID string, queryParams ...string) (map[string]
 }
 
 // GetSubnet gets a single subnet object
-func (u *User) GetSubnet(nodeID, subnetID string) (map[string]interface{}, error) {
+func (u *User) GetSubnet(nodeID, subnetID string) ([]byte, error) {
 	log.info("========== GET SUBNET ==========")
 	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID, path["subnets"], subnetID)
 
@@ -306,7 +316,7 @@ func (u *User) GetSubnet(nodeID, subnetID string) (map[string]interface{}, error
 }
 
 // CreateSubnet creates a subnet object
-func (u *User) CreateSubnet(nodeID, data string, idempotencyKey ...string) (map[string]interface{}, error) {
+func (u *User) CreateSubnet(nodeID, data string, idempotencyKey ...string) ([]byte, error) {
 	log.info("========== CREATE SUBNET ==========")
 	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID, path["subnets"])
 
@@ -314,7 +324,7 @@ func (u *User) CreateSubnet(nodeID, data string, idempotencyKey ...string) (map[
 }
 
 // UpdateSubnet updates a subnet object
-func (u *User) UpdateSubnet(nodeID, subnetID, data string) (map[string]interface{}, error) {
+func (u *User) UpdateSubnet(nodeID, subnetID, data string) ([]byte, error) {
 	log.info("========== UPDATE SUBNET ==========")
 	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID, path["subnets"], subnetID)
 
@@ -322,7 +332,7 @@ func (u *User) UpdateSubnet(nodeID, subnetID, data string) (map[string]interface
 }
 
 // ShipCard ships a physical debit card out to the user
-func (u *User) ShipCard(nodeID, subnetID, data string) (map[string]interface{}, error) {
+func (u *User) ShipCard(nodeID, subnetID, data string) ([]byte, error) {
 	log.info("========== SHIP CARD SUBNET ==========")
 	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID, path["subnets"], subnetID, "ship")
 
@@ -332,7 +342,7 @@ func (u *User) ShipCard(nodeID, subnetID, data string) (map[string]interface{}, 
 /********** TRANSACTION **********/
 
 // GetTransactions returns transactions associated with a user
-func (u *User) GetTransactions(queryParams ...string) (map[string]interface{}, error) {
+func (u *User) GetTransactions(queryParams ...string) ([]byte, error) {
 	log.info("========== GET USER TRANSACTIONS ==========")
 	url := buildURL(path["users"], u.UserID, path["transactions"])
 
@@ -340,7 +350,7 @@ func (u *User) GetTransactions(queryParams ...string) (map[string]interface{}, e
 }
 
 // GetNodeTransactions returns transactions associated with a node
-func (u *User) GetNodeTransactions(nodeID string, queryParams ...string) (map[string]interface{}, error) {
+func (u *User) GetNodeTransactions(nodeID string, queryParams ...string) ([]byte, error) {
 	log.info("========== GET NODE TRANSACTIONS ==========")
 	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID, path["transactions"])
 
@@ -348,7 +358,7 @@ func (u *User) GetNodeTransactions(nodeID string, queryParams ...string) (map[st
 }
 
 // GetTransaction returns a specific transaction associated with a node
-func (u *User) GetTransaction(nodeID, transactionID string) (map[string]interface{}, error) {
+func (u *User) GetTransaction(nodeID, transactionID string) ([]byte, error) {
 	log.info("========== GET TRANSACTION ==========")
 	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID, path["transactions"], transactionID)
 
@@ -356,7 +366,7 @@ func (u *User) GetTransaction(nodeID, transactionID string) (map[string]interfac
 }
 
 // CreateTransaction creates a transaction for the specified node
-func (u *User) CreateTransaction(nodeID, data string, idempotencyKey ...string) (map[string]interface{}, error) {
+func (u *User) CreateTransaction(nodeID, data string, idempotencyKey ...string) ([]byte, error) {
 	log.info("========== CREATE TRANSACTION ==========")
 	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID, path["transactions"])
 
@@ -364,7 +374,7 @@ func (u *User) CreateTransaction(nodeID, data string, idempotencyKey ...string) 
 }
 
 // CancelTransaction deletes/cancels a transaction
-func (u *User) CancelTransaction(nodeID, transactionID string) (map[string]interface{}, error) {
+func (u *User) CancelTransaction(nodeID, transactionID string) ([]byte, error) {
 	log.info("========== CANCEL TRANSACTION ==========")
 	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID, path["transactions"], transactionID)
 
@@ -372,7 +382,7 @@ func (u *User) CancelTransaction(nodeID, transactionID string) (map[string]inter
 }
 
 // CommentOnTransactionStatus adds comment to the transaction status
-func (u *User) CommentOnTransactionStatus(nodeID, transactionID, data string, idempotencyKey ...string) (map[string]interface{}, error) {
+func (u *User) CommentOnTransactionStatus(nodeID, transactionID, data string, idempotencyKey ...string) ([]byte, error) {
 	log.info("========== COMMENT ON TRANSACTION STATUS ==========")
 	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID, path["transactions"], transactionID)
 
@@ -380,7 +390,7 @@ func (u *User) CommentOnTransactionStatus(nodeID, transactionID, data string, id
 }
 
 // DisputeTransaction disputes a transaction for a user
-func (u *User) DisputeTransaction(nodeID, transactionID, data string) (map[string]interface{}, error) {
+func (u *User) DisputeTransaction(nodeID, transactionID, data string) ([]byte, error) {
 	log.info("========== DISPUTE TRANSACTION ==========")
 	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID, path["transactions"], transactionID, "dispute")
 
@@ -388,7 +398,7 @@ func (u *User) DisputeTransaction(nodeID, transactionID, data string) (map[strin
 }
 
 // CreateDummyTransaction triggers external dummy transactions on internal accounts
-func (u *User) CreateDummyTransaction(nodeID string, queryParams ...string) (map[string]interface{}, error) {
+func (u *User) CreateDummyTransaction(nodeID string, queryParams ...string) ([]byte, error) {
 	log.info("========== CREATE DUMMY TRANSACTION ==========")
 	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID) + "/dummy-tran"
 
@@ -410,7 +420,7 @@ func (u *User) Update(data string) (*User, error) {
 }
 
 // CreateUBO creates and uploads an Ultimate Beneficial Ownership (UBO) and REG GG form as a physical document under the Business’s base document
-func (u *User) CreateUBO(data string) (map[string]interface{}, error) {
+func (u *User) CreateUBO(data string) ([]byte, error) {
 	log.info("========== CREATE UBO ==========")
 	url := buildURL(path["users"], u.UserID, "ubo")
 
