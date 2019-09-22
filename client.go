@@ -121,6 +121,7 @@ func (c *Client) do(method, url, data string, queryParams []string) (map[string]
 
 // New creates a client object
 func New(clientID, clientSecret, fingerprint, ipAddress string, modes ...bool) *Client {
+	log.info("========== CREATING CLIENT INSTANCE ==========")
 	if len(modes) > 0 {
 		if modes[0] == true {
 			logMode = true
@@ -138,7 +139,6 @@ func New(clientID, clientSecret, fingerprint, ipAddress string, modes ...bool) *
 		ipAddress:    ipAddress,
 	}
 
-	log.info("Building new client...")
 	return &Client{
 		ClientID:     clientID,
 		ClientSecret: clientSecret,
@@ -152,6 +152,7 @@ func New(clientID, clientSecret, fingerprint, ipAddress string, modes ...bool) *
 
 // GetPublicKey returns a public key as a token representing client credentials
 func (c *Client) GetPublicKey(scope ...string) (map[string]interface{}, error) {
+	log.info("========== GET PUBLIC KEY ==========")
 	url := buildURL(path["client"])
 	defaultScope := "OAUTH|POST,USERS|POST,USERS|GET,USER|GET,USER|PATCH,SUBSCRIPTIONS|GET,SUBSCRIPTIONS|POST,SUBSCRIPTION|GET,SUBSCRIPTION|PATCH,CLIENT|REPORTS,CLIENT|CONTROLS"
 
@@ -162,7 +163,6 @@ func (c *Client) GetPublicKey(scope ...string) (map[string]interface{}, error) {
 	url += defaultScope
 	qp := []string{"?issue_public_key=YES&scope=" + defaultScope}
 
-	log.info("Getting public key...")
 	return c.do("GET", url, "", qp)
 }
 
@@ -170,19 +170,19 @@ func (c *Client) GetPublicKey(scope ...string) (map[string]interface{}, error) {
 
 // GetNodes returns all of the nodes
 func (c *Client) GetNodes(queryParams ...string) (map[string]interface{}, error) {
+	log.info("========== GET CLIENT NODES ==========")
 	url := buildURL(path["nodes"])
 
-	log.info("Getting list of nodes...")
 	return c.do("GET", url, "", queryParams)
 }
 
 // GetTradeMarketData returns data on a stock based on its ticker symbol
 func (c *Client) GetTradeMarketData(tickerSymbol string) (map[string]interface{}, error) {
+	log.info("========== GET TRADE MARKET DATA ==========")
 	url := buildURL(path["nodes"], "trade-market-watch")
 
 	ts := []string{tickerSymbol}
 
-	log.info("Getting trade market data for " + tickerSymbol)
 	return c.do("GET", url, "", ts)
 }
 
@@ -190,49 +190,49 @@ func (c *Client) GetTradeMarketData(tickerSymbol string) (map[string]interface{}
 
 // GetCryptoMarketData returns market data for cryptocurrencies
 func (c *Client) GetCryptoMarketData() (map[string]interface{}, error) {
+	log.info("========== GET CRYPTO MARKET DATA ==========")
 	url := buildURL(path["nodes"], "crypto-market-watch")
 
-	log.info("Getting crypto market data...")
 	return c.do("GET", url, "", nil)
 }
 
 // GetCryptoQuotes returns all of the quotes for crypto currencies
 func (c *Client) GetCryptoQuotes(queryParams ...string) (map[string]interface{}, error) {
+	log.info("========== GET CRYPTO QUOTES ==========")
 	url := buildURL(path["nodes"], "crypto-quotes")
 
-	log.info("Getting crypto market quotes...")
 	return c.do("GET", url, "", queryParams)
 }
 
-// GetInstitutions returns all of the nodes associated with a user
+// GetInstitutions returns a list of all available banking institutions
 func (c *Client) GetInstitutions() (map[string]interface{}, error) {
+	log.info("========== GET INSTITUTIONS ==========")
 	url := buildURL(path["institutions"])
 
-	log.info("Getting list of institutions...")
 	return c.do("GET", url, "", nil)
 }
 
 // LocateATMs returns a list of nearby ATMs
 func (c *Client) LocateATMs(queryParams ...string) (map[string]interface{}, error) {
+	log.info("========== LOCATE ATMS ==========")
 	url := buildURL(path["nodes"], "atms")
 
-	log.info("Getting list of ATMs...")
 	return c.do("GET", url, "", queryParams)
 }
 
 // VerifyAddress checks if an address if valid
 func (c *Client) VerifyAddress(data string) (map[string]interface{}, error) {
+	log.info("========== VERIFY ADDRESS ==========")
 	url := buildURL("address-verification")
 
-	log.info("Verifying address...")
 	return c.do("POST", url, data, nil)
 }
 
 // VerifyRoutingNumber checks and returns the bank details of a routing number
 func (c *Client) VerifyRoutingNumber(data string) (map[string]interface{}, error) {
+	log.info("========== VERIFY ROUTING NUMBER ==========")
 	url := buildURL("routing-number-verification")
 
-	log.info("Retrieving routing number details")
 	return c.do("GET", url, data, nil)
 }
 
@@ -240,41 +240,41 @@ func (c *Client) VerifyRoutingNumber(data string) (map[string]interface{}, error
 
 // GetSubscriptions returns all of the nodes associated with a user
 func (c *Client) GetSubscriptions(queryParams ...string) (map[string]interface{}, error) {
+	log.info("========== GET SUBSCRIPTIONS ==========")
 	url := buildURL(path["subscriptions"])
 
-	log.info("Getting list of subscriptions...")
 	return c.do("GET", url, "", queryParams)
 }
 
 // GetSubscription returns a single subscription
 func (c *Client) GetSubscription(subscriptionID string) (map[string]interface{}, error) {
+	log.info("========== GET SUBSCRIPTION ==========")
 	url := buildURL(path["subscriptions"], subscriptionID)
 
-	log.info("Getting subscription...")
 	return c.do("GET", url, "", nil)
 }
 
 // CreateSubscription creates a subscription and returns the subscription data
 func (c *Client) CreateSubscription(data string, idempotencyKey ...string) (map[string]interface{}, error) {
+	log.info("========== CREATE SUBSCRIPTION ==========")
 	url := buildURL(path["subscriptions"])
 
-	log.info("Creating subscription...")
 	return c.do("POST", url, data, idempotencyKey)
 }
 
 // UpdateSubscription updates an existing subscription
 func (c *Client) UpdateSubscription(subscriptionID string, data string) (map[string]interface{}, error) {
+	log.info("========== UPDATE SUBSCRIPTION ==========")
 	url := buildURL(path["subscriptions"], subscriptionID)
 
-	log.info("Updating subscription...")
 	return c.do("PATCH", url, data, nil)
 }
 
 // GetWebhookLogs returns all of the webhooks sent to a specific client
 func (c *Client) GetWebhookLogs() (map[string]interface{}, error) {
+	log.info("========== GET WEBHOOK LOGS ==========")
 	url := buildURL(path["subscriptions"], "logs")
 
-	log.info("Getting webhook logs...")
 	return c.do("GET", url, "", nil)
 }
 
@@ -282,9 +282,9 @@ func (c *Client) GetWebhookLogs() (map[string]interface{}, error) {
 
 // GetTransactions returns all client transactions
 func (c *Client) GetTransactions(queryParams ...string) (map[string]interface{}, error) {
+	log.info("========== GET CLIENT TRANSACTIONS ==========")
 	url := buildURL(path["transactions"])
 
-	log.info("Getting list of transactions...")
 	return c.do("GET", url, "", queryParams)
 }
 
@@ -292,36 +292,35 @@ func (c *Client) GetTransactions(queryParams ...string) (map[string]interface{},
 
 // GetUsers returns a list of users
 func (c *Client) GetUsers(queryParams ...string) (map[string]interface{}, error) {
+	log.info("========== GET CLIENT USERS ==========")
 	url := buildURL(path["users"])
 
-	log.info("Getting list of users...")
 	return c.do("GET", url, "", queryParams)
 }
 
 // GetUser returns a single user
 func (c *Client) GetUser(userID, fingerprint, ipAddress string, queryParams ...string) (*User, error) {
+	log.info("========== GET USER ==========")
 	url := buildURL(path["users"], userID)
 	res, err := c.do("GET", url, "", queryParams)
 
 	var user User
 	mapstructure.Decode(res, &user)
 	user.Response = res
-
 	request := Request{
 		clientID:     c.ClientID,
 		clientSecret: c.ClientSecret,
 		fingerprint:  fingerprint,
 		ipAddress:    ipAddress,
 	}
-
 	user.request = request
 
-	log.info("Getting user...")
 	return &user, err
 }
 
 // CreateUser creates a single user and returns the new user data
 func (c *Client) CreateUser(data, fingerprint, ipAddress string, idempotencyKey ...string) (*User, error) {
+	log.info("========== CREATE USER ==========")
 	var user User
 	user.request = Request{
 		clientID:     c.ClientID,
@@ -332,10 +331,8 @@ func (c *Client) CreateUser(data, fingerprint, ipAddress string, idempotencyKey 
 
 	url := buildURL(path["users"])
 	res, err := user.do("POST", url, data, idempotencyKey)
-
 	mapstructure.Decode(res, &user)
 	user.Response = res
 
-	log.info("Creating user...")
 	return &user, err
 }
