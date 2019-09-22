@@ -218,7 +218,7 @@ func handleHTTPError(d []byte) error {
 // HELPER METHODS
 
 func formatErrorMessage(httpCode, errorCode, msg string) string {
-	return "HTTP_CODE " + httpCode + " ERROR_CODE " + errorCode + "\n" + msg
+	return "http_code " + httpCode + " error_code " + errorCode + " " + msg
 }
 
 func formatErrorObject(httpCode, errorCode, msg string) map[string]interface{} {
