@@ -5,7 +5,8 @@ Go-based API wrapper for Synapse REST API. This library handles the user authent
 
 ## Documentation
 
-[Synapse Docs](https://docs.synapsefi.com/)
+[Main Docs](https://docs.synapsefi.com/)
+[API Reference](https://docs.synapsefi.com/reference)
 
 ## Installation
 ```bash
