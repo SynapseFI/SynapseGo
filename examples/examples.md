@@ -109,8 +109,8 @@ Enable logging & turn off developer mode (developer mode is true by default)
   "CLIENT_SECRET",
 	"FINGERPRINT",  
 	"IP_ADDRESS",
-	true,
-	false,
+	true,     // set to `false` to disable logging
+	false,    // set to `true` to disable developer mode
 	)
 ```
 

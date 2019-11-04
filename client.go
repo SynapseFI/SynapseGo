@@ -78,8 +78,8 @@ import (
 )
 
 /********** GLOBAL VARIABLES **********/
-var developerMode = true
 var logMode = false
+var developerMode = true
 
 /********** TYPES **********/
 
