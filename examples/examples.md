@@ -110,7 +110,7 @@ Enable logging & turn off developer mode (developer mode is true by default)
 	"FINGERPRINT",  
 	"IP_ADDRESS",
 	true,     // set to `false` to disable logging
-	false,    // set to `true` to disable developer mode
+	false,    // set to `true` to enable developer mode
 	)
 ```
 
