@@ -206,7 +206,11 @@ func handleAPIError(errorCode, httpCode, message string) error {
 }
 
 func handleHTTPError(d []byte) error {
-	data := readStream(d)
+	data, err := readStream(d)
+
+	if err != nil {
+		return err
+	}
 
 	errCode := data["error_code"].(string)
 	httpCode := data["http_code"].(string)

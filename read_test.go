@@ -38,7 +38,11 @@ func Test_Read(t *testing.T) {
 		panic(err)
 	}
 
-	testRes := readStream(td)
+	testRes, testResErr := readStream(td)
+
+	if testResErr != nil {
+		panic(testResErr)
+	}
 
 	assert.Equal(t, testData, testRes)
 }

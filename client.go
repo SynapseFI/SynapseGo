@@ -96,7 +96,7 @@ type (
 
 /********** METHODS **********/
 
-func (c *Client) do(method, url, data string, queryParams []string) (map[string]interface{}, error) {
+func (c *Client) do(method, url, data string, queryParams []string) ([]byte, error) {
 	var body []byte
 	var err error
 
@@ -114,7 +114,7 @@ func (c *Client) do(method, url, data string, queryParams []string) (map[string]
 		body, err = c.request.Delete(url)
 	}
 
-	return readStream(body), err
+	return body, err
 }
 
 /********** CLIENT **********/
@@ -151,7 +151,7 @@ func New(clientID, clientSecret, fingerprint, ipAddress string, modes ...bool) *
 /********** AUTHENTICATION **********/
 
 // GetPublicKey returns a public key as a token representing client credentials
-func (c *Client) GetPublicKey(scope ...string) (map[string]interface{}, error) {
+func (c *Client) GetPublicKey(scope ...string) ([]byte, error) {
 	log.info("========== GET PUBLIC KEY ==========")
 	url := buildURL(path["client"])
 	defaultScope := "OAUTH|POST,USERS|POST,USERS|GET,USER|GET,USER|PATCH,SUBSCRIPTIONS|GET,SUBSCRIPTIONS|POST,SUBSCRIPTION|GET,SUBSCRIPTION|PATCH,CLIENT|REPORTS,CLIENT|CONTROLS"
@@ -169,7 +169,7 @@ func (c *Client) GetPublicKey(scope ...string) (map[string]interface{}, error) {
 /********** NODE **********/
 
 // GetNodes returns all of the nodes
-func (c *Client) GetNodes(queryParams ...string) (map[string]interface{}, error) {
+func (c *Client) GetNodes(queryParams ...string) ([]byte, error) {
 	log.info("========== GET CLIENT NODES ==========")
 	url := buildURL(path["nodes"])
 
@@ -177,7 +177,7 @@ func (c *Client) GetNodes(queryParams ...string) (map[string]interface{}, error)
 }
 
 // GetTradeMarketData returns data on a stock based on its ticker symbol
-func (c *Client) GetTradeMarketData(tickerSymbol string) (map[string]interface{}, error) {
+func (c *Client) GetTradeMarketData(tickerSymbol string) ([]byte, error) {
 	log.info("========== GET TRADE MARKET DATA ==========")
 	url := buildURL(path["nodes"], "trade-market-watch")
 
@@ -189,7 +189,7 @@ func (c *Client) GetTradeMarketData(tickerSymbol string) (map[string]interface{}
 /********** OTHER **********/
 
 // GetCryptoMarketData returns market data for cryptocurrencies
-func (c *Client) GetCryptoMarketData() (map[string]interface{}, error) {
+func (c *Client) GetCryptoMarketData() ([]byte, error) {
 	log.info("========== GET CRYPTO MARKET DATA ==========")
 	url := buildURL(path["nodes"], "crypto-market-watch")
 
@@ -197,7 +197,7 @@ func (c *Client) GetCryptoMarketData() (map[string]interface{}, error) {
 }
 
 // GetCryptoQuotes returns all of the quotes for crypto currencies
-func (c *Client) GetCryptoQuotes(queryParams ...string) (map[string]interface{}, error) {
+func (c *Client) GetCryptoQuotes(queryParams ...string) ([]byte, error) {
 	log.info("========== GET CRYPTO QUOTES ==========")
 	url := buildURL(path["nodes"], "crypto-quotes")
 
@@ -205,7 +205,7 @@ func (c *Client) GetCryptoQuotes(queryParams ...string) (map[string]interface{},
 }
 
 // GetInstitutions returns a list of all available banking institutions
-func (c *Client) GetInstitutions() (map[string]interface{}, error) {
+func (c *Client) GetInstitutions() ([]byte, error) {
 	log.info("========== GET INSTITUTIONS ==========")
 	url := buildURL(path["institutions"])
 
@@ -213,7 +213,7 @@ func (c *Client) GetInstitutions() (map[string]interface{}, error) {
 }
 
 // LocateATMs returns a list of nearby ATMs
-func (c *Client) LocateATMs(queryParams ...string) (map[string]interface{}, error) {
+func (c *Client) LocateATMs(queryParams ...string) ([]byte, error) {
 	log.info("========== LOCATE ATMS ==========")
 	url := buildURL(path["nodes"], "atms")
 
@@ -221,7 +221,7 @@ func (c *Client) LocateATMs(queryParams ...string) (map[string]interface{}, erro
 }
 
 // VerifyAddress checks if an address if valid
-func (c *Client) VerifyAddress(data string) (map[string]interface{}, error) {
+func (c *Client) VerifyAddress(data string) ([]byte, error) {
 	log.info("========== VERIFY ADDRESS ==========")
 	url := buildURL("address-verification")
 
@@ -229,7 +229,7 @@ func (c *Client) VerifyAddress(data string) (map[string]interface{}, error) {
 }
 
 // VerifyRoutingNumber checks and returns the bank details of a routing number
-func (c *Client) VerifyRoutingNumber(data string) (map[string]interface{}, error) {
+func (c *Client) VerifyRoutingNumber(data string) ([]byte, error) {
 	log.info("========== VERIFY ROUTING NUMBER ==========")
 	url := buildURL("routing-number-verification")
 
@@ -239,7 +239,7 @@ func (c *Client) VerifyRoutingNumber(data string) (map[string]interface{}, error
 /********** SUBSCRIPTION **********/
 
 // GetSubscriptions returns all of the nodes associated with a user
-func (c *Client) GetSubscriptions(queryParams ...string) (map[string]interface{}, error) {
+func (c *Client) GetSubscriptions(queryParams ...string) ([]byte, error) {
 	log.info("========== GET SUBSCRIPTIONS ==========")
 	url := buildURL(path["subscriptions"])
 
@@ -247,7 +247,7 @@ func (c *Client) GetSubscriptions(queryParams ...string) (map[string]interface{}
 }
 
 // GetSubscription returns a single subscription
-func (c *Client) GetSubscription(subscriptionID string) (map[string]interface{}, error) {
+func (c *Client) GetSubscription(subscriptionID string) ([]byte, error) {
 	log.info("========== GET SUBSCRIPTION ==========")
 	url := buildURL(path["subscriptions"], subscriptionID)
 
@@ -255,7 +255,7 @@ func (c *Client) GetSubscription(subscriptionID string) (map[string]interface{},
 }
 
 // CreateSubscription creates a subscription and returns the subscription data
-func (c *Client) CreateSubscription(data string, idempotencyKey ...string) (map[string]interface{}, error) {
+func (c *Client) CreateSubscription(data string, idempotencyKey ...string) ([]byte, error) {
 	log.info("========== CREATE SUBSCRIPTION ==========")
 	url := buildURL(path["subscriptions"])
 
@@ -263,7 +263,7 @@ func (c *Client) CreateSubscription(data string, idempotencyKey ...string) (map[
 }
 
 // UpdateSubscription updates an existing subscription
-func (c *Client) UpdateSubscription(subscriptionID string, data string) (map[string]interface{}, error) {
+func (c *Client) UpdateSubscription(subscriptionID string, data string) ([]byte, error) {
 	log.info("========== UPDATE SUBSCRIPTION ==========")
 	url := buildURL(path["subscriptions"], subscriptionID)
 
@@ -271,7 +271,7 @@ func (c *Client) UpdateSubscription(subscriptionID string, data string) (map[str
 }
 
 // GetWebhookLogs returns all of the webhooks sent to a specific client
-func (c *Client) GetWebhookLogs() (map[string]interface{}, error) {
+func (c *Client) GetWebhookLogs() ([]byte, error) {
 	log.info("========== GET WEBHOOK LOGS ==========")
 	url := buildURL(path["subscriptions"], "logs")
 
@@ -281,7 +281,7 @@ func (c *Client) GetWebhookLogs() (map[string]interface{}, error) {
 /********** TRANSACTION **********/
 
 // GetTransactions returns all client transactions
-func (c *Client) GetTransactions(queryParams ...string) (map[string]interface{}, error) {
+func (c *Client) GetTransactions(queryParams ...string) ([]byte, error) {
 	log.info("========== GET CLIENT TRANSACTIONS ==========")
 	url := buildURL(path["transactions"])
 
@@ -291,7 +291,7 @@ func (c *Client) GetTransactions(queryParams ...string) (map[string]interface{},
 /********** USER **********/
 
 // GetUsers returns a list of users
-func (c *Client) GetUsers(queryParams ...string) (map[string]interface{}, error) {
+func (c *Client) GetUsers(queryParams ...string) ([]byte, error) {
 	log.info("========== GET CLIENT USERS ==========")
 	url := buildURL(path["users"])
 
@@ -303,10 +303,15 @@ func (c *Client) GetUser(userID, fingerprint, ipAddress string, queryParams ...s
 	log.info("========== GET USER ==========")
 	url := buildURL(path["users"], userID)
 	res, err := c.do("GET", url, "", queryParams)
+	response, resErr := readStream(res)
+
+	if resErr != nil {
+		return nil, resErr
+	}
 
 	var user User
-	mapstructure.Decode(res, &user)
-	user.Response = res
+	mapstructure.Decode(response, &user)
+	user.Response = response
 	request := Request{
 		clientID:     c.ClientID,
 		clientSecret: c.ClientSecret,
@@ -331,8 +336,14 @@ func (c *Client) CreateUser(data, fingerprint, ipAddress string, idempotencyKey 
 
 	url := buildURL(path["users"])
 	res, err := user.do("POST", url, data, idempotencyKey)
-	mapstructure.Decode(res, &user)
-	user.Response = res
+	response, resErr := readStream(res)
+
+	if resErr != nil {
+		return nil, resErr
+	}
+
+	mapstructure.Decode(response, &user)
+	user.Response = response
 
 	return &user, err
 }
