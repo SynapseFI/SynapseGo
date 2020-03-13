@@ -123,6 +123,20 @@ type (
 		HTTPCode  string `json:"httpCode"`
 		Message   string `json:"message"`
 	}
+
+	// ServerTimeout represents ERROR_CODE 504
+	// Server Timeout
+	ServerTimeout struct {
+		ErrorCode string `json:"errorCode"`
+		HTTPCode  string `json:"httpCode"`
+		Message   string `json:"message"`
+	}
+
+	DefaultError struct {
+		ErrorCode string "000"
+		HTTPCode string "000"
+		Message string "Error code not found"
+	}
 )
 
 /********** METHODS **********/
@@ -183,9 +197,17 @@ func (e *ServiceUnavailable) Error() string {
 	return formatErrorMessage(e.HTTPCode, e.ErrorCode, e.Message)
 }
 
+func (e *ServerTimeout) Error() string {
+	return formatErrorMessage(e.HTTPCode, e.ErrorCode, e.Message)
+}
+
+func (e *DefaultError) Error() string {
+	return formatErrorMessage(e.HTTPCode, e.ErrorCode, e.Message)
+}
+
 func handleAPIError(errorCode, httpCode, message string) error {
 	apiErrors := map[string]error{
-		"":    nil,
+		"":    &DefaultError,
 		"10":  &ActionPending{errorCode, httpCode, message},
 		"100": &IncorrectClientCredentials{errorCode, httpCode, message},
 		"110": &IncorrectUserCredentials{errorCode, httpCode, message},
@@ -200,9 +222,11 @@ func handleAPIError(errorCode, httpCode, message string) error {
 		"460": &RequestFailed{errorCode, httpCode, message},
 		"500": &ServerError{errorCode, httpCode, message},
 		"503": &ServiceUnavailable{errorCode, httpCode, message},
+		"504": &ServerTimeout{errorCode, httpCode, message}
 	}
 
-	return apiErrors[errorCode]
+	return apiErrors[error_code]
+	
 }
 
 func handleHTTPError(d []byte) error {
