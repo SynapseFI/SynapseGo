@@ -209,7 +209,7 @@ func (e *DefaultError) Error() string {
 
 func handleAPIError(errorCode, httpCode, message string) error {
 	apiErrors := map[string]error{
-		"":    &DefaultError,
+		"":    &DefaultError{},
 		"10":  &ActionPending{errorCode, httpCode, message},
 		"100": &IncorrectClientCredentials{errorCode, httpCode, message},
 		"110": &IncorrectUserCredentials{errorCode, httpCode, message},
