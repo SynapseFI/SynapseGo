@@ -227,7 +227,7 @@ func handleAPIError(errorCode, httpCode, message string) error {
 		"504": &ServerTimeout{errorCode, httpCode, message},
 	}
 
-	return apiErrors[error_code]
+	return apiErrors[errorCode]
 	
 }
 
