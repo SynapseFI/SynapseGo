@@ -132,7 +132,7 @@ type (
 		Message   string `json:"message"`
 	}
 
-	// DefaultError represent and unhandled HTTP error
+	// DefaultError represents an unhandled HTTP error
 	// Pass this instead of nil
 	DefaultError struct {
 		ErrorCode string "000"
@@ -209,7 +209,6 @@ func (e *DefaultError) Error() string {
 
 func handleAPIError(errorCode, httpCode, message string) error {
 	apiErrors := map[string]error{
-		"":    &DefaultError{},
 		"10":  &ActionPending{errorCode, httpCode, message},
 		"100": &IncorrectClientCredentials{errorCode, httpCode, message},
 		"110": &IncorrectUserCredentials{errorCode, httpCode, message},
@@ -227,8 +226,10 @@ func handleAPIError(errorCode, httpCode, message string) error {
 		"504": &ServerTimeout{errorCode, httpCode, message},
 	}
 
-	return apiErrors[errorCode]
-	
+	if code, ok := apiErrors[errorCode]; ok {
+		return code
+	}
+	return &DefaultError{}
 }
 
 func handleHTTPError(d []byte) error {
