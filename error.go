@@ -132,6 +132,8 @@ type (
 		Message   string `json:"message"`
 	}
 
+	// DefaultError represent and unhandled HTTP error
+	// Pass this instead of nil
 	DefaultError struct {
 		ErrorCode string "000"
 		HTTPCode string "000"
