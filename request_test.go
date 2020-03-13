@@ -11,6 +11,7 @@ import (
 
 var credentials map[string]interface{}
 var requestData map[string]interface{}
+var userID string = "5e6917b85b5a1e0081e0e309" // Change this to test a user on your platform
 var testID string
 var authKey string
 
@@ -31,6 +32,7 @@ func init() {
 
 	credentials = data["clientData"].(map[string]interface{})
 	requestData = reqData
+
 }
 
 func createRequestClient() *Request {
@@ -47,7 +49,7 @@ func Test_Get(t *testing.T) {
 	assert := assert.New(t)
 	testReq := createRequestClient()
 
-	res, err := testReq.Get(buildURL(path["users"], "/5bec6ebebaabfc00ab168fa0"), nil)
+	res, err := testReq.Get(buildURL(path["users"], userID), nil)
 
 	assert.NoError(err)
 	assert.NotNil(res)
@@ -65,14 +67,14 @@ func Test_Post(t *testing.T) {
 		t.Error(jsonErr)
 	}
 
-	userRes, userErr := testReq.Get(buildURL(path["users"], "/5bec6ebebaabfc00ab168fa0"), nil)
+	userRes, userErr := testReq.Get(buildURL(path["users"], userID), nil)
 
 	if userErr != nil {
 		t.Error(userErr)
 	}
 
 	rt := readStream(userRes)["refresh_token"].(string)
-	authRes, authErr := testReq.Post(buildURL(path["auth"], "/5bec6ebebaabfc00ab168fa0"), `{ "refresh_token": "`+rt+`" }`, nil)
+	authRes, authErr := testReq.Post(buildURL(path["auth"], userID), `{ "refresh_token": "`+rt+`" }`, nil)
 
 	if authErr != nil {
 		t.Error(authErr)
@@ -81,7 +83,7 @@ func Test_Post(t *testing.T) {
 	authKey = readStream(authRes)["oauth_key"].(string)
 	testReq.authKey = authKey
 
-	res, err := testReq.Post(buildURL(path["users"], "/5bec6ebebaabfc00ab168fa0/nodes"), string(jsonData), nil)
+	res, err := testReq.Post(buildURL(path["users"], userID, "nodes"), string(jsonData), nil)
 
 	if err != nil {
 		t.Error(err)
@@ -105,7 +107,7 @@ func Test_Patch(t *testing.T) {
 		t.Error(err)
 	}
 
-	res, err := testReq.Patch(buildURL(path["users"], "/5bec6ebebaabfc00ab168fa0/nodes/", testID), string(jsonData), nil)
+	res, err := testReq.Patch(buildURL(path["users"], userID, "nodes", testID), string(jsonData), nil)
 
 	assert.NoError(err)
 	assert.NotNil(res)
@@ -116,7 +118,7 @@ func Test_Delete(t *testing.T) {
 	testReq := createRequestClient()
 	testReq.authKey = authKey
 
-	res, err := testReq.Delete(buildURL(path["users"], "/5bec6ebebaabfc00ab168fa0/nodes/", testID))
+	res, err := testReq.Delete(buildURL(path["users"], userID, "nodes", testID))
 
 	assert.NoError(err)
 	assert.NotNil(res)

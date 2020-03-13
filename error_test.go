@@ -35,7 +35,7 @@ func Test_HandleHTTPError(t *testing.T) {
 		httpCode := errData["http_code"].(string)
 		errCode := errData["error_code"].(string)
 		msg := errData["error"].(map[string]interface{})["en"].(string)
-		responseMsg := "HTTP_CODE " + httpCode + " ERROR_CODE " + errCode + "\n" + msg
+		responseMsg := "http_code " + httpCode + " error_code " + errCode + " " + msg
 
 		// error message should be an error and print error code plus original API message
 		assert.EqualError(testErr, responseMsg)
