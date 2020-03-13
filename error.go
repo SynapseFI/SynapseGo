@@ -224,7 +224,7 @@ func handleAPIError(errorCode, httpCode, message string) error {
 		"460": &RequestFailed{errorCode, httpCode, message},
 		"500": &ServerError{errorCode, httpCode, message},
 		"503": &ServiceUnavailable{errorCode, httpCode, message},
-		"504": &ServerTimeout{errorCode, httpCode, message}
+		"504": &ServerTimeout{errorCode, httpCode, message},
 	}
 
 	return apiErrors[error_code]
