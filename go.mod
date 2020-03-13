@@ -1,4 +1,4 @@
-module github.com/SynapseFI/SynapseGo
+module github.com/ezquire/SynapseGo
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
