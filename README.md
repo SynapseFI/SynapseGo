@@ -24,7 +24,7 @@ Refer to [examples](examples/examples.md) and our [API documentation](https://do
 
 ## Testing
 
-### To run a test-mock or test-api: 
+### To run test-mock or test-api: 
   1. Add your credentials to "client_credentials.sample.json" and rename it "client_credentials.json"
 
 ### To run test-api:
