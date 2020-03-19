@@ -1,16 +1,27 @@
 # github.com/davecgh/go-spew v1.1.1
+## explicit
 github.com/davecgh/go-spew/spew
+# github.com/elazarl/goproxy v0.0.0-20181111060418-2ce16c963a8a
+## explicit
 # github.com/mitchellh/mapstructure v1.1.2
+## explicit
 github.com/mitchellh/mapstructure
 # github.com/moul/http2curl v1.0.0
+## explicit
 github.com/moul/http2curl
 # github.com/parnurzeal/gorequest v0.2.15
+## explicit
 github.com/parnurzeal/gorequest
 # github.com/pkg/errors v0.8.1
+## explicit
 github.com/pkg/errors
 # github.com/pmezard/go-difflib v1.0.0
 github.com/pmezard/go-difflib/difflib
+# github.com/smartystreets/goconvey v0.0.0-20190306220146-200a235640ff
+## explicit
 # github.com/stretchr/testify v1.3.0
+## explicit
 github.com/stretchr/testify/assert
 # golang.org/x/net v0.0.0-20190311031020-56fb01167e7d
+## explicit
 golang.org/x/net/publicsuffix
