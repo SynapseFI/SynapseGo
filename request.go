@@ -18,7 +18,12 @@ type (
 /********** GLOBAL VARIABLES **********/
 var goreq = gorequest.New()
 
+func SetGoRequest(newGoreq *gorequest.SuperAgent) {
+	goreq = newGoreq
+}
+
 /********** METHODS **********/
+
 
 func (req *Request) updateRequest(clientID, clientSecret, fingerprint, ipAddress string, authKey ...string) Request {
 	var aKey string
