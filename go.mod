@@ -1,4 +1,4 @@
-module github.com/ezquire/SynapseGo
+module github.com/SynapseFI/SynapseGo
 
 go 1.14
 
