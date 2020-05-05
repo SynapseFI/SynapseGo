@@ -160,15 +160,12 @@ func (c *Client) GetPublicKey(scope ...string) (map[string]interface{}, error) {
 		defaultScope = scope[0]
 	}
 
-	qp := []string{"?issue_public_key=YES&scope=" + defaultScope}
+	qp := []string{"issue_public_key=YES&scope=" + defaultScope}
 	
 	if len(scope) > 1 {
 		userId := scope[1]
         qp[0] += "&user_id=" + userId
 	}
-
-	url = url + qp[0]
-	qp[0] = ""
 
 	return c.do("GET", url, "", qp)
 }
