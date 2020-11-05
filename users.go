@@ -329,6 +329,14 @@ func (u *User) ShipCard(nodeID, subnetID, data string) (map[string]interface{}, 
 	return u.do("PATCH", url, data, nil)
 }
 
+// GetCardShipment gets card shipment details
+func (u *User) GetCardShipment(nodeID, subnetID string) (map[string]interface{}, error) {
+	log.info("==========  GET CARD SHIPMENT DETAILS ==========")
+	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID, path["subnets"], subnetID, "ship")
+
+	return u.do("GET", url, "", nil)
+}
+
 /********** TRANSACTION **********/
 
 // GetTransactions returns transactions associated with a user
