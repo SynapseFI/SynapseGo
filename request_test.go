@@ -45,6 +45,31 @@ func createRequestClient() *Request {
 }
 
 /********** TESTS **********/
+func Test_updateRequest(t *testing.T) {
+	assert := assert.New(t)
+	testReq := createRequestClient()
+
+	outdatedReq := *testReq
+	expectedReq := Request{
+		authKey:      "expected_" + testReq.authKey,
+		clientID:     "expected_" + testReq.clientID,
+		clientSecret: "expected_" + testReq.clientSecret,
+		fingerprint:  "expected_" + testReq.fingerprint,
+		ipAddress:    "expected_" + testReq.ipAddress,
+	}
+
+	testReq.updateRequest(
+		expectedReq.clientID,
+		expectedReq.clientSecret,
+		expectedReq.fingerprint,
+		expectedReq.ipAddress,
+		expectedReq.authKey,
+	)
+
+	assert.NotEqual(outdatedReq, *testReq)
+	assert.Equal(expectedReq, *testReq)
+}
+
 func Test_Get(t *testing.T) {
 	assert := assert.New(t)
 	testReq := createRequestClient()
