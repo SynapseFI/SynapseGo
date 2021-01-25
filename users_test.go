@@ -54,13 +54,21 @@ func createTestUser() *User {
 /********** AUTHENTICATION **********/
 func Test_Authenticate(t *testing.T) {
 	assert := assert.New(t)
-	testUser := createTestUser()
+	var (
+		testUser        = createTestUser()
+		testReq         = testUser.request
+		testFingerprint = "test_fp"
+		testIpAddress   = "127.0.0.1"
+	)
 
 	// No parameters
-	testRes, err := testUser.Authenticate("", "", "")
+	testRes, err := testUser.Authenticate("", testFingerprint, testIpAddress)
 
 	assert.NoError(err)
 	assert.Equal(testRes, mockUsersResponse)
+	assert.NotEqual(testReq, testUser.request)
+	assert.Equal(testFingerprint, testUser.request.fingerprint)
+	assert.Equal(testIpAddress, testUser.request.ipAddress)
 }
 
 func Test_GetRefreshToken(t *testing.T) {
