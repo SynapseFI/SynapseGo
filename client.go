@@ -11,7 +11,7 @@ Instantiate client
 	"FINGERPRINT",
 	)
 
-Examples
+# Examples
 
 Enable logging & turn off developer mode (developer mode is true by default)
 
@@ -69,7 +69,6 @@ Submit optional query parameters
 	params := "per_page=3&page=2"
 
 	data, err := client.GetUsers(params)
-
 */
 package synapse
 
@@ -161,10 +160,10 @@ func (c *Client) GetPublicKey(scope ...string) (map[string]interface{}, error) {
 	}
 
 	qp := []string{"issue_public_key=YES&scope=" + defaultScope}
-	
+
 	if len(scope) > 1 {
 		userId := scope[1]
-        qp[0] += "&user_id=" + userId
+		qp[0] += "&user_id=" + userId
 	}
 
 	return c.do("GET", url, "", qp)
@@ -188,6 +187,14 @@ func (c *Client) GetTradeMarketData(tickerSymbol string) (map[string]interface{}
 	ts := []string{tickerSymbol}
 
 	return c.do("GET", url, "", ts)
+}
+
+// GetNodeTypes returns available node types
+func (c *Client) GetNodeTypes() (map[string]interface{}, error) {
+	log.info("========== GET NODE TYPES ==========")
+	url := buildURL(path["nodes"], "types")
+
+	return c.do("GET", url, "", nil)
 }
 
 /********** OTHER **********/
@@ -339,4 +346,28 @@ func (c *Client) CreateUser(data, fingerprint, ipAddress string, idempotencyKey 
 	user.Response = res
 
 	return &user, err
+}
+
+// GetUserDocumentTypes returns available user document types
+func (c *Client) GetUserDocumentTypes() (map[string]interface{}, error) {
+	log.info("========== GET USER DOCUMENT TYPES ==========")
+	url := buildURL(path["users"], "document-types")
+
+	return c.do("GET", url, "", nil)
+}
+
+// GetUserEntityTypes returns available user entity types
+func (c *Client) GetUserEntityTypes() (map[string]interface{}, error) {
+	log.info("========== GET USER ENTITY TYPES ==========")
+	url := buildURL(path["users"], "entity-types")
+
+	return c.do("GET", url, "", nil)
+}
+
+// GetUserEntityScopes returns available user entity scopes
+func (c *Client) GetUserEntityScopes() (map[string]interface{}, error) {
+	log.info("========== GET USER ENTITY TYPES ==========")
+	url := buildURL(path["users"], "entity-scopes")
+
+	return c.do("GET", url, "", nil)
 }
