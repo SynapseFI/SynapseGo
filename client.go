@@ -244,7 +244,7 @@ func (c *Client) VerifyRoutingNumber(data string) (map[string]interface{}, error
 	log.info("========== VERIFY ROUTING NUMBER ==========")
 	url := buildURL("routing-number-verification")
 
-	return c.do("GET", url, data, nil)
+	return c.do("POST", url, data, nil)
 }
 
 /********** SUBSCRIPTION **********/
