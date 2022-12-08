@@ -60,6 +60,8 @@
       - [Create Subnet](#create-subnet)
       - [Update Subnet](#update-subnet)
       - [Ship Card](#ship-card)
+      - [Push To Wallet](#push-to-wallet)
+      - [Get Card Shipment](#get-card-shipment)
     - [Transactions](#transactions)
       - [Get Transactions](#get-transactions)
       - [Get Node Transactions](#get-node-transactions)
@@ -571,6 +573,31 @@ body := `{
 }`
 
 data, err := user.ShipCard(nodeID, subnetID, body)
+```
+
+#### Push to Wallet
+[Synapse Docs](https://docs.synapsefi.com/api-references/subnets/push-to-wallet)
+```go
+nodeID := "594e606212e17a002f2e3251"
+subnetID := "5bc920f2fff373002bf0d51b"
+body := `{
+		"type": "APPLE_PUSH",
+		"nonce": "RH0jOQ==",
+		"nonce_signature": "QNyNZuyDO...EFg/Q",
+		"certificates": [
+			"MIICzD....OPQ7"
+		]
+	}`
+
+data, err := user.PushToWallet(nodeID, subnetID, body)
+```
+
+#### Get Card Shipment
+```go
+nodeID := "594e606212e17a002f2e3251"
+subnetID := "5bc920f2fff373002bf0d51b"
+
+data, err := user.GetCardShipment(nodeID, subnetID)
 ```
 
 ### Transactions
