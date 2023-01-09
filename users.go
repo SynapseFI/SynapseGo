@@ -225,10 +225,12 @@ func (u *User) VerifyMicroDeposit(nodeID, data string) (map[string]interface{}, 
 func (u *User) ReinitiateMicroDeposits(nodeID string) (map[string]interface{}, error) {
 	log.info("========== RE-INITIATE MICRO-DEPOSITS ==========")
 	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID) + "?resend_micro=YES"
+	data := `{"resend_micro":"YES"}`
 
-	return u.do("PATCH", url, "", nil)
+	return u.do("PATCH", url, data, nil)
 }
 
+// DEPRECATED
 // ResetCardNode resets the debit card number, card cvv, and expiration date
 func (u *User) ResetCardNode(nodeID string) (map[string]interface{}, error) {
 	log.info("========== RESET CARD ==========)")
@@ -237,6 +239,7 @@ func (u *User) ResetCardNode(nodeID string) (map[string]interface{}, error) {
 	return u.do("PATCH", url, "", nil)
 }
 
+// DEPRECATED, use User.ShipCard instead
 // ShipCardNode ships a physical debit card out to the user
 func (u *User) ShipCardNode(nodeID, data string) (map[string]interface{}, error) {
 	log.info("========== SHIP CARD ==========")
@@ -245,6 +248,7 @@ func (u *User) ShipCardNode(nodeID, data string) (map[string]interface{}, error)
 	return u.do("PATCH", url, data, nil)
 }
 
+// DEPRECATED
 // GetApplePayToken generates tokenized info for Apple Wallet
 func (u *User) GetApplePayToken(nodeID, data string) (map[string]interface{}, error) {
 	log.info("========== GET APPLE PAY TOKEN ==========")
@@ -271,6 +275,7 @@ func (u *User) GetNodeStatements(nodeID string, queryParams ...string) (map[stri
 	return u.do("GET", url, "", queryParams)
 }
 
+// DEPRECATED - statements are automatically generated
 // CreateNodeStatements creates ad-hoc statements for the specified node
 func (u *User) CreateNodeStatements(nodeID, data string, idempotencyKey ...string) (map[string]interface{}, error) {
 	log.info("========== CREATE AD-HOC STATEMENT ==========")
@@ -329,6 +334,14 @@ func (u *User) ShipCard(nodeID, subnetID, data string) (map[string]interface{}, 
 	return u.do("PATCH", url, data, nil)
 }
 
+// PushToWallet Mobile Wallets are digital wallets held on mobile devices that transact with merchants by turning Native Card Primary Account Numbers (PANs) into digital tokens
+func (u *User) PushToWallet(nodeID, subnetID, data string) (map[string]interface{}, error) {
+	log.info("========== PUSH TO MOBILE WALLET ==========")
+	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID, path["subnets"], subnetID, "push")
+
+	return u.do("POST", url, data, nil)
+}
+
 // GetCardShipment gets card shipment details
 func (u *User) GetCardShipment(nodeID, subnetID string) (map[string]interface{}, error) {
 	log.info("==========  GET CARD SHIPMENT DETAILS ==========")
@@ -380,11 +393,12 @@ func (u *User) CancelTransaction(nodeID, transactionID string) (map[string]inter
 }
 
 // CommentOnTransactionStatus adds comment to the transaction status
-func (u *User) CommentOnTransactionStatus(nodeID, transactionID, data string, idempotencyKey ...string) (map[string]interface{}, error) {
+func (u *User) CommentOnTransactionStatus(nodeID, transactionID, comment string, idempotencyKey ...string) (map[string]interface{}, error) {
 	log.info("========== COMMENT ON TRANSACTION STATUS ==========")
 	url := buildURL(path["users"], u.UserID, path["nodes"], nodeID, path["transactions"], transactionID)
+	data := `{"comment":"` + comment + `"}`
 
-	return u.do("POST", url, data, idempotencyKey)
+	return u.do("PATCH", url, data, idempotencyKey)
 }
 
 // DisputeTransaction disputes a transaction for a user
