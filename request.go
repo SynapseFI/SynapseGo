@@ -20,20 +20,15 @@ var goreq = gorequest.New()
 
 /********** METHODS **********/
 
-func (req *Request) updateRequest(clientID, clientSecret, fingerprint, ipAddress string, authKey ...string) Request {
-	var aKey string
-
+func (req *Request) updateRequest(clientID, clientSecret, fingerprint, ipAddress string, authKey ...string) {
 	if len(authKey) > 0 {
-		aKey = authKey[0]
+		req.authKey = authKey[0]
 	}
 
-	return Request{
-		authKey:      aKey,
-		clientID:     clientID,
-		clientSecret: clientSecret,
-		fingerprint:  fingerprint,
-		ipAddress:    ipAddress,
-	}
+	req.clientID = clientID
+	req.clientSecret = clientSecret
+	req.fingerprint = fingerprint
+	req.ipAddress = ipAddress
 }
 
 /********** REQUEST **********/
